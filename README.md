@@ -2,6 +2,8 @@
 
 Speculative project to map the entire universe over time with low spatial resolution using CMB, 21 cm and local surveys 
 
+![](https://github.com/rogerblandford/Music/raw/master/fig1.jpg)
+
 ## People
 
 * Roger Blandford (KIPAC)

@@ -14,6 +14,11 @@ Applications of such a global map could include: predicting very large scale str
 * Phil Marshall (KIPAC)
 * Ryan Keisler (KIPAC)
 
+## Activities
+
+* Theoretical exploration (Blandford) - document in prep, watch this space
+* Simple universe-in-a-box investigation (at the CtU2015 symposium and hack week): [demo here](http://nbviewer.ipython.org/github/rkeisler/Music/blob/master/Beatbox_Demo.ipynb)
+
 ## Credits, License, etc
 
 This is work in progress! If you use any of the ideas, code etc you find 

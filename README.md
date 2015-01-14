@@ -19,4 +19,4 @@ Applications of such a global map could include: predicting very large scale str
 This is work in progress! If you use any of the ideas, code etc you find 
 here, please cite us as (Blandford et al in preparation). 
 
-All content Copyright 2014 the authors. The code is distributed under the MIT license,
+All content Copyright 2014, 2015 the authors. The code is distributed under the MIT license.

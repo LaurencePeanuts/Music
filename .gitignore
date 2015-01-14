@@ -107,3 +107,9 @@ sympy-plots-for-*.tex/
 
 # xindy
 *.xdy
+
+
+
+# python:
+*.pyc
+.ipynb_checkpoints

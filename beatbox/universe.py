@@ -26,32 +26,6 @@ def demo():
      for i in range(10):
           this_realization = inf.calculate_phi_realization()
 
-class demo_old(object):
-     '''Simple demo that prepares universe in a box, has a method to show slices'''
-     def __init__(self):
-          self.f = FakeHealpixData() #generate fake CMB data, sigma = 1e-10
-          #f.show() #show mollview of CMB 'measurement'
-          
-          #add something here to generate fake LSS data
-          #
-          #
-          autodist = self.f.make_auto_distance_array()
-          self.autocov = large_scale_phi_covariance(autodist)
-          from numpy.linalg import inv
-          self.inv_autocov = inv(self.autocov) #invert covariance on the CMB shell
-          return
-
-     def ViewSlice(self, position=0., side_mpc=35., reso_mpc=0.5): 
-          #take slice through box
-          self.s = SliceSurface(position=position, side_mpc=side_mpc, reso_mpc=reso_mpc)
-          crossdist = self.f.make_distance_array(self.s)
-          crosscov = large_scale_phi_covariance(crossdist) 
-          #get covariance just for slice in 3D cube that follows large-scale LCDM
-          #find constrained realization
-          w = np.dot(crosscov.T, np.dot(self.inv_autocov , self.f.data))
-          w_2d = w.reshape(self.s.n_side, self.s.n_side)
-          plt.imshow(w_2d, cmap=cmap)
-
 
 class Universe(object):
     """

@@ -18,15 +18,16 @@ class demo(object):
           autodist = self.f.make_auto_distance_array()
           self.autocov = large_scale_phi_covariance(autodist)
           from numpy.linalg import inv
-          self.inv_autocov = inv(self.autocov) #invert full covariance in entire box
+          self.inv_autocov = inv(self.autocov) #invert covariance on the CMB shell
           return
 
      def ViewSlice(self, position=0., side_mpc=35., reso_mpc=0.5): 
           #take slice through box
           self.s = SliceSurface(position=position, side_mpc=side_mpc, reso_mpc=reso_mpc)
           crossdist = self.f.make_distance_array(self.s)
-          crosscov = large_scale_phi_covariance(crossdist) #get covariance just for slice
-          
+          crosscov = large_scale_phi_covariance(crossdist) 
+          #get covariance just for slice in 3D cube that follows large-scale LCDM
+          #find constrained realization
           w = np.dot(crosscov.T, np.dot(self.inv_autocov , self.f.data))
           w_2d = w.reshape(self.s.n_side, self.s.n_side)
           plt.imshow(w_2d, cmap=cmap)

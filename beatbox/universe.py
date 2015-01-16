@@ -48,7 +48,7 @@ class CartesianCoordinates(object):
         self.xyz = np.vstack([self.x, self.y, self.z]).T
 
     def make_distance_array(self, other_cart_coord):
-        print '...making distance array...'
+        #print '...making distance array...'
         # Fast pairwise distances, see 
         # https://jakevdp.github.io/blog/2013/06/15/numba-vs-cython-take-2/
         from scipy.spatial.distance import cdist
@@ -106,7 +106,7 @@ class FakeHealpixData(HealpixSphericalSurface):
         self.add_noise()
 
     def add_truth(self):
-        print '...adding truth...'
+        #print '...adding truth...'
         distance = self.make_auto_distance_array()
         delta = distance[distance!=0].min()
         cov = large_scale_phi_covariance(distance)
@@ -114,7 +114,7 @@ class FakeHealpixData(HealpixSphericalSurface):
         self.data += multivariate_normal(np.zeros(self.n_pix), cov)
 
     def add_noise(self):
-        print '...adding noise...'
+        #print '...adding noise...'
         from numpy.random import randn
         self.data += self.sigma*randn(self.n_pix)
         pass

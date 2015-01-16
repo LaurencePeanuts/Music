@@ -156,8 +156,10 @@ class Inference(object):
           self.test = test_object
 
      def calculate_phi_realization(self):
+          ###############################################################
           # Need to code up Equation 18 in Roland's note, 
           # https://www.dropbox.com/s/hsq44r7cs1rwkuq/MusicofSphere.pdf
+          ###############################################################
           # Ryan's understanding of this:
           # Generate noise-free truth *simultaneously* on Sphere and Slice.
           # Add noise to Sphere points.

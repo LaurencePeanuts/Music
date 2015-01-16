@@ -6,25 +6,30 @@ import ipdb
 r_cmb_mpc = 14.0
 cmap = 'gray'
 
-def demo():
-     f = FakeHealpixData()
-     f.show()
-     s = SliceSurface()
+class demo(object):
+     '''Simple demo that prepares universe in a box, has a method to show slices'''
+     def __init__(self):
+          self.f = FakeHealpixData() #generate fake CMB data, sigma = 1e-10
+          #f.show() #show mollview of CMB 'measurement'
+          
+          #add something here to generate fake LSS data
+          #
+          #
+          autodist = self.f.make_auto_distance_array()
+          self.autocov = large_scale_phi_covariance(autodist)
+          from numpy.linalg import inv
+          self.inv_autocov = inv(self.autocov) #invert full covariance in entire box
+          return
 
-     # need to put the below code into objects/methods.
-
-     # 
-     autodist = f.make_auto_distance_array()
-     autocov = large_scale_phi_covariance(autodist)
-     from numpy.linalg import inv
-     inv_autocov = inv(autocov)
-
-     crossdist = f.make_distance_array(s)
-     crosscov = large_scale_phi_covariance(crossdist)
-
-     w = np.dot(crosscov.T, np.dot(inv_autocov , f.data))
-     w_2d = w.reshape(s.n_side, s.n_side)
-     plt.clf(); plt.imshow(w_2d, cmap=cmap)
+     def ViewSlice(self, position=0., side_mpc=35., reso_mpc=0.5): 
+          #take slice through box
+          self.s = SliceSurface(position=position, side_mpc=side_mpc, reso_mpc=reso_mpc)
+          crossdist = self.f.make_distance_array(self.s)
+          crosscov = large_scale_phi_covariance(crossdist) #get covariance just for slice
+          
+          w = np.dot(crosscov.T, np.dot(self.inv_autocov , self.f.data))
+          w_2d = w.reshape(self.s.n_side, self.s.n_side)
+          plt.imshow(w_2d, cmap=cmap)
 
 
 class Universe(object):
@@ -102,7 +107,7 @@ class FakeHealpixData(HealpixSphericalSurface):
         HealpixSphericalSurface.__init__(self)
         self.sigma = sigma
         self.data = np.zeros(self.n_pix)
-        self.add_truth()
+        self.add_truth() 
         self.add_noise()
 
     def add_truth(self):

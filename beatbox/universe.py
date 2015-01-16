@@ -17,7 +17,8 @@ def demo():
      s = SliceSurface()
 
      # Define an Inference object, then infer and visualize 
-     # the minimum variance phi field.
+     # the minimum-variance phi field on the slice, given data
+     # on the sphere.
      inf = Inference(f, s)
      inf.calculate_mv_phi()
      inf.view_phi_mv_slice()
@@ -155,9 +156,15 @@ class Inference(object):
           self.test = test_object
 
      def calculate_phi_realization(self):
-          # Dummy function that will return a phi realization.
           # Need to code up Equation 18 in Roland's note, 
           # https://www.dropbox.com/s/hsq44r7cs1rwkuq/MusicofSphere.pdf
+          # Ryan's understanding of this:
+          # Generate noise-free truth *simultaneously* on Sphere and Slice.
+          # Add noise to Sphere points.
+          # Generate MV estimate on Slice.
+          # Get the difference of the MV estimate on Slice and the truth on Slice.
+          # Add that difference to your *original* MV estimate on Slice.
+          # Now you have a sample/realization of the posterior on the Slice, given original data.
           pass
 
      def calculate_mv_phi(self):

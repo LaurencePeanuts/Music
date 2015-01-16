@@ -1,35 +1,31 @@
 import numpy as np
 import matplotlib.pylab as plt
-plt.ion()
 import ipdb
 
+plt.ion()
+np.random.seed(3) # for reproduceability
 r_cmb_mpc = 14.0
 cmap = 'gray'
+vscale = 15.
 
-class demo(object):
-     '''Simple demo that prepares universe in a box, has a method to show slices'''
-     def __init__(self):
-          self.f = FakeHealpixData() #generate fake CMB data, sigma = 1e-10
-          #f.show() #show mollview of CMB 'measurement'
-          
-          #add something here to generate fake LSS data
-          #
-          #
-          autodist = self.f.make_auto_distance_array()
-          self.autocov = large_scale_phi_covariance(autodist)
-          from numpy.linalg import inv
-          self.inv_autocov = inv(self.autocov) #invert full covariance in entire box
-          return
 
-     def ViewSlice(self, position=0., side_mpc=35., reso_mpc=0.5): 
-          #take slice through box
-          self.s = SliceSurface(position=position, side_mpc=side_mpc, reso_mpc=reso_mpc)
-          crossdist = self.f.make_distance_array(self.s)
-          crosscov = large_scale_phi_covariance(crossdist) #get covariance just for slice
-          
-          w = np.dot(crosscov.T, np.dot(self.inv_autocov , self.f.data))
-          w_2d = w.reshape(self.s.n_side, self.s.n_side)
-          plt.imshow(w_2d, cmap=cmap)
+def demo():
+     # Generate fake CMB data on a Healpix sphere.
+     f = FakeHealpixData()
+     f.show()
+
+     # Define a 2d slice through our universe.
+     s = SliceSurface()
+
+     # Define an Inference object, then infer and visualize 
+     # the minimum variance phi field.
+     inf = Inference(f, s)
+     inf.calculate_mv_phi()
+     inf.view_phi_mv_slice()
+
+     # Make a bunch of realizations and analyze/visualize them.
+     for i in range(10):
+          this_realization = inf.calculate_phi_realization()
 
 
 class Universe(object):
@@ -82,11 +78,6 @@ class SliceSurface(CartesianCoordinates):
         self.update_xyz()
 
 
-class SphericalSurface(CartesianCoordinates):
-    def __init__(self, radius_mpc=r_cmb_mpc, reso_mpc=1.):
-        self.epsilon = 0.5*reso_mpc
-        pass
-        
 
 class HealpixSphericalSurface(CartesianCoordinates):
     def __init__(self, radius_mpc=r_cmb_mpc, n_side=2**4):
@@ -126,7 +117,7 @@ class FakeHealpixData(HealpixSphericalSurface):
 
     def show(self):
         from healpy import mollview
-        mollview(self.data)
+        mollview(self.data)#, cmap=cmap, min=-vscale, max=+vscale)
 
 
 def large_scale_phi_covariance(distance):
@@ -136,7 +127,7 @@ def large_scale_phi_covariance(distance):
 
     # The integral will diverge unless we put in this k_min.
     k_min = 2.*np.pi / (2. * r_cmb_mpc) # hack
-    k_max = 2.*np.pi / (2. * 0.5) # hack
+    k_max = 2.*np.pi / (2. * 0.25) # hack
      
     # Evaluate covariance on 1d grid.
     k_vec = np.arange(k_min, k_max, k_min/4.)
@@ -152,3 +143,53 @@ def large_scale_phi_covariance(distance):
     f = interpolate.interp1d(d_vec, cov_vec)
     cov = f(distance)
     return cov
+
+
+
+class Inference(object):
+     def __init__(self, data_object, test_object):
+          # DATA_OBJECT is e.g. a FakeHealpixData object.
+          #    It's where you have data.
+          # TEST_OBJECT is e.g. a SliceSurface object.
+          #     It's where you want to make inferences.
+          self.data = data_object
+          self.test = test_object
+
+     def calculate_phi_realization(self):
+          # Dummy function that will return a phi realization.
+          # Need to code up Equation 18 in Roland's note, 
+          # https://www.dropbox.com/s/hsq44r7cs1rwkuq/MusicofSphere.pdf
+          pass
+
+     def calculate_mv_phi(self):
+          self.get_data_data_covariance()
+          self.get_data_test_covariance()
+          tmp = np.dot(self.inv_cov_data_data , self.data.data)
+          self.phi_mv = np.dot(self.cov_data_test.T, tmp)
+
+     def get_data_data_covariance(self):
+          # Get phi covariance between data space and data space.
+          from numpy.linalg import inv
+          dist_data_data = self.data.make_auto_distance_array()
+          cov_data_data = large_scale_phi_covariance(dist_data_data)
+          self.inv_cov_data_data = inv(cov_data_data)
+
+     def get_data_test_covariance(self):
+          # Get phi covariance between data space and test space.
+          dist_data_test = self.data.make_distance_array(self.test)
+          cov_data_test = large_scale_phi_covariance(dist_data_test)
+          self.cov_data_test = cov_data_test
+
+     def view_phi_mv_slice(self):
+          self.view_slice(self.phi_mv)
+
+     def view_slice(self, slice_1d):
+          slice_2d = slice_1d.reshape(self.test.n_side, self.test.n_side)
+          plt.figure(figsize=(7,7))
+          plt.imshow(slice_2d, cmap=cmap, vmin=-vscale, vmax=+vscale)
+
+     
+
+
+
+     

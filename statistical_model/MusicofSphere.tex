@@ -1,0 +1,220 @@
+
+
+\documentclass[prd, onecolumn, nofootinbib, floatfix]{revtex4-1}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{dcolumn}
+\usepackage{bm}
+\usepackage{epsfig}
+\usepackage{amssymb,latexsym,mathrsfs}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{hyperref}
+
+\usepackage{tabu}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=red,
+    citecolor=blue,
+} 
+
+% Making life easier
+\newcommand{\be}{\begin{equation}}
+\newcommand{\ee}{\end{equation}}
+\newcommand{\bs}{\begin{split}} 
+\newcommand{\bea}{\begin{eqnarray}}
+\newcommand{\eea}{\end{eqnarray}}
+
+\newcommand{\RdP}[1]{\textcolor{red}{[{\bf RdP}: #1]}}
+ 
+
+% useful symbols
+\newcommand{\om}{\Omega_m}
+\newcommand{\ha}{\frac{1}{2}}
+\newcommand{\ahub}{\frac{\dot{a}}{a}}
+\newcommand{\ode}{\Omega_{de}}
+\newcommand{\Oe}{\Omega_{e}}
+\newcommand{\lcdm}{$\Lambda$CDM} 
+\newcommand{\neff}{N_{\rm eff}} 
+\newcommand{\hfid}{H^2_{\rm fid}} 
+\newcommand{\dl}{\delta} 
+\newcommand{\sumu}{\Sigma m_\nu} 
+\newcommand{\mnu}{\Sigma m_\nu} 
+\newcommand{\mpci}{\,{\rm Mpc}^{-1}}
+
+\newcommand{\jcap}{JCAP}
+\newcommand{\apjs}{Astrophys.J.Supp.}
+\newcommand{\mnras}{MNRAS}
+\newcommand{\physrep}{Physics Reports}
+
+\begin{document}
+
+\title{The Music of the Sphere} 
+%\author{} 
+%\affiliation{} 
+
+
+\begin{abstract}
+
+
+\end{abstract}
+
+\date{\today} 
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Generating constrained realizations}
+
+
+I will jump, not always in a well-organized way, between the general notation from \cite{zaroubietal95}
+and a more practical notation for the problem at hand (the simplext version of it).
+
+
+Let's start with the following toy model.
+We have a 3D potential field on a grid
+\be
+\Phi({\bf x}_i).
+\ee
+Here $i$ labels the grid points so that we can treat this field as a ``theory vector'',
+\be
+{\bf s} \equiv {\bf \Phi},
+\ee
+with components
+\be
+s_i = \Phi_i = \Phi({\bf x}_i) \quad i = 1,..,N.
+\ee
+Moreover, we have a $M$-dimensional data vector, given by some linear operator on the theory vector, plus noise,
+\be
+{\bf d} = {\bf R} \, {\bf s} + {\bf \epsilon}.
+\ee
+Here ${\bf R}$ is the transformation matrix defining the data, and the noise
+has covariance
+\be
+N^{\epsilon}_{kl} \equiv \langle \epsilon_k \, \epsilon_l \rangle.
+\ee
+I will try to use the indices $i,j$ on the theory (i.e.~$\Phi$) side (so that these indices run from $1$ to $N$)
+and use $k,l$ on the data side (so that they run from $1$ to $M$).
+More concretely, let's say the data are simply measurements of $\Phi({\bf x}_i)$ at
+a subset of specific
+grid locations $\{i_1,...,i_M \}$,
+\be
+d_k \equiv \hat{\Phi}({\bf x}_{i_k}) = \Phi({\bf x}_{i_k}) + \epsilon_k = s_{i_k} + \epsilon_k.
+\ee
+Then, ${\bf R}$ is a $M \times N$ matrix with entries
+\be
+R_{ki} \equiv \delta^{K}_{i_k i}.
+\ee
+For simplicity, we can start with a diagonal noise matrix,
+\be
+N^{\epsilon}_{kl} = \sigma^2_\epsilon \, \delta^{K}_{k l}
+\ee
+
+
+Now, given a measurement of ${\bf d}$, i.e.~given a noisy measurement
+of the potential at a subset of grid locations, for instance on a sphere,
+we want to generate realizations of the full field. There is one more ingredient we need:
+the prior covariance matrix of the theory vector.
+This is a $N \times N$ matrix ${\bf S}$, with entries
+\be
+S_{ij} \equiv \langle s_i s_j \rangle = \langle \Phi({\bf x}_i) \, \Phi({\bf x}_j) \rangle = \xi_\Phi(|{\bf x}_i - {\bf x}_j|).
+\ee
+
+Now, following e.g.~\cite{rp92,zaroubietal95}, we can first construct the maximum likelihood estimator
+for the field $\Phi({\bf x}_i)$.
+\be
+\label{eq:mv estimator}
+{\bf s}^{\rm MV} = {\bf F} \, {\bf d},
+\ee
+with
+\be
+\label{eq:F matrix}
+{\bf F} = \langle {\bf s} \, {\bf d}^\dagger \rangle \, \langle {\bf d} \, {\bf d}^\dagger \rangle^{-1} = {\bf S} \, {\bf R}^\dagger \left( {\bf R} \, {\bf S} \, {\bf R}^\dagger + {\bf N^\epsilon}  \right)^{-1}
+\ee
+Since we assume Gaussianity, this estimator gives the posterior expectation value for the field
+and the maximum likelihood solution.
+
+The above Eqs.~(\ref{eq:mv estimator})-(\ref{eq:F matrix}) give the general result. Things become clearer when we apply it to our specific example.
+For instance,
+\be
+\langle d_k \, d_l \rangle = \left({\bf R} \, {\bf S} \, {\bf R}^\dagger  + {\bf N^\epsilon} \right)_{kl} = \xi_\Phi(|{\bf x}_{i_k} - {\bf x}_{i_l}|) + \sigma_{\epsilon}^2 \, \delta^K_{kl} \equiv \left({\bf \xi_\Phi} + \sigma^2_\epsilon \, {\bf I}\right)_{kl}
+\ee
+(${\bf I}$ is the identity matrix and ${\bf \xi_\Phi}$ is the correlation function matrix restricted to the grid points
+where we have measurements, e.g. the CMB last-scattering surface) and
+\be
+\langle s_i \, d_k \rangle = \left( {\bf S} \, {\bf R}^\dagger \right)_{i k} = \xi_\Phi(|{\bf x}_{i} - {\bf x}_{i_k}|).
+\ee
+We can't proceed further analytically, because we need to invert the matrix ${\bf \xi_\Phi} + \sigma^2_\epsilon \, {\bf I}$,
+which is simply the total covariance matrix of the observable $d_k \equiv \hat{\Phi}({\bf x}_{i_k})$.
+We can now write for the solution,
+\be
+\label{eq:mv sol}
+s^{\rm MV}_i = \Phi^{\rm MV}({\bf x}_i) = \sum_{kl}  \xi_\Phi(|{\bf x}_{i} - {\bf x}_{i_k}|) \, \left({\bf \xi_\Phi} + \sigma^2_\epsilon \, {\bf I}\right)^{-1}_{kl} \, \hat{\Phi}({\bf x}_l)
+\ee
+
+
+%S_{ij} = xi_ij
+%R=MxM unity + zeros, (MxN)
+%Rdag = MxM unity + zeros (NxM)
+%Neps = unity (MxM)
+%RSRdag = xi_kl,
+
+%in parentheses:
+
+%xi_{kl}
+
+%S Rdag = xi_ik
+
+%sherman-morrison
+%eps = A - M b^T
+%epsinv = ...
+
+%in fourier space,
+%S diagonal, either R not or N complicated,
+
+\subsection{Generating realizations of $\Phi({\bf x}_i)$}
+
+Now that we have the {\it mean} of the conditional posterior of ${\bf s} = {\bf \Phi}$, given in Eq.~(\ref{eq:mv sol}), there is a straightforward
+method for generating realizations that follow the posterior distribution:
+\begin{itemize}
+\item
+Generate an unconstrained Gaussian random realization of the theory field, ${\bf \tilde{s}} = {\bf \tilde{\Phi}}$ (i.e.~the 3D potential), that follows the prior
+correlation function of the field, i.e.~the same way of generating random realizations we use for the true field, that is our
+input to the whole calculation.
+\item
+Generate a (Gaussian) realization of the measurement noise ${\bf \epsilon}$, that follows the covariance
+given by ${\bf N^{\epsilon}}$.
+\item
+Construct a realization of the data:
+\be
+{\bf \tilde{d}} = {\bf R} \, {\bf \tilde{s}} + {\bf \epsilon}.
+\ee
+Specifically, for us this means
+\be
+\tilde{\hat{\Phi}}({\bf x}_{i_k}) = \tilde{\Phi}({\bf x}_{i_k}) + \tilde{\epsilon}_k.
+\ee
+\item
+Write the realization of the field, {\it conditional on the observations}, as
+\be
+{\bf s}_{\rm post} = {\bf s}^{\rm MV} + {\bf \tilde{s}} - {\bf F} \, {\bf \tilde{d}}.
+\ee
+For us this means
+\be
+\Phi_{\rm post}({\bf x}_i) = \Phi^{\rm MV}({\bf x}_i) + \tilde{\Phi}({\bf x}_i) - \tilde{\Phi}^{\rm MV}({\bf x}_i),
+\ee
+where I have written
+\be
+\tilde{\Phi}^{\rm MV}({\bf x}_i) \equiv \left({\bf F} \, {\bf \tilde{d}}\right)_i = \sum_{kl}  \xi_\Phi(|{\bf x}_{i} - {\bf x}_{i_k}|) \, \left({\bf \xi_\Phi} + \sigma^2_\epsilon \, {\bf I}\right)^{-1}_{kl} \, \tilde{\hat{\Phi}}({\bf x}_l)
+\ee
+This quantity has the appropriate statistics given the measurement ${\bf d}$ and
+the prior statistics of ${\bf s}$ and of the noise.
+\end{itemize}
+
+Possibly more advanced method that would be interesting to explore: \cite{jaslav15}.
+
+\bibliography{refs}
+
+\end{document}
+

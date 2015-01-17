@@ -24,8 +24,22 @@ def demo():
      inf.view_phi_mv_slice()
 
      # Make a bunch of realizations and analyze/visualize them.
-     for i in range(10):
-          this_realization = inf.calculate_phi_realization()
+     '''
+
+     # RK: realizations have lower variance around the CMB ring (good), but
+     # have too-high variance in center of ring.  I think it's an artifact
+     # of how I've defined the correlation/covariance function, namely as 
+     # an integral that starts at k_min = 2*pi/(2*r_cmb).  Not sure where 
+     # to go from here.
+
+     slice_realizations = []
+     for i in range(20):
+          print i
+          this_slice_realization = inf.calculate_phi_realization()
+          slice_realizations.append(this_slice_realization)
+     slice_realizations = np.array(slice_realizations)
+     ipdb.set_trace()
+     '''
 
 
 class Universe(object):
@@ -60,7 +74,7 @@ class CartesianCoordinates(object):
 
 
 class SliceSurface(CartesianCoordinates):
-    def __init__(self, position=0., side_mpc=35., reso_mpc=0.5):
+    def __init__(self, position=0., side_mpc=30., reso_mpc=0.8):
         self.side_mpc = side_mpc
         self.reso_mpc = reso_mpc
         n_side = np.ceil(side_mpc/reso_mpc)
@@ -120,6 +134,21 @@ class FakeHealpixData(HealpixSphericalSurface):
         mollview(self.data)#, cmap=cmap, min=-vscale, max=+vscale)
 
 
+class HealpixPlusSlice(CartesianCoordinates):
+     def __init__(self):
+          healpix = HealpixSphericalSurface()
+          slice = SliceSurface()
+          self.n_healpix = len(healpix.x)
+          self.n_slice = len(slice.x)
+          self.n_total = self.n_healpix + self.n_slice
+          self.ind_healpix = range(0, self.n_healpix)
+          self.ind_slice = range(self.n_healpix, self.n_total)
+          self.x = np.hstack([healpix.x, slice.x])
+          self.y = np.hstack([healpix.y, slice.y])
+          self.z = np.hstack([healpix.z, slice.z])
+          self.update_xyz()
+
+
 def large_scale_phi_covariance(distance):
     # should be something like 
     # cov(r) ~ Int(dk * sin(k*r)/(k**2 * r) )
@@ -142,6 +171,13 @@ def large_scale_phi_covariance(distance):
     from scipy import interpolate
     f = interpolate.interp1d(d_vec, cov_vec)
     cov = f(distance)
+
+    # Let's force the covariance to be unity along the diagonal.
+    # I.e. let's define the variance of each point to be 1.0.
+    #cov_diag = cov.diagonal().copy()
+    #cov /= np.sqrt(cov_diag)
+    #cov /= np.sqrt(cov_diag.T)
+    
     return cov
 
 
@@ -157,17 +193,49 @@ class Inference(object):
 
      def calculate_phi_realization(self):
           ###############################################################
-          # Need to code up Equation 18 in Roland's note, 
+          # Coded up from Equation 18 in Roland's note, 
           # https://www.dropbox.com/s/hsq44r7cs1rwkuq/MusicofSphere.pdf
+          # Is there a faster algorithm than this?
           ###############################################################
           # Ryan's understanding of this:
+
+          # Define a coordinate object that includes points on the sphere 
+          # and on a 2d slice.
+          joint = HealpixPlusSlice()
+          
+          # Do some preparatory work.
+          # We only do this once when making multiple realizations.
+          if not(hasattr(self, 'cov_joint')):
+               dist = joint.make_auto_distance_array()
+               cov_joint = large_scale_phi_covariance(dist)
+               self.cov_joint = cov_joint
+          if not(hasattr(self, 'phi_mv')):
+               self.calculate_mv_phi()
+
           # Generate noise-free truth *simultaneously* on Sphere and Slice.
+          from numpy.random import multivariate_normal
+          realization_truth = multivariate_normal(np.zeros(joint.n_total), self.cov_joint)
+          sphere_truth = realization_truth[joint.ind_healpix]
+          slice_truth = realization_truth[joint.ind_slice]
+
           # Add noise to Sphere points.
+          noise = self.data.sigma*np.random.randn(joint.n_healpix)
+          sphere_data = sphere_truth + noise
+
           # Generate MV estimate on Slice.
+          tmp = np.dot(self.inv_cov_data_data , sphere_data)
+          this_phi_mv_slice = np.dot(self.cov_data_test.T, tmp)
+
           # Get the difference of the MV estimate on Slice and the truth on Slice.
+          diff_mv = this_phi_mv_slice - slice_truth
+
           # Add that difference to your *original* MV estimate on Slice.
           # Now you have a sample/realization of the posterior on the Slice, given original data.
-          pass
+          this_realization = self.phi_mv + diff_mv
+
+          return this_realization
+
+
 
      def calculate_mv_phi(self):
           self.get_data_data_covariance()

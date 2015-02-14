@@ -20,34 +20,11 @@
     citecolor=blue,
 } 
 
-% Making life easier
-\newcommand{\be}{\begin{equation}}
-\newcommand{\ee}{\end{equation}}
-\newcommand{\bs}{\begin{split}} 
-\newcommand{\bea}{\begin{eqnarray}}
-\newcommand{\eea}{\end{eqnarray}}
 
+\include{macros}
 \newcommand{\RdP}[1]{\textcolor{red}{[{\bf RdP}: #1]}}
- 
+\newcommand{\MDS}[1]{\textcolor{blue}{[{\bf MDS}: #1]}}
 
-% useful symbols
-\newcommand{\om}{\Omega_m}
-\newcommand{\ha}{\frac{1}{2}}
-\newcommand{\ahub}{\frac{\dot{a}}{a}}
-\newcommand{\ode}{\Omega_{de}}
-\newcommand{\Oe}{\Omega_{e}}
-\newcommand{\lcdm}{$\Lambda$CDM} 
-\newcommand{\neff}{N_{\rm eff}} 
-\newcommand{\hfid}{H^2_{\rm fid}} 
-\newcommand{\dl}{\delta} 
-\newcommand{\sumu}{\Sigma m_\nu} 
-\newcommand{\mnu}{\Sigma m_\nu} 
-\newcommand{\mpci}{\,{\rm Mpc}^{-1}}
-
-\newcommand{\jcap}{JCAP}
-\newcommand{\apjs}{Astrophys.J.Supp.}
-\newcommand{\mnras}{MNRAS}
-\newcommand{\physrep}{Physics Reports}
 
 \begin{document}
 
@@ -70,7 +47,7 @@
 
 
 I will jump, not always in a well-organized way, between the general notation from \cite{zaroubietal95}
-and a more practical notation for the problem at hand (the simplext version of it).
+and a more practical notation for the problem at hand (the simplest version of it).
 
 
 Let's start with the following toy model.
@@ -87,10 +64,10 @@ with components
 s_i = \Phi_i = \Phi({\bf x}_i) \quad i = 1,..,N.
 \ee
 Moreover, we have a $M$-dimensional data vector, given by some linear operator on the theory vector, plus noise,
-\be
-{\bf d} = {\bf R} \, {\bf s} + {\bf \epsilon}.
+\be\label{eq:data_model}
+{\bf d} = \transfer \, {\bf s} + {\bf \epsilon}.
 \ee
-Here ${\bf R}$ is the transformation matrix defining the data, and the noise
+Here $\transfer$ is the transformation matrix defining the data, and the noise
 has covariance
 \be
 N^{\epsilon}_{kl} \equiv \langle \epsilon_k \, \epsilon_l \rangle.
@@ -113,12 +90,12 @@ N^{\epsilon}_{kl} = \sigma^2_\epsilon \, \delta^{K}_{k l}
 \ee
 
 
-Now, given a measurement of ${\bf d}$, i.e.~given a noisy measurement
+Now, given a measurement of $\data$, i.e.~given a noisy measurement
 of the potential at a subset of grid locations, for instance on a sphere,
 we want to generate realizations of the full field. There is one more ingredient we need:
 the prior covariance matrix of the theory vector.
-This is a $N \times N$ matrix ${\bf S}$, with entries
-\be
+This is a $N \times N$ matrix $\smat$, with entries
+\be\label{eq:signal_cov}
 S_{ij} \equiv \langle s_i s_j \rangle = \langle \Phi({\bf x}_i) \, \Phi({\bf x}_j) \rangle = \xi_\Phi(|{\bf x}_i - {\bf x}_j|).
 \ee
 
@@ -175,6 +152,7 @@ s^{\rm MV}_i = \Phi^{\rm MV}({\bf x}_i) = \sum_{kl}  \xi_\Phi(|{\bf x}_{i} - {\b
 %S diagonal, either R not or N complicated,
 
 \subsection{Generating realizations of $\Phi({\bf x}_i)$}
+\label{sub:generating_realizations}
 
 Now that we have the {\it mean} of the conditional posterior of ${\bf s} = {\bf \Phi}$, given in Eq.~(\ref{eq:mv sol}), there is a straightforward
 method for generating realizations that follow the posterior distribution:
@@ -213,6 +191,153 @@ the prior statistics of ${\bf s}$ and of the noise.
 \end{itemize}
 
 Possibly more advanced method that would be interesting to explore: \cite{jaslav15}.
+
+
+\subsection{Informing simulations with existing data} % (fold)
+\label{sub:informing_simulations_with_existing_data}
+
+Consider the common scenario that we want to constrain cosmological parameters $\theta$ 
+given a data set $\data$, which is related to the cosmological mass density as in 
+\autoref{eq:data_model}.
+If we have no knowledge about the realized mass density $\Phi$ in our observed portion of the 
+universe then we must marginalize over all possible mass density realizations in computing the 
+marginal posterior of $\theta$.
+
+However, if we have performed previous surveys of some volumes of the universe, we should be 
+able to use the information from those surveys to constrain the mass density marginalization in 
+the analysis of our current survey. 
+Specifically, the joint marginal likelihood of our current data $\data$ and an `external' or 
+past data set $\dataext$ is,
+\begin{equation}\label{eq:joint_likelihood}
+	P(\data, \dataext | \theta) = 
+	P(\data | \dataext, \theta) P(\dataext | \theta).
+\end{equation}
+That is, we want a \emph{conditional} inference of the data $\data$ given the external data $\dataext$, 
+which factors the joint data likelihood.
+
+The posterior on the cosmological parameters $\theta$ factors as,
+\begin{align}
+	P(\theta | \data, \dataext) &= \frac{P(\data, \dataext | \theta) P(\theta)}{P(\data,\dataext)}
+	\notag\\
+	&= \frac{P(\data | \dataext,\theta) P(\dataext | \theta) P(\theta)}{P(\data | \dataext) P(\dataext)}
+	\notag\\
+	&= \frac{P(\data | \dataext,\theta) P(\theta | \dataext)}{P(\data | \dataext)}.
+	\label{eq:factored_posterior}
+\end{align}
+So, we can infer posterior constraints on $\theta$ given both past $\dataext$ and current $\data$ data sets 
+by evaluating only the likelihood of the current data conditioned on the external data $P(\data|\dataext,\theta)$ 
+as long as we update our prior on $\theta$ from the posterior inferences given only the external data sets.
+
+If we assume the observational noise is uncorrelated between the current $\data$ and past $\dataext$ data sets,
+the likelihood conditioned on the mass density factors,
+\begin{equation}
+	P(\data,\dataext | \Phi, \theta) = P(\data | \Phi, \theta) P(\dataext | \Phi, \theta).
+\end{equation}
+But, after marginalizing over the mass density the joint likelihood no longer factors,
+\begin{equation}\label{eq:marg_likelihood}
+	P(\data, \dataext | \theta) = 
+	\int d\Phi\, P(\data | \Phi, \theta) P(\dataext | \Phi, \theta) P(\Phi | \theta).
+\end{equation}
+
+We can evaluate \autoref{eq:marg_likelihood} and thereby understand the impact of adding information 
+from a past data set $\dataext$ by assuming Gaussian distributions for each conditional distribution 
+in the integrand,
+\begin{align}
+	P(\Phi | \theta) &\equiv \normdist_{\Phi}(0, \smat(\theta))
+	\label{eq:ic_prior}\\
+	P(\data | \Phi, \theta) &\equiv 
+		\normdist_{\data} \left(\transfer(\theta)\Phi, \noisemat\right)
+	\label{eq:cond_likelihood}\\
+	P(\dataext | \Phi, \theta) &\equiv 
+		\normdist_{\dataext} \left(\transferext(\theta)\Phi, \noisematext\right).
+	\label{eq:cond_ext_likelihood}
+\end{align}
+The Gaussian distribution in \autoref{eq:ic_prior} comes from our assumption that the 
+initial conditions for the cosmological mass density perturbations are Gaussian with mean zero and 
+a covariance $\smat(\theta)$ given by the two-point correlation function as in \autoref{eq:signal_cov}.
+The Gaussian distributions in \autoref{eq:cond_likelihood} and \autoref{eq:cond_ext_likelihood} come from 
+the assumed noise models for each data set.
+
+By first rewriting the likelihood as a function of $\Phi$,
+\begin{equation}
+	\normdist_{\data} \left(\transfer\Phi, \noisemat\right) = 
+	\left|\transfer\transfer^{T}\right|^{1/2}
+	\normdist_{\Phi} \left(\transfer^{-1}\data, \left(\transfer^{T}\noisematinv\transfer\right)^{-1}\right)
+\end{equation}
+and then multiplying by the prior on $\Phi$,
+\begin{equation}\label{eq:cond_posterior}
+	P(\data|\Phi,\theta)P(\Phi|\theta) =
+	\left|\transfer\transfer^{T}\right|^{1/2}
+	\normdist_{\transfer\data} \left(0, \smat + \noisemattransfer\right)
+	\normdist_{\Phi} \left(\cmat \noisemattransferinv \transfer \data, \cmat\right)
+\end{equation}
+we get another Gaussian distribution in $\Phi$ with maximum given by \autoref{eq:F matrix}. 
+And, in \autoref{eq:cond_posterior} we defined,
+\begin{align}
+	\noisemattransfer &\equiv \left(\transfer^{T} \noisematinv \transfer\right)^{-1},
+	\\
+	\cmat &\equiv \left(\smat^{-1} + \noisemattransferinv\right)^{-1}.
+	\label{eq:cmat}
+\end{align}
+
+Performing similar manipulations with the Gaussian likelihood of $\dataext$, we can 
+perform the integral in \autoref{eq:marg_likelihood} as the integral of Gaussian distribution to get,
+\begin{multline}\label{eq:marg_likelihood_final}
+	P(\data, \dataext | \theta) =
+	% External data likelihood
+	\left[
+	\left|\transferext\transferext^{T}\right|^{1/2}
+	\normdist_{\transferext\dataext} \left(0, \smat + \noisemattransferext\right)
+	\right]
+	\\ \times
+	% Conditional likelihood
+	\left[
+	\left|\transfer\transfer^{T}\right|^{1/2}
+	\normdist_{\transfer\data} \left(\cmatext\noisemattransferextinv\transferext\dataext, 
+	\noisemattransfer + \cmatext\right)
+	\right],
+\end{multline}
+where the term in the first square brackets is recognized as $P(\dataext | \theta)$ while the 
+second set of square brackets gives $P(\data | \dataext, \theta)$.
+
+The result for $P(\dataext|\theta)$ in \autoref{eq:marg_likelihood_final} is familiar. The 
+marginal likelihood for a mass density tracer without any extra prior information has mean zero 
+and a covariance that is the sum of the signal and noise covariance matrices. Although, the 
+prefactor depending on the transfer function $\transferext$ is not usually kept even though it 
+does, in general, depend on the cosmological parameters $\theta$.
+
+The result for $P(\data|\dataext,\theta)$ in \autoref{eq:marg_likelihood_final} is a Gaussian 
+distribution in the data with a mean determined by the external data $\dataext$, suitably filtered 
+by the signal and noise covariances. The covariance of $\data$ is a sum 
+of the noise covariance for the data $\noisemat$ and the matrix $\cmatext$ as defined in 
+\autoref{eq:cmat} (inserting the past data noise covariance). Because the \emph{inverse} 
+covariances are summed in \autoref{eq:cmat},
+\begin{equation}
+	\cmatext \approx \noisematext
+\end{equation}
+when the past data $\dataext$ is measured with high signal-to-noise ratio (i.e., as the observational 
+noise on $\dataext$ becomes arbitrarily small). So, even though measurements of $\dataext$ may be 
+sample variance dominated, the conditional inferences from $\data$ given $\dataext$ need not be 
+limited by sample variance. This is our main result.
+
+
+\subsubsection{Algorithm for simulations}
+This suggests a procedure for running simulations of cosmological large-scale structure for 
+parameter inference,
+\begin{enumerate}
+	\item Infer $P(\theta | \dataext)$ given past or external data sets $\dataext$ as is typically done.
+	\item Use $P(\Phi, \theta | \dataext)$ as in \autoref{sub:generating_realizations} to generate 
+	initial conditions for cosmological simulations to aid in the inferences from a new 
+	data set $\data$ that at least partially overlaps in volume with $\dataext$.
+	\item Infer cosmological parameter constraints given $\data$ given the likelihood function 
+	obtained from the previous step and replacing the usual prior on $\theta$ with $P(\theta | \dataext)$.
+\end{enumerate}
+From \autoref{eq:factored_posterior}, this procedure is guaranteed to yield correct inferences 
+from $P(\theta | \data, \dataext)$ (i.e., as if we had analyzed both data sets jointly). 
+But, we obtain the computational savings in running \emph{conditional} simulations given 
+the first data set $\dataext$.
+
+% subsection informing_simulations_with_existing_data (end)
 
 \bibliography{refs}
 

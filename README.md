@@ -20,7 +20,7 @@ Applications of such a global map could include: predicting very large scale str
 ## Activities
 
 * Theoretical exploration (Blandford) - document in prep, watch this space
-* Simple universe-in-a-box investigation (at the CtU2015 symposium and hack week): [demo here](http://nbviewer.ipython.org/github/rkeisler/Music/blob/master/Beatbox_Demo.ipynb)
+* Simple universe-in-a-box investigation (at the CtU2015 symposium and hack week): [demo here](http://nbviewer.ipython.org/github/rogerblandford/Music/blob/master/Beatbox_Demo.ipynb)
 
 ## Credits, License, etc
 

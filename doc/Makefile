@@ -3,7 +3,7 @@
 all: ctu2015
 
 clean:
-	-rm -f *.aux *.log *.dvi *.blg *.out *.bbl ctu2015.pdf
+	-rm -f *.aux *.log *.dvi *.blg *.out *.bbl
 
 # ----------------------------------------------------------------------------
 

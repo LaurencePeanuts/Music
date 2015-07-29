@@ -165,7 +165,7 @@ s_i = \Pot_i = \Pot({\bf x}_i) \quad i = 1,..,N.
 \ee
 Moreover, we have a $M$-dimensional data vector, given by some linear operator on the theory vector, plus noise,
 \be\label{eq:data_model}
-{\bf d} = \transfer \, {\bf s} + {\bf \epsilon}.
+{\bf d} = \transfer \, {\bf s} + \boldsymbol{\epsilon}.
 \ee
 Here $\transfer$ is the transformation matrix defining the data, and the noise
 has covariance
@@ -215,19 +215,19 @@ and the maximum likelihood solution.
 The above Eqs.~(\ref{eq:mv estimator})-(\ref{eq:F matrix}) give the general result. Things become clearer when we apply it to our specific example.
 For instance,
 \be
-\langle d_k \, d_l \rangle = \left({\bf R} \, {\bf S} \, {\bf R}^\dagger  + {\bf N^\epsilon} \right)_{kl} = \xi_\Pot(|{\bf x}_{i_k} - {\bf x}_{i_l}|) + \sigma_{\epsilon}^2 \, \delta^K_{kl} \equiv \left({\bf \xi_\Pot} + \sigma^2_\epsilon \, {\bf I}\right)_{kl}
+\langle d_k \, d_l \rangle = \left({\bf R} \, {\bf S} \, {\bf R}^\dagger  + {\bf N^\epsilon} \right)_{kl} = \xi_\Pot(|{\bf x}_{i_k} - {\bf x}_{i_l}|) + \sigma_{\epsilon}^2 \, \delta^K_{kl} \equiv \left(\boldsymbol{\xi}_\Pot + \sigma^2_\epsilon \, {\bf I}\right)_{kl}
 \ee
-(${\bf I}$ is the identity matrix and ${\bf \xi_\Pot}$ is the correlation function matrix restricted to the grid points
+(${\bf I}$ is the identity matrix and $\boldsymbol{\xi}_\Pot$ is the correlation function matrix restricted to the grid points
 where we have measurements, e.g. the CMB last-scattering surface) and
 \be
-\langle s_i \, d_k \rangle = \left( {\bf S} \, {\bf R}^\dagger \right)_{i k} = \xi_\Pot(|{\bf x}_{i} - {\bf x}_{i_k}|).
+\langle s_i \, d_k \rangle = \left( {\bf S} \, {\bf R}^\dagger \right)_{i k} = \xi_{\Pot}(|{\bf x}_{i} - {\bf x}_{i_k}|).
 \ee
-We can't proceed further analytically, because we need to invert the matrix ${\bf \xi_\Pot} + \sigma^2_\epsilon \, {\bf I}$,
+We can't proceed further analytically, because we need to invert the matrix $\boldsymbol{\xi}_\Pot + \sigma^2_\epsilon \, {\bf I}$,
 which is simply the total covariance matrix of the observable $d_k \equiv \hat{\Pot}({\bf x}_{i_k})$.
 We can now write for the solution,
 \be
 \label{eq:mv sol}
-s^{\rm MV}_i = \Pot^{\rm MV}({\bf x}_i) = \sum_{kl}  \xi_\Pot(|{\bf x}_{i} - {\bf x}_{i_k}|) \, \left({\bf \xi_\Pot} + \sigma^2_\epsilon \, {\bf I}\right)^{-1}_{kl} \, \hat{\Pot}({\bf x}_l)
+s^{\rm MV}_i = \Pot^{\rm MV}({\bf x}_i) = \sum_{kl}  \xi_\Pot(|{\bf x}_{i} - {\bf x}_{i_k}|) \, \left(\boldsymbol{\xi}_\Pot + \sigma^2_\epsilon \, {\bf I}\right)^{-1}_{kl} \, \hat{\Pot}({\bf x}_l)
 \ee
 
 
@@ -255,20 +255,20 @@ s^{\rm MV}_i = \Pot^{\rm MV}({\bf x}_i) = \sum_{kl}  \xi_\Pot(|{\bf x}_{i} - {\b
 \subsection{Generating realizations of $\Pot({\bf x}_i)$}
 \label{sub:generating_realizations}
 
-Now that we have the {\it mean} of the conditional posterior of ${\bf s} = {\bf \Pot}$, given in Eq.~(\ref{eq:mv sol}), there is a straightforward
+Now that we have the {\it mean} of the conditional posterior of ${\bf s} = \Potvector$, given in Eq.~(\ref{eq:mv sol}), there is a straightforward
 method for generating realizations that follow the posterior distribution:
 \begin{itemize}
 \item
-Generate an unconstrained Gaussian random realization of the theory field, ${\bf \tilde{s}} = {\bf \tilde{\Pot}}$ (i.e.~the 3D potential), that follows the prior
+Generate an unconstrained Gaussian random realization of the theory field, ${\bf \tilde{s}} = \tilde{\Potvector}$ (i.e.~the 3D potential), that follows the prior
 correlation function of the field, i.e.~the same way of generating random realizations we use for the true field, that is our
 input to the whole calculation.
 \item
-Generate a (Gaussian) realization of the measurement noise ${\bf \epsilon}$, that follows the covariance
-given by ${\bf N^{\epsilon}}$.
+Generate a (Gaussian) realization of the measurement noise $\boldsymbol{\epsilon}$, that follows the covariance
+given by ${\bf N}^{\epsilon}$.
 \item
 Construct a realization of the data:
 \be
-{\bf \tilde{d}} = {\bf R} \, {\bf \tilde{s}} + {\bf \epsilon}.
+{\bf \tilde{d}} = {\bf R} \, {\bf \tilde{s}} + {\boldsymbol{\epsilon}}.
 \ee
 Specifically, for us this means
 \be
@@ -285,7 +285,7 @@ For us this means
 \ee
 where I have written
 \be
-\tilde{\Pot}^{\rm MV}({\bf x}_i) \equiv \left({\bf F} \, {\bf \tilde{d}}\right)_i = \sum_{kl}  \xi_\Pot(|{\bf x}_{i} - {\bf x}_{i_k}|) \, \left({\bf \xi_\Pot} + \sigma^2_\epsilon \, {\bf I}\right)^{-1}_{kl} \, \tilde{\hat{\Pot}}({\bf x}_l)
+\tilde{\Pot}^{\rm MV}({\bf x}_i) \equiv \left({\bf F} \, {\bf \tilde{d}}\right)_i = \sum_{kl}  \xi_\Pot(|{\bf x}_{i} - {\bf x}_{i_k}|) \, \left(\boldsymbol{\xi}_\Pot + \sigma^2_\epsilon \, {\bf I}\right)^{-1}_{kl} \, \tilde{\hat{\Pot}}({\bf x}_l)
 \ee
 This quantity has the appropriate statistics given the measurement ${\bf d}$ and
 the prior statistics of ${\bf s}$ and of the noise.

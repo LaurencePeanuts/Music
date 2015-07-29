@@ -12,6 +12,7 @@ Applications of such a global map could include: predicting very large scale str
 
 * Roger Blandford (KIPAC)
 * Phil Marshall (KIPAC)
+* Laurence Perreault Levasseur (KIPAC)
 * Ryan Keisler (KIPAC)
 
 ## Credits, License, etc

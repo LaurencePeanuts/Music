@@ -1,4 +1,4 @@
-# Music
+# The Music of the Sphere
 
 A speculative project to map the entire universe over time with low spatial resolution using CMB, 21 cm and local surveys. The simple time-evolution of the perturbations in the gravitational potential makes this a natural quantity to map; it (and its gradient) should be well constrained in a thin shell at z=1000 by the all-sky CMB data, and also by large scale structure surveys at low redshift. The longest wavelength fourier modes of the 3D potential will be best constrained; a question we are interested in is how high the resolution of a truly global evolving map of the universe can be made.
 

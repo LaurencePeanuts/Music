@@ -14,6 +14,7 @@ Applications of such a global map could include: predicting very large scale str
 * Phil Marshall (KIPAC)
 * Laurence Perreault Levasseur (KIPAC)
 * Ryan Keisler (KIPAC)
+* Michael Schneider (LLNL)
 
 ## Activities
 
@@ -22,7 +23,6 @@ Applications of such a global map could include: predicting very large scale str
 
 ## Credits, License, etc
 
-This is work in progress! If you use any of the ideas, code etc you find 
-here, please cite us as (Blandford et al in preparation). 
+This is work in progress! If you use any of the ideas, code etc you find here, please cite us as (Blandford et al in preparation). 
 
 All content Copyright 2014, 2015 the authors. The code is distributed under the MIT license.

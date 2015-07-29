@@ -19,11 +19,11 @@ Applications of such a global map could include: predicting very large scale str
 
 ## Activities
 
-* Theoretical exploration (Blandford) - document in prep, watch this space
+* Project description, and some theoretical explorations (Blandford) [here](https://github.com/rogerblandford/Music/blob/master/doc/music.pdf).
 * Simple universe-in-a-box investigation at the "Computing the Universe 2015" symposium and hack week, Berkeley, January 2015. IPython notebook demo [here](http://nbviewer.ipython.org/github/rogerblandford/Music/blob/master/Beatbox_Demo.ipynb), collected notes [here](https://github.com/rogerblandford/Music/blob/master/doc/ctu2015.pdf).
 
 ## Credits, License, etc
 
-This is work in progress! If you use any of the ideas, code etc you find here, please cite us as (Blandford et al in preparation).
+This is work in progress! If you use any of the ideas, code etc you find here, please cite us as (Blandford et al in preparation), and do please get in touch! We welcome feedback via the [issues](https://github.com/rogerblandford/Music/issues).
 
 All content Copyright 2014, 2015 the authors. The code is distributed under the MIT license.

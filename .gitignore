@@ -117,3 +117,6 @@ sympy-plots-for-*.tex/
 # Don't check in the Planck data!
 data
 Planck
+
+# Ignore Roger's mathematica stuff:
+classicalmusic

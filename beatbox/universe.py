@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pylab as plt
 import healpy as hp
 
+import beatbox
+
 # ====================================================================
 
 class Universe(object):
@@ -31,8 +33,11 @@ class Universe(object):
             # Sky map:
             hp.mollview(self.Tmap)
         else:
-            #  "External" view ([like this](http://zonca.github.io/2013/03/interactive-3d-plot-of-sky-map.html))            pass
-            # TO BE CODED!
+            # "External" view ([like this](http://zonca.github.io/2013/03/interactive-3d-plot-of-sky-map.html))            pass
+            #   beatbox.zoncaview(self.Tmap)
+            # This did not work, sadly. Maybe we can find a 3D
+            # spherical surface plot routine using matplotlib?
+            print "Ahem - we can't visualize maps on the surface of the sphere yet, sorry."
             pass
         return
 

@@ -107,3 +107,13 @@ sympy-plots-for-*.tex/
 
 # xindy
 *.xdy
+
+
+
+# python:
+*.pyc
+.ipynb_checkpoints
+
+# Don't check in the Planck data!
+data
+Planck

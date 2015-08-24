@@ -20,8 +20,10 @@ class Universe(object):
         if from_this is None:
             print "No CMB T map file supplied."
             self.Tmap = None
+            self.NSIDE = None
         else:
             self.Tmap = hp.read_map(from_this)
+            self.NSIDE = hp.npix2nside(len(self.Tmap))
         return
 
     def show_CMB_T_map(self,from_perspective_of="observer"):
@@ -31,6 +33,31 @@ class Universe(object):
         else:
             #  "External" view ([like this](http://zonca.github.io/2013/03/interactive-3d-plot-of-sky-map.html))            pass
             # TO BE CODED!
+            pass
+        return
+
+    def decompose_T_map_into_spherical_harmonics(self,lmax=None):
+        """
+        See healpy documentation at https://healpy.readthedocs.org/en/latest/generated/healpy.sphtfunc.map2alm.html
+        self.alm is a 1D numpy array of type=complex128.
+        Indexing is described at https://healpy.readthedocs.org/en/latest/generated/healpy.sphtfunc.Alm.html
+        """
+        if lmax is None:
+            self.lmax = 3*self.NSIDE - 1
+        else:
+            self.lmax = lmax
+        self.mmax = self.lmax
+
+        self.alm = hp.sphtfunc.map2alm(self.Tmap,lmax=self.lmax,mmax=self.mmax)
+
+        return
+
+    def show_one_spherical_harmonic_of_CMB_T_map(self,l=1,m=1,max=20):
+        i = hp.Alm.getidx(self.lmax, l, m)
+        projected_alm = self.alm * 0.0
+        projected_alm[i] = self.alm[i]
+        projected_map = hp.alm2map(projected_alm,self.NSIDE)
+        hp.mollview(projected_map,min=-max,max=max)
         return
 
 # ====================================================================

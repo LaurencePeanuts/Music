@@ -80,3 +80,26 @@ class Universe(object):
         return
 
 # ====================================================================
+
+"""
+Response matrix from Roger's mathematica notebook:
+
+nmax = 6; klst = {};
+Do[If[0 < n1^2 + n2^2 + n3^2 <= nmax^2, 
+  klst = Append[klst, {n1, n2, n3}]], {n1, -nmax, nmax}, {n2, -nmax, 
+  nmax}, {n3, -nmax, nmax}]; NN = 
+ Length[klst]; \[CapitalDelta]k = .5 \[Pi];
+lmax = 10; llst = {}; Do[
+ If[1 < l <= lmax, llst = Append[llst, {l, m}]], {l, 2, lmax}, {m, -l,
+   l}]; llst; L = Length[llst];
+myn = Chop[Table[4. \[Pi] I^llst[[y, 1]]
+     SphericalHarmonicY[llst[[y, 1]], llst[[y, 2]], 
+       ArcCos[klst[[n, 3]]/Norm[klst[[n]]]], 
+       If[klst[[n, 1]] == klst[[n, 2]] == 0, 0, 
+        ArcTan[klst[[n, 1]], 
+         klst[[n, 2]]]]]\[Conjugate] SphericalBesselJ[
+      llst[[y, 1]], \[CapitalDelta]k Norm[klst[[n]]]], {y, 1, L}, {n, 
+     1, NN}]];
+(*Export["myn.txt",myn]*)
+
+"""

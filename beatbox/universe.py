@@ -31,14 +31,16 @@ class Universe(object):
     def show_CMB_T_map(self,from_perspective_of="observer"):
         if from_perspective_of == "observer":
             # Sky map:
-            hp.mollview(self.Tmap)
+            hp.mollview(self.Tmap,title="CMB temperature fluctuations as seen from inside the LSS")
         else:
-            # "External" view ([like this](http://zonca.github.io/2013/03/interactive-3d-plot-of-sky-map.html))            pass
+            # Interactive "external" view ([like this](http://zonca.github.io/2013/03/interactive-3d-plot-of-sky-map.html))            pass
             #   beatbox.zoncaview(self.Tmap)
             # This did not work, sadly. Maybe we can find a 3D
-            # spherical surface plot routine using matplotlib?
-            print "Ahem - we can't visualize maps on the surface of the sphere yet, sorry."
-            pass
+            # spherical surface plot routine using matplotlib? For
+            # now, just use the healpix vis.
+            R = (0.0,0.0,0.0) # (lon,lat,psi) to specify center of map and rotation to apply
+            hp.orthview(self.Tmap,rot=R,half_sky=True,title="CMB temperature fluctuations as seen from outside the LSS")
+            # print "Ahem - we can't visualize maps on the surface of the sphere yet, sorry."
         return
 
     def decompose_T_map_into_spherical_harmonics(self,lmax=None):

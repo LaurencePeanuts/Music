@@ -65,4 +65,16 @@ class Universe(object):
         hp.mollview(projected_map,min=-max,max=max)
         return
 
+    def show_lowest_spherical_harmonics_of_CMB_T_map(self,lmax=3,max=20):
+        i = []
+        for l in range(lmax):
+            for m in range(-lmax,lmax+1):
+                i.append(hp.Alm.getidx(self.lmax, l, m))
+        print "Displaying sky map of the ",len(i)," lowest spherical harmonics only..."
+        truncated_alm = self.alm * 0.0
+        truncated_alm[i] = self.alm[i]
+        truncated_map = hp.alm2map(truncated_alm,self.NSIDE)
+        hp.mollview(truncated_map,min=-max,max=max)
+        return
+
 # ====================================================================

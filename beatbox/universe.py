@@ -128,6 +128,39 @@ class Universe(object):
 
         return
 
+
+    def show_potential_with_yt(self):
+        """
+        Vaporware to make a beautiful visualization of the gravitational
+        potential of the entire universe, using yt. We're after something
+        like http://yt-project.org/doc/_images/vr_sample.jpg - described
+        at http://yt-project.org/doc/visualizing/volume_rendering.html
+        Hopefully someone out there can help us out!
+        """
+
+        # Awesome code goes here:
+
+        # Until then, hang our heads:
+        print "We need someone with yt skillz to code this."
+
+        return
+
+
+    def transform_3D_potential_fourier_series_into_T_spherical_harmonics(self,lmax=3):
+
+        self.lmax = lmax
+        Nalm = 0
+        for l in range(self.lmax+1):
+            for m in range(-l,l+1):
+                Nalm += 1
+
+        # Dummy code until I figure out Roger's matrix:
+        self.R = np.zeros([Nalm,len(self.fn)])
+
+        self.alm = np.multiply(self.R,self.fn)
+
+        return
+
 # ====================================================================
 
 """

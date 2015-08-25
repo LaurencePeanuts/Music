@@ -138,7 +138,7 @@ class Universe(object):
         Hopefully someone out there can help us out!
         """
 
-        # Awesome code goes here:
+        # make_amazing_yt_3D_plot(self.phi)
 
         # Until then, hang our heads:
         print "We need someone with yt skillz to code this."

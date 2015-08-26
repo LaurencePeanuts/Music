@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pylab as plt
 import healpy as hp
+import string
 
 import beatbox
 
@@ -28,9 +29,11 @@ class Universe(object):
     def read_in_CMB_T_map(self,from_this=None):
         if from_this is None:
             print "No CMB T map file supplied."
+            self.Tmapfile = None
             self.Tmap = None
             self.NSIDE = None
         else:
+            self.Tmapfile = from_this
             self.Tmap = hp.read_map(from_this)
             self.NSIDE = hp.npix2nside(len(self.Tmap))
         return
@@ -74,16 +77,32 @@ class Universe(object):
         hp.mollview(projected_map,min=-max,max=max)
         return
 
-    def show_lowest_spherical_harmonics_of_CMB_T_map(self,lmax=3,max=20):
+    def show_lowest_spherical_harmonics_of_CMB_T_map(self,lmax=10,max=20):
         i = []
-        for l in range(lmax):
-            for m in range(-lmax,lmax+1):
+        for l in range(lmax+1):
+            for m in range(-l,l+1):
                 i.append(hp.Alm.getidx(self.lmax, l, m))
         print "Displaying sky map of the ",len(i)," lowest spherical harmonics only..."
         truncated_alm = self.alm * 0.0
         truncated_alm[i] = self.alm[i]
         truncated_map = hp.alm2map(truncated_alm,self.NSIDE)
         hp.mollview(truncated_map,min=-max,max=max)
+        return
+
+    def write_out_spherical_harmonic_coefficients(self,lmax=10):
+        outfile = string.join(string.split(self.Tmapfile,'.')[0:-1],'.') + '_alm_lmax' + str(lmax) + '.txt'
+        f = open(outfile, 'w')
+        f.write("#    l    m    alm_real   alm_imag\n")
+        count = 0
+        for l in range(lmax+1):
+            for m in range(-l,l+1):
+                i = hp.Alm.getidx(lmax, l, m)
+                alm = self.alm[i]
+                line = " {0:d}  {1:d}  {2:g}  {3:g}\n".format(l,m,float(np.real(alm)),float(np.imag(alm)))
+                f.write(line)
+                count += 1
+        f.close()
+        print count,"alm's (lmax =",lmax,") written to",outfile
         return
 
     # ----------------------------------------------------------------
@@ -93,15 +112,15 @@ class Universe(object):
         # Draw unit Gaussian random Fourier coefficients:
         self.nmax = nmax
         self.fn = np.array([])
-        self.n = []
+        self.klst = []
         for nx in range(-self.nmax,self.nmax+1):
             for ny in range(-self.nmax,self.nmax+1):
                 for nz in range(-self.nmax,self.nmax+1):
                     if (nx*nx+ny*ny+nz*nz <= self.nmax*self.nmax):
-                        self.n.append([nx,ny,nz])
+                        self.klst.append([nx,ny,nz])
                         self.fn = np.append(self.fn,np.random.randn())
 
-        self.n = np.array(self.n)
+        self.klst = np.array(self.klst)
         print "Generated ",len(self.fn)," potential Fourier coefficients"
 
         # Evaluate it on our Phi grid:
@@ -118,7 +137,7 @@ class Universe(object):
             for ny in range(-self.nmax,self.nmax+1):
                 for nz in range(-self.nmax,self.nmax+1):
                     if (nx*nx+ny*ny+nz*nz <= self.nmax*self.nmax):
-                        kx,ky,kz = deltak*self.n[i]
+                        kx,ky,kz = deltak*self.klst[i]
                         phase = kx * self.x + ky * self.y + kz * self.z
                         self.phi += self.fn[i]*np.cos(phase)
                         i += 1
@@ -166,22 +185,46 @@ class Universe(object):
 """
 Response matrix from Roger's mathematica notebook:
 
-nmax = 6; klst = {};
-Do[If[0 < n1^2 + n2^2 + n3^2 <= nmax^2,
-  klst = Append[klst, {n1, n2, n3}]], {n1, -nmax, nmax}, {n2, -nmax,
-  nmax}, {n3, -nmax, nmax}]; NN =
- Length[klst]; \[CapitalDelta]k = .5 \[Pi];
-lmax = 10; llst = {}; Do[
- If[1 < l <= lmax, llst = Append[llst, {l, m}]], {l, 2, lmax}, {m, -l,
-   l}]; llst; L = Length[llst];
-myn = Chop[Table[4. \[Pi] I^llst[[y, 1]]
-     SphericalHarmonicY[llst[[y, 1]], llst[[y, 2]],
-       ArcCos[klst[[n, 3]]/Norm[klst[[n]]]],
-       If[klst[[n, 1]] == klst[[n, 2]] == 0, 0,
-        ArcTan[klst[[n, 1]],
-         klst[[n, 2]]]]]\[Conjugate] SphericalBesselJ[
-      llst[[y, 1]], \[CapitalDelta]k Norm[klst[[n]]]], {y, 1, L}, {n,
-     1, NN}]];
-(*Export["myn.txt",myn]*)
+# Construct the klst:
+nmax = 6;
+klst = {};
+Do[
+  If[0 < n1^2 + n2^2 + n3^2 <= nmax^2, klst = Append[klst, {n1, n2, n3}]],
+      {n1, -nmax, nmax}, {n2, -nmax, nmax}, {n3, -nmax, nmax}
+  ];
+NN = Length[klst];
+
+# Set size of box, via separation in k space:
+[CapitalDelta]k = .5 [Pi];
+
+# Construct llst, an array of l's and m's for use in Spherical Harmonics:
+# Note that the monopole and dipole are ignored!
+lmax = 10;
+llst = {};
+Do[
+  If[1 < l <= lmax, llst = Append[llst, {l, m}]], {l, 2, lmax}, {m, -l, l}
+  ];
+llst; # Not sure what this line does.
+L = Length[llst];
+
+# Construct R matrix:
+R = Chop[ # Clean out rounding errors (esp in imaginary parts)
+     Table[4. [Pi] I^llst[[y, 1]] # i^l - imaginary i!
+
+      SphericalHarmonicY[llst[[y, 1]],
+                        llst[[y, 2]],
+                        ArcCos[klst[[n, 3]]/Norm[klst[[n]]]], # theta'
+                        If[klst[[n, 1]] == klst[[n, 2]] == 0, 0, ArcTan[klst[[n, 1]], klst[[n, 2]]]]] # phi'
+                      [Conjugate] # Take complex conjugate of the Ylm
+
+      SphericalBesselJ[llst[[y, 1]], [CapitalDelta]k Norm[klst[[n]]]], # Norm gives the length of the k vector
+
+      {y, 1, L}, # for y in range 1 to L
+      {n, 1, NN} # for n in range 1 to NN
+     ] # End of Table command
+  ];
+
+# Write it out:
+(*Export["myn.txt",R]*)
 
 """

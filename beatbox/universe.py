@@ -70,7 +70,7 @@ class Universe(object):
         return
 
     def show_one_spherical_harmonic_of_CMB_T_map(self,l=1,m=1,max=20):
-        i = hp.Alm.getidx(self.lmax, l, np.abs(m))
+        i = hp.Alm.getidx(self.lmax, l, np.abs(m))  # Bug: this should include a factor i^l and a conjugate...
         projected_alm = self.alm * 0.0
         projected_alm[i] = self.alm[i]
         projected_map = hp.alm2map(projected_alm,self.NSIDE)
@@ -81,7 +81,7 @@ class Universe(object):
         i = []
         for l in range(lmax+1):
             for m in range(-l,l+1):
-                i.append(hp.Alm.getidx(self.lmax, l, np.abs(m)))
+                i.append(hp.Alm.getidx(self.lmax, l, np.abs(m))) # Bug: this should include a factor i^l and a conjugate...
         print "Displaying sky map of the ",len(i)," lowest spherical harmonics only..."
         truncated_alm = self.alm * 0.0
         truncated_alm[i] = self.alm[i]
@@ -96,7 +96,9 @@ class Universe(object):
         count = 0
         for l in range(lmax+1):
             for m in range(-l,l+1):
-                i = hp.Alm.getidx(lmax, l, np.abs(m)) # NB. m < 0 coeffs are equal to m > 0 coeffs, but the negative ones are not returned by map2alm! See http://stackoverflow.com/questions/30888908/healpy-map2alm-function-does-not-return-expected-number-of-alm-values?lq=1
+                i = hp.Alm.getidx(lmax, l, np.abs(m))
+                # NB. m < 0 coeffs are equal to m > 0 coeffs, but the negative ones are not returned by map2alm! See http://stackoverflow.com/questions/30888908/healpy-map2alm-function-does-not-return-expected-number-of-alm-values?lq=1
+                # There's still a bug though: we should have a factor i^l and a conjugate...
                 alm = self.alm[i]
                 line = " {0:d}  {1:d}  {2:g}  {3:g}\n".format(l,m,float(np.real(alm)),float(np.imag(alm)))
                 f.write(line)

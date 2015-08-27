@@ -69,25 +69,62 @@ class Universe(object):
 
         return
 
+
     def show_one_spherical_harmonic_of_CMB_T_map(self,l=1,m=1,max=20):
-        i = hp.Alm.getidx(self.lmax, l, np.abs(m))  # Bug: this should include a factor i^l and a conjugate...
+        """
+        To do this we need to make a healpy-format alm array, with
+        just one non-zero complex value in it, which we extract
+        from the parent alm array. Since healpy only returns positive
+        m coefficients, we just ask to see component with that |m|.
+        """
         projected_alm = self.alm * 0.0
+        i = hp.Alm.getidx(self.lmax, l, np.abs(m)) # Note |m| here
         projected_alm[i] = self.alm[i]
         projected_map = hp.alm2map(projected_alm,self.NSIDE)
         hp.mollview(projected_map,min=-max,max=max)
         return
 
+
     def show_lowest_spherical_harmonics_of_CMB_T_map(self,lmax=10,max=20):
+        """
+        To do this, we construct a healpy-formatted alm array based on
+        a subset of the parent one, again observing the positive m-only
+        convention.
+        """
+        truncated_alm = self.alm * 0.0
         i = []
         for l in range(lmax+1):
-            for m in range(-l,l+1):
-                i.append(hp.Alm.getidx(self.lmax, l, np.abs(m))) # Bug: this should include a factor i^l and a conjugate...
-        print "Displaying sky map of the ",len(i)," lowest spherical harmonics only..."
-        truncated_alm = self.alm * 0.0
+            for m in range(l+1):
+                i.append(hp.Alm.getidx(self.lmax, l, m))
+        print "Displaying sky map of the l = ",l," and lower spherical harmonics only..."
         truncated_alm[i] = self.alm[i]
         truncated_map = hp.alm2map(truncated_alm,self.NSIDE)
         hp.mollview(truncated_map,min=-max,max=max)
         return
+
+
+    def get_alm(self,l=None,m=None):
+        """
+        hp.map2alm only returns the positive m coefficients - we need
+        to derive the negative ones ourselves if we are going to
+        do anything with them outside healpy. See
+        http://stackoverflow.com/questions/30888908/healpy-map2alm-function-does-not-return-expected-number-of-alm-values?lq=1
+        for discussion.
+        """
+        if l is None or m is None:
+            return None
+
+        elif m >= 0:
+            index = hp.Alm.getidx(self.lmax, l, m)
+            prefactor = 1.0
+            value = self.alm[index]
+        else:
+            index = hp.Alm.getidx(self.lmax, l, -m)
+            prefactor = -1.0**m
+            value = np.conjugate(self.alm[index])
+
+        return prefactor * self.alm[index]
+
 
     def write_out_spherical_harmonic_coefficients(self,lmax=10):
         outfile = string.join(string.split(self.Tmapfile,'.')[0:-1],'.') + '_alm_lmax' + str(lmax) + '.txt'
@@ -96,10 +133,7 @@ class Universe(object):
         count = 0
         for l in range(lmax+1):
             for m in range(-l,l+1):
-                i = hp.Alm.getidx(lmax, l, np.abs(m))
-                # NB. m < 0 coeffs are equal to m > 0 coeffs, but the negative ones are not returned by map2alm! See http://stackoverflow.com/questions/30888908/healpy-map2alm-function-does-not-return-expected-number-of-alm-values?lq=1
-                # There's still a bug though: we should have a factor i^l and a conjugate...
-                alm = self.alm[i]
+                alm = self.get_alm(l,m)
                 line = " {0:d}  {1:d}  {2:g}  {3:g}\n".format(l,m,float(np.real(alm)),float(np.imag(alm)))
                 f.write(line)
                 count += 1

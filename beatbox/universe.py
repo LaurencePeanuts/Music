@@ -120,10 +120,10 @@ class Universe(object):
             value = self.alm[index]
         else:
             index = hp.Alm.getidx(self.lmax, l, -m)
-            prefactor = -1.0**m
+            prefactor = (-1.0)**m
             value = np.conjugate(self.alm[index])
 
-        return prefactor * self.alm[index]
+        return prefactor * value
 
 
     def write_out_spherical_harmonic_coefficients(self,lmax=10):

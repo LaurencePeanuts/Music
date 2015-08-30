@@ -15,6 +15,8 @@
 # *.eps
 # *.pdf
 
+ADA7_Tutorial_6.pdf
+
 ## Bibliography auxiliary files (bibtex/biblatex/biber):
 *.bbl
 *.bcf
@@ -108,8 +110,6 @@ sympy-plots-for-*.tex/
 # xindy
 *.xdy
 
-
-
 # python:
 *.pyc
 .ipynb_checkpoints
@@ -117,6 +117,8 @@ sympy-plots-for-*.tex/
 # Don't check in the Planck data!
 data
 Planck
+*.fits
+*.txt
 
 # Ignore Roger's mathematica stuff:
 classicalmusic

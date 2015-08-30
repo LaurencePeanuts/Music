@@ -21,8 +21,8 @@ ctu2015: ctu2015.tex macros.tex references.bib
 music: music.tex references.bib
 	pdflatex music.tex
 	pdflatex music.tex
-	bibtex music
-	pdflatex music.tex
-	pdflatex music.tex
+# 	bibtex music
+# 	pdflatex music.tex
+# 	pdflatex music.tex
 
 # ----------------------------------------------------------------------------

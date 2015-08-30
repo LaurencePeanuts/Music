@@ -118,6 +118,7 @@ sympy-plots-for-*.tex/
 data
 Planck
 *.fits
+*.txt
 
 # Ignore Roger's mathematica stuff:
 classicalmusic

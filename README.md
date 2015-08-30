@@ -13,6 +13,8 @@ Applications of such a global map could include: predicting very large scale str
 * Roger Blandford (KIPAC)
 * Phil Marshall (KIPAC)
 * Laurence Perreault Levasseur (KIPAC)
+* Hans Kristian Eriksen (Oslo)
+* Ingunn Kathrine Wehus (Oslo)
 * Ryan Keisler (KIPAC)
 * Michael Schneider (LLNL)
 * Roland de Putter (Caltech)
@@ -21,6 +23,8 @@ Applications of such a global map could include: predicting very large scale str
 
 * Project description, and some theoretical explorations (Blandford) [here](https://github.com/rogerblandford/Music/blob/master/doc/music.pdf).
 * Simple universe-in-a-box investigation at the "Computing the Universe 2015" symposium and hack week, Berkeley, January 2015. IPython notebook demo [here](http://nbviewer.ipython.org/github/rogerblandford/Music/blob/master/Beatbox_Demo.ipynb), collected notes [here](https://github.com/rogerblandford/Music/blob/master/doc/ctu2015.pdf).
+* Application to Planck CMB temperature anisotropy maps. Work in progress here, [exploring the maximum posterior map](https://github.com/rogerblandford/Music/blob/master/Planck_Demo.ipynb) and then [extracting the mean and covariance matrix of the Gaussian approximation to the posterior over maps](https://github.com/rogerblandford/Music/blob/master/PlanckSamples_Demo.ipynb).
+
 
 ## Credits, License, etc
 

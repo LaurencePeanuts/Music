@@ -49,7 +49,7 @@ class Universe(object):
             # spherical surface plot routine using matplotlib? For
             # now, just use the healpix vis.
             R = (0.0,0.0,0.0) # (lon,lat,psi) to specify center of map and rotation to apply
-            hp.orthview(self.Tmap,rot=R,half_sky=True,title="CMB temperature fluctuations as seen from outside the LSS")
+            hp.orthview(self.Tmap,rot=R,flip='geo',half_sky=True,title="CMB temperature fluctuations as seen from outside the LSS")
             # print "Ahem - we can't visualize maps on the surface of the sphere yet, sorry."
         return
 

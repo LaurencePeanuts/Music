@@ -46,6 +46,10 @@ ADA7_Tutorial_6.pdf
 *.snm
 *.vrb
 
+# Powerpoint, Keynote
+*.key
+*.pptx
+
 #(e)ledmac/(e)ledpar
 *.end
 *.[1-9]

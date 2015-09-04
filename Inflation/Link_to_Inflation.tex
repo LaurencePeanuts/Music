@@ -1,0 +1,250 @@
+
+% !TEX TS-program = pdflatexmk
+\documentclass[prd, onecolumn, floatfix, letterpaper, nofootinbib, amsmath, amssymb, superscriptaddress]{revtex4}
+\usepackage{caption}
+%\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{bm}
+\usepackage{amsfonts}
+\usepackage{comment}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+
+\usepackage{color}% use if color is used in text
+\newcommand{\tc}{\textcolor{red}}
+
+\newcommand{\ha}{{1 \over 2}}
+\newcommand{\la}{\lambda}
+\newcommand{\rc}{\nonumber\\}
+
+\newcommand{\rhophi}{\rho_{\rm DDE}}
+\newcommand{\de}{\partial}
+\newbox\pippobox
+
+\def\bx{\bm{x}}
+\def\bk{\bm{k}}
+\def\tpk{{\tilde{\phi}_k}}
+
+%\newcommand{\eqn}[1] {Eq.~(\ref{#1})}
+%\newcommand{\fig}[1] {Fig.~(\ref{#1})}
+\newcommand {\lla} {\ {\raise-.5ex\hbox{$\buildrel<\over\sim$}}\ }
+\renewcommand{\(}{\left(}
+\renewcommand{\)}{\right)}
+\renewcommand{\[}{\left[}
+\renewcommand{\]}{\right]}
+
+\def\iPP{\color{red}}
+\def\bl{\color{green}}
+
+\usepackage[countmax]{subfloat}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{graphicx}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+
+\def\pp{{\, \mid \hskip -1.5mm =}}
+\def\cL{{\cal L}}
+\def\tr{{\rm tr}\, }
+\def\nn{\nonumber \\}
+\def\e{\mathrm{e}}
+
+\def\be{\begin{equation}}
+\def\ee{\end{equation}}
+\def\bea{\begin{eqnarray}}
+\def\eea{\end{eqnarray}}
+\newcommand{\ex}{\mathrm{e}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\gsim}{\gtrsim}
+\newcommand{\lsim}{\lesssim}
+\def\spose#1{\hbox to 0pt{#1\hss}}
+\def\Vec#1{\mbox{\boldmath$#1$\unboldmath}}
+\def\lta{\mathrel{\spose{\lower 3pt\hbox{$\mathchar"218$}}
+     \raise 2.0pt\hbox{$\mathchar"13C$}}}
+\def\gta{\mathrel{\spose{\lower 3pt\hbox{$\mathchar"218$}}
+     \raise 2.0pt\hbox{$\mathchar"13E$}}}
+\newcommand{\trace}{\mathrm{Tr}}
+\def\setH{\mathbb{H}}
+\def\setR{\mathbb{R}}
+\def\setC{\mathbb{C}}
+\def\setG{\mathbb{G}}
+\def\setO{\mathbb{O}}
+\def\setN{\mathbb{N}}
+\def\setZ{\mathbb{Z}}
+\def\setUni{\mathbb{1}}
+
+% Cosmology
+\newcommand{\Hu}{\mathcal{H}}
+\newcommand{\Ka}{\mathcal{K}}
+\newcommand{\Zed}{\mathcal{Z}}
+\newcommand{\cs}{c_{_\mathrm{S}}}
+\newcommand{\ns}{n_{_\mathrm{S}}}
+
+% General Physics
+\newcommand{\GN}{G_{_\mathrm{N}}}
+\newcommand{\mP}{m_{_\mathrm{Pl}}}
+\newcommand{\Mp}{M_{_\mathrm{Pl}}}
+\newcommand{\lP}{\ell_{_\mathrm{Pl}}}
+\newcommand{\Lag}{\mathcal{L}}
+
+
+
+\begin{document}
+
+
+\title{Music of the Sphere: Connecting the Evolution of the Universe on the Largest Scales to Inflation}
+
+
+\author{ Laurence Perreault Levasseur}
+\maketitle
+
+
+
+\section{Definitions and Constants}
+
+Inflation provides a way of seeding perturbations to the metric outside the Hubble horizon (well) before the time of BBN. It is common to quantify these perturbations with the gauge-invariant curvature perturbation of the metric $\zeta$, which is defined by:
+\be
+	-\zeta=\psi+H\frac{\delta\rho}{\rho}\, ,
+\ee
+where $\psi$ is the trace part of the spatial scalar metric perturbations, i.e. writing the most general spatial perturbation to a 4-d metric by $\delta g_{ij}=2(\psi\delta_{ij}-E_{ij})$ with $\nabla^2E=0$, then $\psi$ contains the trace of the perturbation. We also define $\rho$ and $\delta \rho$ to be the mean energy density and the linear energy density perturbation, respectively, as well as the $H$, the Hubble parameter. $H$ and $\rho$ are related through the first Friedmann equation,
+\be	
+\label{eq:Hubbledef}
+	H^2\equiv \left(\frac{\dot{a}}{a}\right)^2=\frac{1}{3\Mp}\rho=\frac{1}{3\Mp}\left( \frac{\dot\varphi^2}{2}+\frac{1}{2}\frac{\nabla^2\varphi}{a^2}+V \right)\, ,
+\ee
+ where a is the scale factor and, in the third equality, we have related $\rho$ to the field content of the Universe assuming a single scalar field, $\varphi$, is dominating its energy density, as is the case in single field inflation. The 3 terms in the l.h.s. of (\ref{eq:Hubbledef}) represent, in order of appearance, the kinetic energy density of the field, its gradient energy density, and its potential energy. 
+ 
+ For inflation to occur, the field $\varphi$ must be dominated by its homogeneous mode, hence at the background level one has $\frac{1}{2}\frac{\nabla^2\varphi}{a^2}=0$, and its potential energy must dominate over its kinetic energy density. Hence $\dot\varphi^2\ll V$ during inflation. Moreover, during single-field inflation, there is only one physical scalar perturbation degree of freedom representing both scalar metric fluctuations and $\varphi$ fluctuations. Therefore, through an appropriate gauge choice, it is possible to gauge away all linear fluctuations in $\varphi$ and be left with only $\zeta$ as the scalar perturbation. This gauge choice is commonly called the $\zeta$-gauge, or comoving gauge.
+
+During inflation, $H$ remains almost constant, since $V\gg\dot\varphi^2$ and $\varphi$ is almost static. Deviations from $H=\,$cst can be quantified by a hierarchy of slow-roll parameters:
+\be
+	\epsilon\equiv-\frac{\dot H}{H^2}\, ;\quad \eta=\frac{\dot \epsilon}{\epsilon H}\, ; \quad \eta_n=\frac{\dot{\eta}_{n-1}}{\eta_{n-1}N} ~~\mathrm{for~}n>1\, .
+\ee
+Inflation requires $\epsilon<1$, and obtaining at least 60 $e$-folds requires $\eta<1$ as well. In the case of single-field inflation, which we will assume in the rest of these notes, the first slow-roll parameter $\epsilon$ can also be re-written as:
+\be
+	\epsilon=\frac{1}{2}\frac{\dot\varphi^2}{\Mp^2H^2}\, ,
+\ee
+a formula that will be very useful in the following. Moreover, it will prove useful to use this to re-write $H$ as a function of $\epsilon$ and $V$ only:
+\be
+\label{eq:HnVrel}
+	\Mp^2H^2=\frac{V}{3-\epsilon}
+\ee
+
+\bigskip 
+The main observable predicted by inflation is the power spectrum of curvature fluctuations, $\mathcal{P}_\zeta (k)$, defined by:
+\be
+	\langle \zeta_k \zeta_k'\ \rangle=(2\pi)^{(3)}\delta^3(k+k')\mathcal{P}_\zeta(k)
+\ee
+Explicitly, $\mathcal{P}_\zeta (k)$ can be calculated to be
+\be
+	\mathcal{P}_\zeta(k)=\left.\frac{1}{4 k^3}\frac{H^2}{\epsilon}\right|_{k=aH}\, .
+\ee
+Quantities in the above equation are evaluated at horizon exit for every mode. Since each mode $\zeta_k$ remains constant outside of the Hubble horizon (see, e.g. Weinberg's proof in astro-ph/0302326), it is sufficient to calculate the amplitude of each mode at horizon exit and fix it from there until horizon re-entry, much after inflation.  If we do not want to perform the evaluation at horizon crossing, it is also possible to write an expression involving the explicit $k$-dependence, through a Hankel function of the first kind:
+\be
+	\mathcal{P}_\zeta(k)\sim \frac{\pi}{2}(-\tau)^{2\nu}\left| H^{(1)}_\nu(-k\tau)\right|^2\, .
+\ee
+Here, $\tau$ is the conformal time, related to the cosmic time $t$ by $dt=ad\tau$, and $\nu$ is given by:
+\be
+	\nu=\frac{3}{2}+\epsilon+\frac{1}{2}\eta
+\ee
+to leading order in slow-roll parameters. 
+The dimensionless form of the power spectrum is given by
+\be
+	\Delta^2_\xi\equiv\frac{k^3}{2\pi^2}\mathcal{P}_\zeta(k)\,.
+\ee
+
+
+Other useful observables to define are the tilt of the power spectrum, defined by:
+\be
+	n_s-1\equiv\frac{d\ln\Delta^2_\zeta}{d\ln k}=-\epsilon-2\eta\, ,
+\ee
+where the last equality holds to first order in slow-roll parameters, and the running, defined by
+\be
+	\alpha_s=-2\eta\epsilon-\eta\eta_2\, .
+\ee
+Finally, the tensor-to-scalar ratio is given by:
+\be
+	r=16\epsilon\, .
+\ee
+The amplitude of the power spectrum is usually given at a pivot scale, denoted by $k_*$. For $k_*=0.05Mpc^{-1}$, we have $\Delta^2_\zeta=2.4\times10^{-9}$ from the latest Planck data.
+
+\section{Relation to the CMB}
+
+The Fourier modes of $\zeta$ are related to observable coefficients of spherical harmonics on the last scattering surface through:
+\be
+	a_{lm}=4\pi (-i)^l\int \frac{\mathrm{d}^3k}{(2\pi)^3} \Delta_{T(l)}(k)\zeta_{\vec{k}}Y_{l,m}(\hat{k})\, ,
+\ee
+where the  $Y_{l,m}(\hat{k})$s are the spherical harmonics and $\Delta_{T(l)}(k)$ is a transfer function that transforms the primordial, 3 dimensional $\zeta_{\vec{k}}$ at horizon re-entry into the spectrum of metric fluctuations as observed today projected onto the 2d sphere, and can be written as
+\be
+	\Delta_{T(l)}(k)=\int_0^{\tau_0} d\tau S_T(k, \tau)P_{T, l}(k\left|\tau_0-\tau\right|)\,.
+\ee 
+This can be understood as an integral over the line of sight over a physical source term ($S_T$) and a geometric projection $P_{T,l}$ which can be written as a combination of Bessel functions.
+
+Note that, inside the horizon after indlation, it is more convenient to use the Newtonian gauge. Once modes have re-entered the horizon, one can think of $\zeta$ and the gravitational potential $\phi$ (i.e. the metric perturbation in Newtonian gauge) interchangeably.
+
+Moreover, upon horizon re-entry, all the modes $\zeta_{\vec{k}}$ with a fixed $|\vec{k}|$ are in phase and have an amplitude that is randomly distributed. If the fluctuations are Gaussian, the modes  $\zeta_{\vec{k}}$ with a fixed $|\vec{k}|$ are drawn from a Gaussian disrtibution with mean 0 and variance given by $P_\zeta(k)$. 
+
+The reconstruction presented in music.pdf allows to recover $\zeta_k$ (or equivalently $\left| \zeta_k\right|^2$ which is a sample of $\mathcal{P}_\zeta(k)$) for a small, low value range of $k$-modes.  
+ 
+ 
+ 
+ \section{Sampling $\mathcal{P}_\zeta(k)$}
+ 
+ 
+ Our goal in the following will be to reconstruct the potential of the inflaton in a model-independent fashion, by using only the samples of the specific $\zeta_k$ we get from reconstructing the fluctuations of the gravitational potential in the 3d Universe. Since in $k$-space we now look at a volume, the number for modes will therefore grow as $k^3$, as opposed to the usual $l^2$ when the Universe is projected onto a 2d surface at last scattering. It is useful to see how many samples we get for each additional surface $k$-shell we add to the considered volume. That is, for every additional shell in $\vec{n}$ space of unit thickness we add the number of additional samples of the $\zeta_k$ power spectrum is
+ \bea
+ 	\delta Vol_{\vec{n}}&=&\frac{4\pi}{3}\left(n_2^3-n_1^3 \right)\\
+	&=&\frac{4\pi}{3}\left(n_2^3-(n_2-1)^3 \right)\\
+	&=&4\pi(n^2-n+1)\, .
+ \eea
+Therefore, for every additional shell, we add $2\pi(n^2-n+1)$ independent measurements, where we divide by two to only consider the half shell, since $\zeta_k$ and $\zeta_{-k}$ are related to each other through complex conjugation and are therefore not independent. Therefore the procedure from Music.pdf gives us a number of fiducial measurements of $\mathcal{P}_\zeta(k)$ over a range of $|\vec{k}|$ (or $|\vec{n}|$) values.
+ 
+ 
+ \section{Reconstructing the Potential of the Inflation}
+ 
+ Only assuming single field inflation, from the samples of $\mathcal{P}_\zeta$ it is possible to reconstruct locally the shape on the inflaton potential, in a model-independent way. To see how this is possible, we can re-write the expression of the $\mathcal{P}_\zeta$ in terms of $V(\varphi)$ and slow-roll parameters, using (\ref{eq:HnVrel}): 
+\be
+\label{eq:PfctVnepsilon}
+	\mathcal{P}_\zeta(k)=\left.\frac{1}{4k^{3}}\frac{V}{\Mp^2\epsilon(\epsilon-3)}\right|_{k=aH}\, .
+\ee
+ 
+Given a single fiducial measurement of $\mathcal{P}_\zeta(k)$ at a fiducial value of $k_*$, we can find an expression for $V(\varphi)$ in the local neighbourhood of $V(\varphi)$ as a function of $V(\varphi_*)$ and slow-roll parameters at $\varphi_*$, where $\varphi_*$ is the value of the background inflaton field at the moment when the mode with wavenumber $k_*$ exited the horizon. To do this, we simply Taylor expand $V$ around $\varphi_*$:
+\begin{align}
+	V(\varphi_*+\Delta\varphi)&=V(\varphi_*)+\left.\partial_\varphi V(\varphi)\right|_{\varphi_*}\Delta\varphi+\left.\partial^2_\varphi V(\varphi)\right|_{\varphi_*}\frac{\Delta\varphi^2}{2}+\left.\partial^3_\varphi V(\varphi)\right|_{\varphi_*}\frac{\Delta\varphi^3}{3!}+\left.\partial^4_\varphi V(\varphi)\right|_{\varphi_*}\frac{\Delta\varphi^4}{4!}+...\, ;\\
+	&=V(\varphi_*)\left[1+\frac{\Mp}{V(\varphi_*)}\left.\partial_\varphi V(\varphi)\right|_{\varphi_*}\frac{\Delta\varphi}{\Mp}+\frac{1}{2}\frac{\Mp^2}{V(\varphi_*)}\left.\partial^2_\varphi V(\varphi)\right|_{\varphi_*}\frac{\Delta\varphi^2}{\Mp^2}+\frac{1}{3!}\frac{\Mp^3}{V(\varphi_*)}\left.\partial^3_\varphi V(\varphi)\right|_{\varphi_*}\frac{\Delta\varphi^3}{\Mp^3}\right. \nonumber\\
+	&\qquad\qquad\qquad\left.+\frac{1}{4!}\frac{\Mp^4}{V(\varphi_*)}\left.\partial^4_\varphi V(\varphi)\right|_{\varphi_*}\frac{\Delta\varphi^4}{\Mp^4}+...\right]\, ;\\
+	&\equiv V(\varphi_*)\left[1+d_1\frac{\Delta\varphi}{\Mp}+\frac{1}{2}d_2\frac{\Delta\varphi^2}{\Mp^2}+\frac{1}{3!}d_3\frac{\Delta\varphi^3}{\Mp^3} +\frac{1}{4!}d_4\frac{\Delta\varphi^4}{\Mp^4}+...\right]\,.
+\end{align}
+
+where we have included only relevant and marginal operators in the expansion (up to the fourth derivative of $V$). Higher derivatives represent irrelevant operators and are neglected here. Since we are only performing a local expansion around a point of the potential for which the range of the inflaton is small and are not considering the full range of the inflaton during inflation, we do not expect a breakdown of perturbation theory; i.e., we consider sub-Planckian excursions of the field around $\varphi_*$, $\Delta\varphi<\Mp$, so that the tower of higher order operators suppressed by at least 5 powers of the Planck mass do not become relevant.
+
+Similarly, we can expand $\epsilon$ appearing in (\ref{eq:PfctVnepsilon}) around the fiducial value $\epsilon_*$ at the same $\varphi_*$,
+\be
+	\epsilon=\epsilon_*+\Gamma_1\frac{\Delta\varphi}{\Mp}+\frac{\Gamma_2}{2}\frac{\Delta\varphi^2}{\Mp^2}+\frac{\Gamma_3}{3!}\frac{\Delta\varphi^3}{\Mp^3}+\frac{\Gamma_4}{4!}\frac{\Delta\varphi^4}{\Mp^4}\, .
+\ee
+ 
+Every derivative of $V$ (more specifically, the $d_i$ parameters) can be expressed in terms of slow-roll parameters at $\varphi_*$ alone, and similarly for all the derivatives of $\epsilon$. Therefore, we find a fitting function in terms of the slow-roll parameters. The explicit expression for the $\Gamma_i$ and $d_i$ was obtained in the calculation notes accompanying this file. The $\Gamma_i$ parameters are given by:
+\begin{align}
+	\Gamma_1&=\sqrt{\frac{\epsilon}{2}}\eta\,;\\
+	\Gamma_2&=\frac{\eta\eta_2}{2}+\frac{\eta^2}{4}\,;\\
+	\Gamma_3&=\frac{1}{2\sqrt{2\epsilon}}\left[ \eta_3\eta_2\eta+\eta^2\eta_2+\eta_2^2\eta \right]\, ;\\
+	\Gamma_4&= \frac{\eta\eta_2}{4\epsilon}\left[ \eta_4\eta_3+\eta_3^2+3\eta_3\eta_2+\eta_2^2+\frac{3}{2}\eta\eta_2 -\frac{1}{2}\eta^2+\frac{1}{2}\eta\eta_3 \right]\, .
+\end{align}
+The $d_i$ parameters are given by:
+\begin{align}
+	d_1&=\sqrt{2\epsilon}{(3-\epsilon)}\left[ -3+\epsilon-\frac{1}{2}\eta \right]\, ,\nonumber\\
+		& \approx -\sqrt{2\epsilon}\left(1+\frac{1}{6}\epsilon+\frac{1}{18}\eta\epsilon \right)\, ;\\
+	d_2&= -\frac{1}{12}\frac{1}{(3-\epsilon)}\left(-24\epsilon+6\eta+2\eta\eta_2+8\epsilon^2 -10\epsilon\eta+\eta^2\right)\, ,\nonumber\\
+		&\approx 2\epsilon-\frac{1}{2}\eta-\frac{1}{6}\eta\eta_2\, ;\\
+	d_3&=\, \frac{1}{2\sqrt{2\epsilon}} \frac{1}{(3-\epsilon)}\left[ -24\epsilon^2 +18\epsilon\eta +7\epsilon\eta\eta_2+8\epsilon^3-18\epsilon^2\eta+6\epsilon\eta^2-\eta\eta_2\left(3+\eta+\eta_2+\eta_3 \right)\right] ,\nonumber\\
+		&\approx \frac{8\epsilon^2-6\epsilon\eta-\frac{8}{3}\epsilon\eta\eta_2+\eta\eta_2\left(1+\frac{\eta+\eta_2+\eta_3}{3} \right)}{2\sqrt{2\epsilon}}\\
+	d_4&=\, ,\nonumber\\
+		&\approx \frac{\eta\eta_2(-2\eta_2^2 +\eta(\eta+3)-64\epsilon^2+(35\eta+48)\epsilon+3\eta_2(-\eta-2\eta_3+6\epsilon-2)-\eta_3(\eta+2\eta_3+2\eta_4-18\epsilon+6))}{24\epsilon}\nonumber\\
+			&\qquad\qquad+\frac{1}{4}(3\eta^2+16\epsilon^2-24\eta\epsilon)\, . 
+\end{align}
+ 
+ 
+ 
+\end{document}

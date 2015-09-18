@@ -160,7 +160,7 @@ Other useful observables to define are the tilt of the power spectrum, defined b
 \be
 	n_s-1\equiv\frac{d\ln\Delta^2_\zeta}{d\ln k}=-\epsilon-2\eta\, ,
 \ee
-where the last equality holds to first order in slow-roll parameters, and the running, defined by
+where the last equality holds to first order in slow-roll parameters, and the running, defined by (to leading order in slow roll)
 \be
 	\alpha_s=-2\eta\epsilon-\eta\eta_2\, .
 \ee
@@ -190,24 +190,24 @@ The reconstruction presented in music.pdf allows to recover $\zeta_k$ (or equiva
  
  
  
- \section{Sampling $\mathcal{P}_\zeta(k)$}
+ \section{Measurements of $|\zeta_k|^2$}
  
  
- Our goal in the following will be to reconstruct the potential of the inflaton in a model-independent fashion, by using only the samples of the specific $\zeta_k$ we get from reconstructing the fluctuations of the gravitational potential in the 3d Universe. Since in $k$-space we now look at a volume, the number for modes will therefore grow as $k^3$, as opposed to the usual $l^2$ when the Universe is projected onto a 2d surface at last scattering. It is useful to see how many samples we get for each additional surface $k$-shell we add to the considered volume. That is, for every additional shell in $\vec{n}$ space of unit thickness we add the number of additional samples of the $\zeta_k$ power spectrum is
+ Our goal in the following will be to reconstruct the potential of the inflaton in a model-independent fashion, by using only the samples of the specific $\zeta_k$ we get from reconstructing the fluctuations of the gravitational potential in the 3d Universe. Since in $k$-space we now look at a volume, the number for modes will therefore grow as $k^3$, as opposed to the usual $l^2$ when the Universe is projected onto a 2d surface at last scattering. It is useful to see how many samples we get for each additional surface $k$-shell we add to the considered volume. That is, for every additional shell in $\vec{n}$ space of unit thickness we add the number of additional samples of the norm of $\zeta_k$ is
  \bea
  	\delta Vol_{\vec{n}}&=&\frac{4\pi}{3}\left(n_2^3-n_1^3 \right)\\
 	&=&\frac{4\pi}{3}\left(n_2^3-(n_2-1)^3 \right)\\
 	&=&4\pi(n^2-n+1)\, .
  \eea
-Therefore, for every additional shell, we add $2\pi(n^2-n+1)$ independent measurements, where we divide by two to only consider the half shell, since $\zeta_k$ and $\zeta_{-k}$ are related to each other through complex conjugation and are therefore not independent. Therefore the procedure from Music.pdf gives us a number of fiducial measurements of $\mathcal{P}_\zeta(k)$ over a range of $|\vec{k}|$ (or $|\vec{n}|$) values.
+Therefore, for every additional shell, we add $2\pi(n^2-n+1)$ independent measurements, where we divide by two to only consider the half shell, since $\zeta_k$ and $\zeta_{-k}$ are related to each other through complex conjugation and are therefore not independent. Therefore the procedure from Music.pdf gives us a number of fiducial measurements of $|\zeta(k)|^2$ over a range of $|\vec{k}|$ (or $|\vec{n}|$) values.
  
  
- \section{Reconstructing the Potential of the Inflation}
+ \section{Reconstructing the Potential of the Inflaton}
  
- Only assuming single field inflation, from the samples of $\mathcal{P}_\zeta$ it is possible to reconstruct locally the shape on the inflaton potential, in a model-independent way. To see how this is possible, we can re-write the expression of the $\mathcal{P}_\zeta$ in terms of $V(\varphi)$ and slow-roll parameters, using (\ref{eq:HnVrel}): 
+ Only assuming single field inflation, from the measurements of $|\zeta_k|^2$ it is possible to reconstruct locally the shape on the inflaton potential, in a model-independent way. To see how this is possible, we can re-write the expression of the $|\zeta_k|^2$ in terms of $V(\varphi)$ and slow-roll parameters, using (\ref{eq:HnVrel}): 
 \be
 \label{eq:PfctVnepsilon}
-	\mathcal{P}_\zeta(k)=\left.\frac{1}{4k^{3}}\frac{V}{\Mp^2\epsilon(\epsilon-3)}\right|_{k=aH}\, .
+	|\zeta_k|^2=\mathcal{P}_\zeta(k)=\left.\frac{1}{4k^{3}}\frac{V}{\Mp^2\epsilon(3-\epsilon)}\right|_{k=aH}\, .
 \ee
  
 Given a single fiducial measurement of $\mathcal{P}_\zeta(k)$ at a fiducial value of $k_*$, we can find an expression for $V(\varphi)$ in the local neighbourhood of $V(\varphi)$ as a function of $V(\varphi_*)$ and slow-roll parameters at $\varphi_*$, where $\varphi_*$ is the value of the background inflaton field at the moment when the mode with wavenumber $k_*$ exited the horizon. To do this, we simply Taylor expand $V$ around $\varphi_*$:
@@ -225,7 +225,7 @@ Similarly, we can expand $\epsilon$ appearing in (\ref{eq:PfctVnepsilon}) around
 	\epsilon=\epsilon_*+\Gamma_1\frac{\Delta\varphi}{\Mp}+\frac{\Gamma_2}{2}\frac{\Delta\varphi^2}{\Mp^2}+\frac{\Gamma_3}{3!}\frac{\Delta\varphi^3}{\Mp^3}+\frac{\Gamma_4}{4!}\frac{\Delta\varphi^4}{\Mp^4}\, .
 \ee
  
-Every derivative of $V$ (more specifically, the $d_i$ parameters) can be expressed in terms of slow-roll parameters at $\varphi_*$ alone, and similarly for all the derivatives of $\epsilon$. Therefore, we find a fitting function in terms of the slow-roll parameters. The explicit expression for the $\Gamma_i$ and $d_i$ was obtained in the calculation notes accompanying this file. The $\Gamma_i$ parameters are given by:
+Every derivative of $V$ (more specifically, the $d_i$ parameters) can be expressed in terms of slow-roll parameters at $\varphi_*$ alone, and similarly for all the derivatives of $\epsilon$. Therefore, we find a fitting function in terms of the slow-roll parameters. The explicit expressions for the $\Gamma_i$ and $d_i$ were obtained in the calculation notes accompanying this file. The $\Gamma_i$ parameters are given by:
 \begin{align}
 	\Gamma_1&=\sqrt{\frac{\epsilon}{2}}\eta\,;\\
 	\Gamma_2&=\frac{\eta\eta_2}{2}+\frac{\eta^2}{4}\,;\\
@@ -234,17 +234,105 @@ Every derivative of $V$ (more specifically, the $d_i$ parameters) can be express
 \end{align}
 The $d_i$ parameters are given by:
 \begin{align}
+\label{eq:Gamma1}
 	d_1&=\sqrt{2\epsilon}{(3-\epsilon)}\left[ -3+\epsilon-\frac{1}{2}\eta \right]\, ,\nonumber\\
 		& \approx -\sqrt{2\epsilon}\left(1+\frac{1}{6}\epsilon+\frac{1}{18}\eta\epsilon \right)\, ;\\
 	d_2&= -\frac{1}{12}\frac{1}{(3-\epsilon)}\left(-24\epsilon+6\eta+2\eta\eta_2+8\epsilon^2 -10\epsilon\eta+\eta^2\right)\, ,\nonumber\\
 		&\approx 2\epsilon-\frac{1}{2}\eta-\frac{1}{6}\eta\eta_2\, ;\\
 	d_3&=\, \frac{1}{2\sqrt{2\epsilon}} \frac{1}{(3-\epsilon)}\left[ -24\epsilon^2 +18\epsilon\eta +7\epsilon\eta\eta_2+8\epsilon^3-18\epsilon^2\eta+6\epsilon\eta^2-\eta\eta_2\left(3+\eta+\eta_2+\eta_3 \right)\right] ,\nonumber\\
 		&\approx \frac{8\epsilon^2-6\epsilon\eta-\frac{8}{3}\epsilon\eta\eta_2+\eta\eta_2\left(1+\frac{\eta+\eta_2+\eta_3}{3} \right)}{2\sqrt{2\epsilon}}\\
-	d_4&=\, ,\nonumber\\
-		&\approx \frac{\eta\eta_2(-2\eta_2^2 +\eta(\eta+3)-64\epsilon^2+(35\eta+48)\epsilon+3\eta_2(-\eta-2\eta_3+6\epsilon-2)-\eta_3(\eta+2\eta_3+2\eta_4-18\epsilon+6))}{24\epsilon}\nonumber\\
-			&\qquad\qquad+\frac{1}{4}(3\eta^2+16\epsilon^2-24\eta\epsilon)\, . 
+	d_4&=\frac{1}{(3-\epsilon)}\left[12\epsilon^2-18\epsilon\eta+\frac{9}{4}\eta^2 +6\eta\eta_2-4\epsilon^3+14\epsilon^2\eta-\frac{39}{4}\epsilon\eta^2   +\frac{3}{4}\eta^3 -8\epsilon\eta\eta_2+\frac{35}{8}\eta^2\eta_2+\frac{9}{4}\eta\eta_2^2+\frac{9}{4}\eta\eta_2\eta_3\right.\nonumber\\
+	& \qquad +\frac{1}{\epsilon}\left.\left( \frac{3}{8}\eta^2\eta_2-\frac{3}{4}\eta\eta^2_2-\frac{3}{4}\eta\eta_2\eta_3 +\frac{\eta^3\eta_2}{8}-\frac{3}{8}\eta^2\eta_2^2-\frac{1}{4}\eta\eta_2^3-\frac{3}{4}\eta\eta_2^2\eta_3-\frac{1}{8}\eta^2\eta_2\eta_3-\frac{1}{4}\eta\eta_2\eta_3^2-\frac{1}{4}\eta\eta_2\eta_3\eta_4\right)\right]
+	\, , \\
+		&\approx 4\epsilon^2-6\epsilon\eta+\frac{3}{4}\eta^2+\frac{4}{3}\eta\eta_2+
+		\frac{\eta\eta_2}{3\epsilon}\left( \frac{3}{8}\eta-\frac{3}{4}\eta_2-\frac{3}{4}\eta_3 +\frac{\eta^2}{8}-\frac{3}{8}\eta\eta_2-\frac{1}{4}\eta_2^2-\frac{3}{4}\eta_2\eta_3-\frac{1}{8}\eta\eta_3-\frac{1}{4}\eta_3^2-\frac{1}{4}\eta_3\eta_4\right)\nonumber\\
+		&\qquad+\frac{\eta\eta_2}{3}\left[ 8\epsilon+\frac{9}{2}\eta+2\eta_2+2\eta_3+\frac{3}{4}\epsilon\eta_2+\frac{3}{4}\epsilon\eta_3-\frac{1}{8}\eta\eta_2-\frac{1}{12}\eta_2^2-\frac{1}{4}\eta_2\eta_3-\frac{1}{24}\eta\eta_3-\frac{1}{12}\eta_3^2-\frac{1}{12}\eta_3\eta_4
+		  \right] \, .
+		  \label{eq:d4}%\\
+		%&\approx \frac{\eta\eta_2(-2\eta_2^2 +\eta(\eta+3)-64\epsilon^2+(35\eta+48)\epsilon+3\eta_2(-\eta-2\eta_3+6\epsilon-2)-\eta_3(\eta+2\eta_3+2\eta_4-18\epsilon+6))}{24\epsilon}\nonumber\\
+		%	&\qquad\qquad+\frac{1}{4}(3\eta^2+16\epsilon^2-24\eta\epsilon)\, . 
 \end{align}
+In the above expressions, equations (\ref{eq:Gamma1})-(\ref{eq:d4}), all slow-roll parameters are evaluated at the time when the mode $k_*$ exits the Hubble horizon and the background field has value $\varphi_*$, so they should actually read $(\epsilon_*, \eta_*, (\eta_2)_*, (\eta_3)_*, (\eta_4)_*)$ but we have omitted the $*$ for the sake of simplifying the notation. Moreover, assuming that the slow-roll approximation holds, it is safe to assume that the last slow-roll parameter $ (\eta_4)_*$ is negligible, and so we are left with a 5-parameters model of the local $\mathcal{P}_\zeta(k)$ around $k_*$,
+\be
+	\vec{\eta}\equiv\left(V(\varphi_*),\, \epsilon_*, \,\eta_*, \, (\eta_2)_*, \,(\eta_3)_*\right)\,.
+\ee
+We also expect a hierarchy between the different parameters, i.e., $1> (\epsilon_*, \,\eta_*)> (\eta_2)_*>(\eta_3)_*$.
+
+\bigskip
+
+We are now left with the problem of converting measurements at different $k$ for $|\zeta_k|$ into corresponding measurements at different $\Delta\varphi$. To do so, we use the identity $k=aH$, and the identity
+\be
+	\ln a \equiv \int  \mathrm{d}t \, H(t) \, = \, \int  \mathrm{d}\varphi \frac{H}{\dot\varphi}\, =\, \int \mathrm{d}\varphi \frac{1}{\sqrt{2\epsilon}\Mp}\, .
+\ee
+This leads to
+\bea
+	k&=&\exp\left\{ \int \frac{\mathrm{d}\varphi}{\Mp}(2\epsilon)^{-1/2}  \right\}\frac{1}{\Mp}\sqrt{\frac{V}{3-\epsilon}}\, ,\\
+		&=&  \frac{1}{\Mp}\exp\left\{ \int \frac{\mathrm{d}\varphi}{\sqrt{2}\Mp}\frac{1}{\sqrt{\epsilon_*+\Gamma_1\frac{\Delta\varphi}{\Mp}+\Gamma_2\frac{\Delta\varphi^2}{2\Mp^2} +\Gamma_3\frac{\Delta\varphi^3}{3!\Mp^3}+\Gamma_4\frac{\Delta\varphi^4}{4!\Mp^4} }}  \right\}
+		\nonumber
+		\\
+		\label{eq:kDeltavarphimapping}
+		&&\qquad\qquad\qquad \qquad \qquad\times \sqrt{\frac{V(\varphi_*)\left[1+d_1\frac{\Delta\varphi}{\Mp}+\frac{1}{2}d_2\frac{\Delta\varphi^2}{\Mp^2}+\frac{1}{3!}d_3\frac{\Delta\varphi^3}{\Mp^3} +\frac{1}{4!}d_4\frac{\Delta\varphi^4}{\Mp^4}\right]}{3-\epsilon_*+\Gamma_1\Delta\frac{\varphi}{\Mp}+\Gamma_2\frac{\Delta\varphi^2}{2\Mp^2} +\Gamma_3\frac{\Delta\varphi^3}{3!\Mp^3}+\Gamma_4\frac{\Delta\varphi^4}{4!\Mp^4} }}  \,  .
+\eea
  
+ The solution to the integral can be given in terms of elliptical functions. For every $k$ this has to be inverted and a value of $\Delta \varphi$ has to be found, but this cannot be done analytically. At this point I think that for every choice of $\vec{\eta}$, the solution will have t be found numerically.
  
+ \section{Slow roll parameters inference}
  
+ We want to infer the probability of a given vector of slow-roll parameters $\vec{\eta}$ given the observations:
+ \be
+ 	\mathcal{P}(\vec{\eta}| f_n, a_{lm})=\frac{\mathcal{P}( f_n, \, a_{lm}|\vec{\eta})\mathcal{P}(\vec{\eta})}{\mathcal{P}( f_n,\, a_{lm})}=\frac{\mathcal{P}( a_{lm}| f_n,\,\vec{\eta}) \mathcal{P}( f_n|\vec{\eta})\mathcal{P}(\vec{\eta})}{\mathcal{P}( f_n, \, a_{lm})} = \frac{\mathcal{P}( a_{lm}| f_n) \mathcal{P}( f_n|\vec{\eta})\mathcal{P}(\vec{\eta})}{\mathcal{P}( f_n, \, a_{lm})}
+ \ee
+ %But $\vec{\eta}$ and $f_n$ are conditionally independent given $a_{l,m}$, so $\mathcal{P}(\vec{\eta}| f_n, a_{lm})=\mathcal{P}(\vec{\eta}| a_{lm})$, and, similarly, 
+ and in the last equality we used that $a_{l,m}$ and $\vec{\eta}$ are conditionally independent given $f_n$, therefore $\mathcal{P}( a_{lm}| f_n, \,\vec{\eta})= \mathcal{P}( a_{lm}| f_n)$. 
+ 
+ Marginalizing over the potential map (the $f_n$s), we obtain:
+%  \be
+% 	\mathcal{P}(\vec{\eta}| a_{lm} )=\frac{\mathcal{P}(\vec{\eta})}{\mathcal{P}( f_n, \, a_{lm})}\int \mathrm{d}f_n\mathcal{P}( a_{lm}| f_n) \mathcal{P}( f_n|\vec{\eta})
+% \ee
+ \be
+ 	\mathcal{P}(\vec{\eta}| a_{lm} )\propto\mathcal{P}(\vec{\eta})\int \mathrm{d}f_n\mathcal{P}( a_{lm}| f_n) \mathcal{P}( f_n|\vec{\eta})
+ \ee
+
+We have:
+\be
+	\mathcal{P}( a_{lm}| f_n) \propto \exp\left[ -\frac{1}{2}\left(a_{lm}-\mathbf{R} f_n\right)^{\mathrm{T}}C^{-1}_a\left(a_{lm}-\mathbf{R} f_n\right)\right]\, ;
+\ee
+and assuming the CMB fluctuations are Gaussian, they will be described by a Gaussian distribution with variance given by the inflationary power spectrum:
+\be
+	\mathcal{P}( f_n|\vec{\eta})=\exp\left[ f_n^{\mathrm{T}}C_f^{-1}f_n \right]\,
+\ee
+with $C_f^{-1}$ a diagonal matrix given by:
+\be
+	C_f^{-1}  =\left(  \begin{array}{ccccc} 1/\sigma_{n_1}^1&0&0&... &0 \\ 0& 1/\sigma_{n_2}^2 &0& &... \\ ... & & & &\\ 0&...&  & &1/\sigma_{n_i}^2\end{array} \right)\, ,
+\ee
+where the $\sigma_{n_i}$ only depend on the norm of the $\vec{n}_i$ vector to which they correspond (or equivalently on the norm or the corresponding Fourier mode $|\vec{k}|$). More specifically, they are given in terms of the power spectrum by:
+\bea
+	\sigma_k^2&=&\mathcal{P}_\zeta(k)\nonumber\\
+	&=&\frac{1}{4k^{3}}\frac{V(\varphi_*)\left[1+d_1\frac{\Delta\varphi}{\Mp}+\frac{1}{2}d_2\frac{\Delta\varphi^2}{\Mp^2}+\frac{1}{3!}d_3\frac{\Delta\varphi^3}{\Mp^3} +\frac{1}{4!}d_4\frac{\Delta\varphi^4}{\Mp^4}\right]}{\Mp^2\left( \epsilon_*+\Gamma_1\frac{\Delta\varphi}{\Mp}+\frac{\Gamma_2}{2}\frac{\Delta\varphi^2}{\Mp^2}+\frac{\Gamma_3}{3!}\frac{\Delta\varphi^3}{\Mp^3}+\frac{\Gamma_4}{4!}\frac{\Delta\varphi^4}{\Mp^4})\right)\left(3-\epsilon_*+\Gamma_1\frac{\Delta\varphi}{\Mp}+\frac{\Gamma_2}{2}\frac{\Delta\varphi^2}{\Mp^2}+\frac{\Gamma_3}{3!}\frac{\Delta\varphi^3}{\Mp^3}+\frac{\Gamma_4}{4!}\frac{\Delta\varphi^4}{\Mp^4}\right)}\, .
+\eea
+Here, the mapping between $k$ and $\Delta \varphi$ has to be done using equation (\ref{eq:kDeltavarphimapping}). We therefore obtain that the $f_n$ covariance matrix only depends on the $\vec{\eta}$ vector. To completely define the problem, we are left with the task of specifying a prior on $\vec{\eta}$. This can be done using the following constraints:
+\be
+	\left\{\begin{array}{ccl} V(\varphi_*)&\rightarrow &\mathrm{fixed~by~}H_*\, \varepsilon\, \left[10^{11.5}\, \mathrm{GeV},\,  10^{15}\, \mathrm{GeV}\right] \\
+	\epsilon_* &\varepsilon& \left[10^{-6},\, 1 \right[\\
+	\eta_*  &\varepsilon& \left]-1,\, 1 \right[\\
+	(\eta_2)_*  &\varepsilon& \left[-1,\, 1 \right]\\
+	|(\eta_3)_*|  &<& |(\eta_2)_*|
+	\end{array} \right.
+\ee
+\bigskip
+
+Performing the integral over $\mathrm{d}f_n$, we obtain (see handwritten notes for details):
+\be
+	\mathcal{P}(\vec{\eta}| a_{lm} )\propto\frac{(2\pi)^{(n_i/2)}}{\mathrm{Det}\,\mathbf{A}}\exp\left\{\frac{1}{2}\mathbf{B}^{\mathrm{T}}\mathbf{A}^{-1}\mathbf{B}-\frac{1}{2}a^{\mathrm{T}}_{lm}C_a^{-1}a_{lm} \right\}\mathcal{P}(\vec{\eta})\, ,
+\ee  
+where the $\mathbf{A}$ and $\mathbf{B}$ matrices are given by:
+\bea
+	\mathbf{A}~~&=&\mathbf{R}^{\mathrm{T}}C^{-1}_a \mathbf{R}+C_f^{-1}\\
+	 \mathbf{B}^{\mathrm{T}}&=&a_{lm}^{\mathrm{T}}C_a^{-1}\mathbf{R}
+\eea
+
+
+
+
+
 \end{document}

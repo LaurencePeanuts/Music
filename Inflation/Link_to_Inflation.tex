@@ -284,7 +284,18 @@ This leads to
  \ee
  %But $\vec{\eta}$ and $f_n$ are conditionally independent given $a_{l,m}$, so $\mathcal{P}(\vec{\eta}| f_n, a_{lm})=\mathcal{P}(\vec{\eta}| a_{lm})$, and, similarly, 
  and in the last equality we used that $a_{l,m}$ and $\vec{\eta}$ are conditionally independent given $f_n$, therefore $\mathcal{P}( a_{lm}| f_n, \,\vec{\eta})= \mathcal{P}( a_{lm}| f_n)$. 
- 
+
+The corresponding Bayesian network representation of the joint distribution $\mathcal{P}(a_{lm},\,f_n,\,\vec{\eta} )$ is given by
+
+\begin{figure*}[h]
+\begin{center}
+\centering
+\includegraphics[width=0.50\textwidth]{inflation.png}\\
+\caption{\label{inflationPGM}
+}
+
+\end{center}
+\end{figure*} 
  Marginalizing over the potential map (the $f_n$s), we obtain:
 %  \be
 % 	\mathcal{P}(\vec{\eta}| a_{lm} )=\frac{\mathcal{P}(\vec{\eta})}{\mathcal{P}( f_n, \, a_{lm})}\int \mathrm{d}f_n\mathcal{P}( a_{lm}| f_n) \mathcal{P}( f_n|\vec{\eta})

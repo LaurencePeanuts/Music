@@ -282,8 +282,10 @@ This leads to
  \be
  	\mathcal{P}(\vec{\eta}| f_n, a_{lm})=\frac{\mathcal{P}( f_n, \, a_{lm}|\vec{\eta})\mathcal{P}(\vec{\eta})}{\mathcal{P}( f_n,\, a_{lm})}=\frac{\mathcal{P}( a_{lm}| f_n,\,\vec{\eta}) \mathcal{P}( f_n|\vec{\eta})\mathcal{P}(\vec{\eta})}{\mathcal{P}( f_n, \, a_{lm})} = \frac{\mathcal{P}( a_{lm}| f_n) \mathcal{P}( f_n|\vec{\eta})\mathcal{P}(\vec{\eta})}{\mathcal{P}( f_n, \, a_{lm})}
  \ee
- %But $\vec{\eta}$ and $f_n$ are conditionally independent given $a_{l,m}$, so $\mathcal{P}(\vec{\eta}| f_n, a_{lm})=\mathcal{P}(\vec{\eta}| a_{lm})$, and, similarly, 
- and in the last equality we used that $a_{l,m}$ and $\vec{\eta}$ are conditionally independent given $f_n$, therefore $\mathcal{P}( a_{lm}| f_n, \,\vec{\eta})= \mathcal{P}( a_{lm}| f_n)$. 
+where in the last equality we used that $a_{l,m}$ and $\vec{\eta}$ are conditionally independent given $f_n$, therefore $\mathcal{P}( a_{lm}| f_n, \,\vec{\eta})= \mathcal{P}( a_{lm}| f_n)$. Rewriting the denominator, we obtain:
+\be
+	\mathcal{P}(\vec{\eta}| f_n, a_{lm})=\frac{\mathcal{P}( a_{lm}| f_n) \mathcal{P}( f_n|\vec{\eta})\mathcal{P}(\vec{\eta})}{\mathcal{P}( f_n|a_{lm} )\mathcal{P}(a_{lm})}
+\ee
 
 The corresponding Bayesian network representation of the joint distribution $\mathcal{P}(a_{lm},\,f_n,\,\vec{\eta} )$ is given by
 
@@ -291,26 +293,29 @@ The corresponding Bayesian network representation of the joint distribution $\ma
 \begin{center}
 \centering
 \includegraphics[width=0.50\textwidth]{pgm/inflation.png}\\
-\caption{\label{inflationPGM}
+\caption{\label{inflationPGM} Probabilistic graphical model for the joint distribution $\mathcal{P}(a_{lm},\,f_n,\,\vec{\eta} )$.
 }
 
 \end{center}
-\end{figure*} 
- Marginalizing over the potential map (the $f_n$s), we obtain:
+\end{figure*}
+
+The quantity we are after is $\mathcal{P}(\vec{\eta}| a_{lm})$, which is marginalized over the potential map (the $f_n$s). We therefore proceed as follows:
 %  \be
 % 	\mathcal{P}(\vec{\eta}| a_{lm} )=\frac{\mathcal{P}(\vec{\eta})}{\mathcal{P}( f_n, \, a_{lm})}\int \mathrm{d}f_n\mathcal{P}( a_{lm}| f_n) \mathcal{P}( f_n|\vec{\eta})
 % \ee
- \be
- 	\mathcal{P}(\vec{\eta}| a_{lm} )\propto\mathcal{P}(\vec{\eta})\int \mathrm{d}f_n\mathcal{P}( a_{lm}| f_n) \mathcal{P}( f_n|\vec{\eta})
- \ee
+ \bea
+ 	\mathcal{P}(\vec{\eta}| a_{lm} )&=& \int \mathrm{d}f_n\, \mathcal{P}(\vec{\eta}| f_n, a_{lm}) \mathcal{P}(f_n | a_{lm}) 
+	\\
+	&=&\frac{\mathcal{P}(\vec{\eta})}{\mathcal{P}(a_{lm})}\int \mathrm{d}f_n\mathcal{P}( a_{lm}| f_n) \mathcal{P}( f_n|\vec{\eta})
+ \eea
 
 We have:
 \be
-	\mathcal{P}( a_{lm}| f_n) \propto \exp\left[ -\frac{1}{2}\left(a_{lm}-\mathbf{R} f_n\right)^{\mathrm{T}}C^{-1}_a\left(a_{lm}-\mathbf{R} f_n\right)\right]\, ;
+	\mathcal{P}( a_{lm}| f_n) =\frac{1}{\sqrt{(2\pi)^{p}\mathrm{Det}(C_a)}} \exp\left[ -\frac{1}{2}\left(a_{lm}-\mathbf{R} f_n\right)^{\mathrm{T}}C^{-1}_a\left(a_{lm}-\mathbf{R} f_n\right)\right]\, ,
 \ee
-and assuming the CMB fluctuations are Gaussian, they will be described by a Gaussian distribution with variance given by the inflationary power spectrum:
+where $p=l_{max}^2+2l_{max}+1$ is the total number of independent measurements in $a_{lm}$ up to the harmonic $l_{max}$. Assuming the CMB fluctuations are Gaussian, the $f_n$s are described by a Gaussian distribution with variance given by the inflationary power spectrum:
 \be
-	\mathcal{P}( f_n|\vec{\eta})=\exp\left[ f_n^{\mathrm{T}}C_f^{-1}f_n \right]\,
+	\mathcal{P}( f_n|\vec{\eta})= \sqrt{\frac{\mathrm{Det}(C_f^{-1})}{(2\pi)^{n_i}}}\exp\left[ f_n^{\mathrm{T}}C_f^{-1}f_n \right]\,, 
 \ee
 with $C_f^{-1}$ a diagonal matrix given by:
 \be
@@ -345,7 +350,7 @@ where we used $\alpha=2.4\times10^{-9}$ and $\Mp=2.435\times10^{10}\mathrm{GeV})
 
 Performing the integral over $\mathrm{d}f_n$, we obtain (see handwritten notes for details):
 \be
-	\mathcal{P}(\vec{\eta}| a_{lm} )\propto\frac{(2\pi)^{(n_i/2)}}{\mathrm{Det}\,\mathbf{A}}\exp\left\{\frac{1}{2}\mathbf{B}^{\mathrm{T}}\mathbf{A}^{-1}\mathbf{B}-\frac{1}{2}a^{\mathrm{T}}_{lm}C_a^{-1}a_{lm} \right\}\mathcal{P}(\vec{\eta})\, ,
+	\mathcal{P}(\vec{\eta}| a_{lm} )\propto\frac{(2\pi)^{(n_i/2)}}{(\mathrm{Det}\,\mathbf{A})^{1/2}}\exp\left\{\frac{1}{2}\mathbf{B}^{\mathrm{T}}\mathbf{A}^{-1}\mathbf{B}-\frac{1}{2}a^{\mathrm{T}}_{lm}C_a^{-1}a_{lm} \right\}\mathcal{P}(\vec{\eta})\, ,
 \ee  
 where the $\mathbf{A}$ and $\mathbf{B}$ matrices are given by:
 \bea

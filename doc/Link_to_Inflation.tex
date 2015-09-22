@@ -274,11 +274,11 @@ This leads to
 		&&\qquad\qquad\qquad \qquad \qquad\times \sqrt{\frac{V(\varphi_*)\left[1+d_1\frac{\Delta\varphi}{\Mp}+\frac{1}{2}d_2\frac{\Delta\varphi^2}{\Mp^2}+\frac{1}{3!}d_3\frac{\Delta\varphi^3}{\Mp^3} +\frac{1}{4!}d_4\frac{\Delta\varphi^4}{\Mp^4}\right]}{3-\epsilon_*+\Gamma_1\frac{\Delta\varphi}{\Mp}+\Gamma_2\frac{\Delta\varphi^2}{2\Mp^2} +\Gamma_3\frac{\Delta\varphi^3}{3!\Mp^3}+\Gamma_4\frac{\Delta\varphi^4}{4!\Mp^4} }}  \,  .
 \eea
  
- The solution to the integral can be given in terms of elliptical functions. For every $k$ this has to be inverted and a value of $\Delta \varphi$ has to be found, but this cannot be done analytically. At this point I think that for every choice of $\vec{\eta}$, the solution will have t be found numerically.
+ The solution to the integral can be given in terms of elliptical functions. For every $k$ this has to be inverted and a value of $\Delta \varphi$ has to be found, but this cannot be done analytically. At this point I think that for every choice of $\vec{\eta}$, the solution will have to be found numerically.
  
  \section{Slow roll parameters inference}
  
- We want to infer the probability of a given vector of slow-roll parameters $\vec{\eta}$ given the observations:
+ We want to infer the probability of a given vector of slow-roll parameters $\vec{\eta}$ given the observations, $\mathcal{P}(\vec{\eta}| a_{lm})$. To find an expression for this distribution, we start from 
  \be
  	\mathcal{P}(\vec{\eta}| f_n, a_{lm})=\frac{\mathcal{P}( f_n, \, a_{lm}|\vec{\eta})\mathcal{P}(\vec{\eta})}{\mathcal{P}( f_n,\, a_{lm})}=\frac{\mathcal{P}( a_{lm}| f_n,\,\vec{\eta}) \mathcal{P}( f_n|\vec{\eta})\mathcal{P}(\vec{\eta})}{\mathcal{P}( f_n, \, a_{lm})} = \frac{\mathcal{P}( a_{lm}| f_n) \mathcal{P}( f_n|\vec{\eta})\mathcal{P}(\vec{\eta})}{\mathcal{P}( f_n, \, a_{lm})}
  \ee
@@ -304,9 +304,9 @@ The quantity we are after is $\mathcal{P}(\vec{\eta}| a_{lm})$, which is margina
 % 	\mathcal{P}(\vec{\eta}| a_{lm} )=\frac{\mathcal{P}(\vec{\eta})}{\mathcal{P}( f_n, \, a_{lm})}\int \mathrm{d}f_n\mathcal{P}( a_{lm}| f_n) \mathcal{P}( f_n|\vec{\eta})
 % \ee
  \bea
- 	\mathcal{P}(\vec{\eta}| a_{lm} )&=& \int \mathrm{d}f_n\, \mathcal{P}(\vec{\eta}| f_n, a_{lm}) \mathcal{P}(f_n | a_{lm}) 
+ 	\mathcal{P}(\vec{\eta}| a_{lm} )&=& \int \mathrm{d}f_n\, \mathcal{P}(\vec{\eta}| f_n, a_{lm}) \mathcal{P}(f_n | a_{lm}) \, ,
 	\\
-	&=&\frac{\mathcal{P}(\vec{\eta})}{\mathcal{P}(a_{lm})}\int \mathrm{d}f_n\mathcal{P}( a_{lm}| f_n) \mathcal{P}( f_n|\vec{\eta})
+	&=&\frac{\mathcal{P}(\vec{\eta})}{\mathcal{P}(a_{lm})}\int \mathrm{d}f_n\mathcal{P}( a_{lm}| f_n) \, .\mathcal{P}( f_n|\vec{\eta})
  \eea
 
 We have:
@@ -315,11 +315,14 @@ We have:
 \ee
 where $p=l_{max}^2+2l_{max}+1$ is the total number of independent measurements in $a_{lm}$ up to the harmonic $l_{max}$. Assuming the CMB fluctuations are Gaussian, the $f_n$s are described by a Gaussian distribution with variance given by the inflationary power spectrum:
 \be
-	\mathcal{P}( f_n|\vec{\eta})= \sqrt{\frac{\mathrm{Det}(C_f^{-1})}{(2\pi)^{n_i}}}\exp\left[ f_n^{\mathrm{T}}C_f^{-1}f_n \right]\,, 
+	\mathcal{P}( f_n|\vec{\eta})= \sqrt{\frac{\mathrm{Det}(C_f^{-1})}{(2\pi)^{n_{tot}}}}\exp\left[ f_n^{\mathrm{T}}C_f^{-1}f_n \right]\,, 
 \ee
 with $C_f^{-1}$ a diagonal matrix given by:
 \be
-	C_f^{-1}  =\left(  \begin{array}{ccccc} 1/\sigma_{n_1}^1&0&0&... &0 \\ 0& 1/\sigma_{n_2}^2 &0& &... \\ ... & & & &\\ 0&...&  & &1/\sigma_{n_i}^2\end{array} \right)\, ,
+	C_f^{-1}  =\left(  \begin{array}{ccccccc} 1/\sigma_{n_1}^1&0&0&... &0 &...&0\\ 0& 1/\sigma_{n_2}^2 &0& &... \\ ... & & & &\\ 0&...&  & &1/\sigma_{n_i}^2\\
+	...&&&&&...&\\
+	0&&&&&&1/\sigma_{n_{tot}}^2
+	\end{array} \right)\, ,
 \ee
 where the $\sigma_{n_i}$ only depend on the norm of the $\vec{n}_i$ vector to which they correspond (or equivalently on the norm or the corresponding Fourier mode $|\vec{k}|$). More specifically, they are given in terms of the power spectrum by:
 \bea
@@ -349,9 +352,10 @@ where we used $\alpha=2.4\times10^{-9}$ and $\Mp=2.435\times10^{10}\mathrm{GeV})
 \bigskip
 
 Performing the integral over $\mathrm{d}f_n$, we obtain (see handwritten notes for details):
-\be
-	\mathcal{P}(\vec{\eta}| a_{lm} )\propto\frac{(2\pi)^{(n_i/2)}}{(\mathrm{Det}\,\mathbf{A})^{1/2}}\exp\left\{\frac{1}{2}\mathbf{B}^{\mathrm{T}}\mathbf{A}^{-1}\mathbf{B}-\frac{1}{2}a^{\mathrm{T}}_{lm}C_a^{-1}a_{lm} \right\}\mathcal{P}(\vec{\eta})\, ,
-\ee  
+\bea
+	\mathcal{P}(\vec{\eta}| a_{lm} )&=&\sqrt{\frac{\mathrm{Det}(C_f^{-1})}{(2\pi)^{n_{tot}}}}\frac{1}{\sqrt{(2\pi)^{p}\mathrm{Det}(C_a)}} \frac{(2\pi)^{(n_{tot}/2)}}{(\mathrm{Det}\,\mathbf{A})^{1/2}}\exp\left\{\frac{1}{2}\mathbf{B}^{\mathrm{T}}\mathbf{A}^{-1}\mathbf{B}-\frac{1}{2}a^{\mathrm{T}}_{lm}C_a^{-1}a_{lm} \right\}\frac{\mathcal{P}(\vec{\eta})}{\mathcal{P}(a_{lm})}\, , \\
+	&=&\frac{1}{(2\pi)^{p/2}} \frac{1}{\left[\mathrm{Det}(C_f)\mathrm{Det}(C_a)\mathrm{Det}\,\mathbf{A}\right]^{1/2}}\exp\left\{\frac{1}{2}\mathbf{B}^{\mathrm{T}}\mathbf{A}^{-1}\mathbf{B}-\frac{1}{2}a^{\mathrm{T}}_{lm}C_a^{-1}a_{lm} \right\}\frac{\mathcal{P}(\vec{\eta})}{\mathcal{P}(a_{lm})}\, ,
+\eea
 where the $\mathbf{A}$ and $\mathbf{B}$ matrices are given by:
 \bea
 	\mathbf{A}~~&=&\mathbf{R}^{\mathrm{T}}C^{-1}_a \mathbf{R}+C_f^{-1}\\

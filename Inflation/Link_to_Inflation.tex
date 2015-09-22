@@ -182,9 +182,9 @@ where the  $Y_{l,m}(\hat{k})$s are the spherical harmonics and $\Delta_{T(l)}(k)
 \ee 
 This can be understood as an integral over the line of sight over a physical source term ($S_T$) and a geometric projection $P_{T,l}$ which can be written as a combination of Bessel functions.
 
-Note that, inside the horizon after indlation, it is more convenient to use the Newtonian gauge. Once modes have re-entered the horizon, one can think of $\zeta$ and the gravitational potential $\phi$ (i.e. the metric perturbation in Newtonian gauge) interchangeably.
+Note that, inside the horizon after inflation, it is more convenient to use the Newtonian gauge. Once modes have re-entered the horizon, one can think of $\zeta$ and the gravitational potential $\phi$ (i.e. the metric perturbation in Newtonian gauge) interchangeably.
 
-Moreover, upon horizon re-entry, all the modes $\zeta_{\vec{k}}$ with a fixed $|\vec{k}|$ are in phase and have an amplitude that is randomly distributed. If the fluctuations are Gaussian, the modes  $\zeta_{\vec{k}}$ with a fixed $|\vec{k}|$ are drawn from a Gaussian disrtibution with mean 0 and variance given by $P_\zeta(k)$. 
+Moreover, upon horizon re-entry, all the modes $\zeta_{\vec{k}}$ with a fixed $|\vec{k}|$ are in phase and have an amplitude that is randomly distributed. If the fluctuations are Gaussian, the modes  $\zeta_{\vec{k}}$ with a fixed $|\vec{k}|$ are drawn from a Gaussian distribution with mean 0 and variance given by $P_\zeta(k)$. 
 
 The reconstruction presented in music.pdf allows to recover $\zeta_k$ (or equivalently $\left| \zeta_k\right|^2$ which is a sample of $\mathcal{P}_\zeta(k)$) for a small, low value range of $k$-modes.  
  
@@ -323,12 +323,23 @@ where the $\sigma_{n_i}$ only depend on the norm of the $\vec{n}_i$ vector to wh
 \eea
 Here, the mapping between $k$ and $\Delta \varphi$ has to be done using equation (\ref{eq:kDeltavarphimapping}). We therefore obtain that the $f_n$ covariance matrix only depends on the $\vec{\eta}$ vector. To completely define the problem, we are left with the task of specifying a prior on $\vec{\eta}$. This can be done using the following constraints:
 \be
+\label{eq:priors}
 	\left\{\begin{array}{ccl} V(\varphi_*)&\rightarrow &\mathrm{fixed~by~}H_*\, \varepsilon\, \left[10^{11.5}\, \mathrm{GeV},\,  10^{15}\, \mathrm{GeV}\right] \\
 	\epsilon_* &\varepsilon& \left[10^{-6},\, 1 \right[\\
 	\eta_*  &\varepsilon& \left]-1,\, 1 \right[\\
 	(\eta_2)_*  &\varepsilon& \left[-1,\, 1 \right]\\
 	|(\eta_3)_*|  &<& |(\eta_2)_*|
 	\end{array} \right.
+\ee
+These are very conservative bounds, drawn only from the requirement that the slow-roll approximation holds. This should be the case since the low $k$ values that we are interested in here correspond to the first few of the 60 $e$-folds of inflation that should have occurred to solve e.g. the flatness and homogeneity problems. For example, $\epsilon<1$ is equivalent to the statement the Universe is inflating, and $?|\eta|\leq1$ translate to the requirement that inflation can last for long enough. $\eta_2$ and $\eta_3$ being higher-order parameters, it is then expected that they should be somewhat smaller. It would be possible put a somewhat stronger prior on $\epsilon_*$ using the bound on $r$ from the latest Planck results, however this bound is for a different scale from the one we are looking at here (i.e. the first acoustic peak in the power spectrum), and it varies a lot depending on the assumptions made on other parameters (e.g. the running of the power spectrum). 
+
+To get a specific range of allowed $V(\varphi_*)$, in (\ref{eq:priors}) we first used the normalization of the power spectrum at the scale $k_*$ (which I believe was called $\alpha$) and the allowed range of $\epsilon_*$ to obtain a ranged of allowed $H_*$ 
+\be
+	\alpha=\frac{H^2_*}{8\pi^2\epsilon_*\Mp^2}\quad\Rightarrow\quad H_*=\sqrt{2.4\times10^{-9}\, 8\pi^2\epsilon_*(2.435\times10^{10}\mathrm{GeV})^2}\, ,
+\ee
+where we used $\alpha=2.4\times10^{-9}$ and $\Mp=2.435\times10^{10}\mathrm{GeV})^2$. From there, the range of values of $V(\varphi_*)$ can be found as follows
+\be
+	H_*^2\Mp^2 (3-\epsilon_*)=V(\varphi_*)\quad\Rightarrow\quad V(\varphi_*)\quad\varepsilon\quad[10^{61}\mathrm{GeV}^4,\, 1.5\times10^{67}\mathrm{GeV}^4]
 \ee
 \bigskip
 

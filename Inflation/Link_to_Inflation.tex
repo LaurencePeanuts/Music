@@ -267,11 +267,11 @@ We are now left with the problem of converting measurements at different $k$ for
 This leads to
 \bea
 	k&=&\exp\left\{ \int \frac{\mathrm{d}\varphi}{\Mp}(2\epsilon)^{-1/2}  \right\}\frac{1}{\Mp}\sqrt{\frac{V}{3-\epsilon}}\, ,\\
-		&=&  \frac{1}{\Mp}\exp\left\{ \int \frac{\mathrm{d}\varphi}{\sqrt{2}\Mp}\frac{1}{\sqrt{\epsilon_*+\Gamma_1\frac{\Delta\varphi}{\Mp}+\Gamma_2\frac{\Delta\varphi^2}{2\Mp^2} +\Gamma_3\frac{\Delta\varphi^3}{3!\Mp^3}+\Gamma_4\frac{\Delta\varphi^4}{4!\Mp^4} }}  \right\}
+		&=&  \frac{1}{\Mp}\exp\left\{ \int \frac{\mathrm{d}\Delta\varphi}{\sqrt{2}\Mp}\frac{1}{\sqrt{\epsilon_*+\Gamma_1\frac{\Delta\varphi}{\Mp}+\Gamma_2\frac{\Delta\varphi^2}{2\Mp^2} +\Gamma_3\frac{\Delta\varphi^3}{3!\Mp^3}+\Gamma_4\frac{\Delta\varphi^4}{4!\Mp^4} }}  \right\}
 		\nonumber
 		\\
 		\label{eq:kDeltavarphimapping}
-		&&\qquad\qquad\qquad \qquad \qquad\times \sqrt{\frac{V(\varphi_*)\left[1+d_1\frac{\Delta\varphi}{\Mp}+\frac{1}{2}d_2\frac{\Delta\varphi^2}{\Mp^2}+\frac{1}{3!}d_3\frac{\Delta\varphi^3}{\Mp^3} +\frac{1}{4!}d_4\frac{\Delta\varphi^4}{\Mp^4}\right]}{3-\epsilon_*+\Gamma_1\Delta\frac{\varphi}{\Mp}+\Gamma_2\frac{\Delta\varphi^2}{2\Mp^2} +\Gamma_3\frac{\Delta\varphi^3}{3!\Mp^3}+\Gamma_4\frac{\Delta\varphi^4}{4!\Mp^4} }}  \,  .
+		&&\qquad\qquad\qquad \qquad \qquad\times \sqrt{\frac{V(\varphi_*)\left[1+d_1\frac{\Delta\varphi}{\Mp}+\frac{1}{2}d_2\frac{\Delta\varphi^2}{\Mp^2}+\frac{1}{3!}d_3\frac{\Delta\varphi^3}{\Mp^3} +\frac{1}{4!}d_4\frac{\Delta\varphi^4}{\Mp^4}\right]}{3-\epsilon_*+\Gamma_1\frac{\Delta\varphi}{\Mp}+\Gamma_2\frac{\Delta\varphi^2}{2\Mp^2} +\Gamma_3\frac{\Delta\varphi^3}{3!\Mp^3}+\Gamma_4\frac{\Delta\varphi^4}{4!\Mp^4} }}  \,  .
 \eea
  
  The solution to the integral can be given in terms of elliptical functions. For every $k$ this has to be inverted and a value of $\Delta \varphi$ has to be found, but this cannot be done analytically. At this point I think that for every choice of $\vec{\eta}$, the solution will have t be found numerically.
@@ -331,7 +331,7 @@ Here, the mapping between $k$ and $\Delta \varphi$ has to be done using equation
 	|(\eta_3)_*|  &<& |(\eta_2)_*|
 	\end{array} \right.
 \ee
-These are very conservative bounds, drawn only from the requirement that the slow-roll approximation holds. This should be the case since the low $k$ values that we are interested in here correspond to the first few of the 60 $e$-folds of inflation that should have occurred to solve e.g. the flatness and homogeneity problems. For example, $\epsilon<1$ is equivalent to the statement the Universe is inflating, and $?|\eta|\leq1$ translate to the requirement that inflation can last for long enough. $\eta_2$ and $\eta_3$ being higher-order parameters, it is then expected that they should be somewhat smaller. It would be possible put a somewhat stronger prior on $\epsilon_*$ using the bound on $r$ from the latest Planck results, however this bound is for a different scale from the one we are looking at here (i.e. the first acoustic peak in the power spectrum), and it varies a lot depending on the assumptions made on other parameters (e.g. the running of the power spectrum). 
+These are very conservative bounds, drawn only from the requirement that the slow-roll approximation holds. This should be the case since the low $k$ values that we are interested in here correspond to the first few of the 60 $e$-folds of inflation that should have occurred to solve e.g. the flatness and homogeneity problems. For example, $\epsilon<1$ is equivalent to the statement the Universe is inflating, and $|\eta|\leq1$ translate to the requirement that inflation can last for long enough. $\eta_2$ and $\eta_3$ being higher-order parameters, it is then expected that they should be somewhat smaller. It would be possible put a somewhat stronger prior on $\epsilon_*$ using the bound on $r$ from the latest Planck results, however this bound is for a different scale from the one we are looking at here (i.e. the first acoustic peak in the power spectrum), and it varies a lot depending on the assumptions made on other parameters (e.g. the running of the power spectrum). 
 
 To get a specific range of allowed $V(\varphi_*)$, in (\ref{eq:priors}) we first used the normalization of the power spectrum at the scale $k_*$ (which I believe was called $\alpha$) and the allowed range of $\epsilon_*$ to obtain a ranged of allowed $H_*$ 
 \be

@@ -25,4 +25,10 @@ music: music.tex references.bib
 	pdflatex music.tex
 	pdflatex music.tex
 
+# Notes on inflation inference:
+
+inflation: Link_to_Inflation.tex
+	pdflatex Link_to_Inflation.tex
+	pdflatex Link_to_Inflation.tex
+
 # ----------------------------------------------------------------------------

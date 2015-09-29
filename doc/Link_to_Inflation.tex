@@ -168,7 +168,7 @@ Finally, the tensor-to-scalar ratio is given by:
 \be
 	r=16\epsilon\, .
 \ee
-The amplitude of the power spectrum is usually given at a pivot scale, denoted by $k_*$. For $k_*=0.05Mpc^{-1}$, we have $\Delta^2_\zeta=2.4\times10^{-9}$ from the latest Planck data.
+The amplitude of the power spectrum is usually given at a pivot scale, denoted by $k_*$. For $k_*=0.05Mpc^{-1}$, we have $\Delta^2_\zeta=2.199\times10^{-9}$ from the latest Planck data.
 
 \section{Relation to the CMB}
 
@@ -329,20 +329,20 @@ where the $\sigma_{n_i}$ only depend on the norm of the $\vec{n}_i$ vector to wh
 	\sigma_k^2&=&\mathcal{P}_\zeta(k)\nonumber\\
 	&=&\frac{1}{4k^{3}}\frac{V(\varphi_*)\left[1+d_1\frac{\Delta\varphi}{\Mp}+\frac{1}{2}d_2\frac{\Delta\varphi^2}{\Mp^2}+\frac{1}{3!}d_3\frac{\Delta\varphi^3}{\Mp^3} +\frac{1}{4!}d_4\frac{\Delta\varphi^4}{\Mp^4}\right]}{\Mp^2\left( \epsilon_*+\Gamma_1\frac{\Delta\varphi}{\Mp}+\frac{\Gamma_2}{2}\frac{\Delta\varphi^2}{\Mp^2}+\frac{\Gamma_3}{3!}\frac{\Delta\varphi^3}{\Mp^3}+\frac{\Gamma_4}{4!}\frac{\Delta\varphi^4}{\Mp^4})\right)\left(3-\epsilon_*+\Gamma_1\frac{\Delta\varphi}{\Mp}+\frac{\Gamma_2}{2}\frac{\Delta\varphi^2}{\Mp^2}+\frac{\Gamma_3}{3!}\frac{\Delta\varphi^3}{\Mp^3}+\frac{\Gamma_4}{4!}\frac{\Delta\varphi^4}{\Mp^4}\right)}\, .
 \eea
-Here, the mapping between $k$ and $\Delta \varphi$ has to be done using equation (\ref{eq:kDeltavarphimapping}). We therefore obtain that the $f_n$ covariance matrix only depends on the $\vec{\eta}$ vector. To completely define the problem, we are left with the task of specifying a prior on $\vec{\eta}$.  First, the energy scale of inflation must lie between the BBN scale and (hopefully) the string scale. Actually, given the observed amplitude of the power spectrum, we can safely lower the upper bound by two orders of magnitude. Therefore, we know $\rho=3H^2\Mp^2$ should lie within $\left[ (10^{17}\mathrm{GeV})^4, \, (10 \, \mathrm{TeV})^4 \right]$. This can be translated into an allowed range of $H$ values, $[2.4\times 10^{-14}\mathrm{eV} ,\,2.4\times10^{15}\mathrm{GeV}]$. Note that these values are taken for the parameters at the time when the scale $k=0.05$Mpc$^{-1}$ exited the Hubble horizon during inflation.
+Here, the mapping between $k$ and $\Delta \varphi$ has to be done using equation (\ref{eq:kDeltavarphimapping}). We therefore obtain that the $f_n$ covariance matrix only depends on the $\vec{\eta}$ vector. 
+
+To completely define the problem, we are left with the task of specifying a prior on $\vec{\eta}$.  First, the energy scale of inflation must lie between the BBN scale and (hopefully) the string scale. Actually, given the observed amplitude of the power spectrum, we can safely lower the upper bound by two orders of magnitude. Therefore, we know $\rho=3H^2\Mp^2$ should lie within $\left[ (10^{17}\mathrm{GeV})^4, \, (10 \, \mathrm{TeV})^4 \right]$. This can be translated into an allowed range of $H$ values, $[2.4\times 10^{-14}\mathrm{eV} ,\,2.4\times10^{15}\mathrm{GeV}]$. Note that these values are taken for the parameters at the time when the scale $k=0.05$Mpc$^{-1}$ exited the Hubble horizon during inflation.
 
 Because of this huge range of allowed $H$ values, and because we expect $H_*$ and $\epsilon_*$ to be degenerate since only their ratio appears in the expression for the power spectrum, it is convenient to change variables in our inflationary parameter vector as follows:
 \be
 	\vec{\eta}=\left(\frac{H^2_*}{\epsilon_*},\, \epsilon_*, \,\eta_*, \, (\eta_2)_*, \,(\eta_3)_*\right)\, .
 \ee
-We make this choice of parametrization for the first element of $\vec{\eta}$ because we expect the amplitude of the power spectrum to be well-constrained by the data $a_{lm}$, whereas $H_*$ and $V(\varphi_*)$, while degenerate with $\epsilon_*$, are easily obtained from the $\mathcal{P}_\zeta(k_*)$ amplitude once a value of $\epsilon_*$ is picked:
+We make this choice of parametrization for the first element of $\vec{\eta}$ because we expect the amplitude of the power spectrum to be well-constrained by the data $a_{lm}$, whereas $H_*$ and $V(\varphi_*)$, while degenerate with $\epsilon_*$, are easily obtained from the $\Delta^2_\zeta(k_*)$ amplitude once a value of $\epsilon_*$ is picked:
 \bea
-	\frac{H^2_*}{\epsilon_*}=8\pi^2\Mp^2\mathcal{P}_\zeta(k_*)\quad&\Rightarrow&\quad H_*=\sqrt{\mathcal{P}_\zeta(k_*)\, 8\pi^2\epsilon_*(2.435\times10^{18}\mathrm{GeV})^2}\, ,\\
+	\frac{H^2_*}{\epsilon_*}=8\pi^2\Mp^2\Delta^2_\zeta(k_*)\quad&\Rightarrow&\quad H_*=\sqrt{\Delta^2_\zeta(k_*)\, 8\pi^2\epsilon_*(2.435\times10^{18}\mathrm{GeV})^2}\, ,\\
 	&\&&\quad V(\varphi_*)=H_*^2 \,(2.435\times10^{18}\mathrm{GeV})^2 \, (3-\epsilon_*)
 \eea
 where we used $\Mp=2.435\times10^{18}\mathrm{GeV}$.
-
-$2.4\times10^{-9}$
 
 We finally arrive at the following set of constraints on the parameters of the new $\vec{\eta}$ vector:
 \be
@@ -354,7 +354,7 @@ We finally arrive at the following set of constraints on the parameters of the n
 	|(\eta_3)_*|  &<& |(\eta_2)_*|
 	\end{array} \right.
 \ee
-These are very conservative bounds. The bound on $ H^2_*/\epsilon_*$ is taken to be a range encompassing the Planck 2015 value of $\mathcal{P}_\zeta(2.199\pm 0.016) \times10^{-9}$. The lower bound on $\epsilon_*$ is calculated from the lower bound on the energy scale of inflation. The rest of the bounds are drawn only from the requirement that the slow-roll approximation holds. This should be the case since the low $k$ values that we are interested in here correspond to the first few of the 60 $e$-folds of inflation that should have occurred to solve e.g. the flatness and homogeneity problems. For example, $\epsilon<1$ is equivalent to the statement the Universe is inflating, and $|\eta|\leq1$ translate to the requirement that inflation can last for long enough. $\eta_2$ and $\eta_3$ being higher-order parameters, it is then expected that they should be somewhat smaller. It would be possible put a somewhat stronger prior on $\epsilon_*$ using the bound on $r$ from the latest Planck results, however this bound is for a different scale from the one we are looking at here (i.e. the first acoustic peak in the power spectrum), and it varies a lot depending on the assumptions made on other parameters (e.g. the running of the power spectrum). 
+These are very conservative bounds. The bound on $ H^2_*/\epsilon_*$ is taken to be a range encompassing the Planck 2015 value of $\Delta^2_\zeta=(2.199\pm 0.016) \times10^{-9}$. The lower bound on $\epsilon_*$ is calculated from the lower bound on the energy scale of inflation. The rest of the bounds are drawn only from the requirement that the slow-roll approximation holds. This should be the case since the low $k$ values that we are interested in here correspond to the first few of the 60 $e$-folds of inflation that should have occurred to solve e.g. the flatness and homogeneity problems. For example, $\epsilon<1$ is equivalent to the statement the Universe is inflating, and $|\eta|\leq1$ translate to the requirement that inflation can last for long enough. $\eta_2$ and $\eta_3$ being higher-order parameters, it is then expected that they should be somewhat smaller. It would be possible put a somewhat stronger prior on $\epsilon_*$ using the bound on $r$ from the latest Planck results, however this bound is for a different scale from the one we are looking at here (i.e. the first acoustic peak in the power spectrum), and it varies a lot depending on the assumptions made on other parameters (e.g. the running of the power spectrum). 
 
 %To get a specific range of allowed $V(\varphi_*)$, in (\ref{eq:priors}) we first used the normalization of the power spectrum at the scale $k_*$ (which I believe was called $\alpha$) and the allowed range of $\epsilon_*$ to obtain a ranged of allowed $H_*$ 
 %\be

@@ -3,6 +3,10 @@ import matplotlib.pylab as plt
 import healpy as hp
 import string
 import yt
+import os
+import glob
+from PIL import Image as PIL_Image
+from images2gif import writeGif
 
 import beatbox
 
@@ -193,7 +197,7 @@ class Universe(object):
         return
 
 
-    def show_potential_with_yt(self,output='phi.png',angle=1.0):
+    def show_potential_with_yt(self,output='phi.png',angle=np.pi/4.0):
         """
         Visualize the gravitational potential using yt. We're after something
         like http://yt-project.org/doc/_images/vr_sample.jpg - described
@@ -231,7 +235,11 @@ class Universe(object):
 
         # Set up the camera parameters: center, looking direction, width, resolution
         c = (ds.domain_right_edge + ds.domain_left_edge)/2.0
-        L = np.array([angle, 1.0, 1.0])
+
+        Lx = np.sqrt(2.0)*np.cos(angle)
+        Ly = np.sqrt(2.0)*np.sin(angle)
+        Lz = 1.0
+        L = np.array([Lx, Ly, Lz])
         W = ds.quan(1.6, 'unitary')
         N = 256
 
@@ -247,6 +255,30 @@ class Universe(object):
 
         # Save the image to a file:
         nim.write_png(output)
+
+        return
+
+
+    def show_potential_from_all_angles_with_yt(self,output='phi.gif'):
+
+        # Create 36 frames for the animated gif, one for each angle:
+        steps = 36
+        angles = np.arange(steps)*2.0*np.pi/np.float(steps)
+
+        # book-keeping:
+        folder = 'frames/'
+        os.system("rm -rf "+folder)
+        os.system("mkdir -p "+folder)
+
+        # Now create the individual frames:
+        for k,angle in enumerate(angles):
+            framefile = folder+str(k).zfill(3)+'.png'
+            print "Making frame",k,": ",framefile,"at viewing angle",angle
+            self.show_potential_with_yt(output=framefile,angle=angle)
+
+        # Create an animated gif of all the frames:
+        images = [PIL_Image.open(framefile) for framefile in glob.glob(folder+'*.png')]
+        writeGif(output, images, duration=0.2)
 
         return
 

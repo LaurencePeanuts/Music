@@ -143,23 +143,48 @@ class Universe(object):
 
     # ----------------------------------------------------------------
 
-    def generate_a_random_potential_field(self,nmax=6):
+    def generate_a_random_potential_field(self, high_k_cutoff=6, low_k_cutoff=2, nmax=10, n_s=0.96, kstar=0.02, PSnorm=2.43e-9):
 
-        # Draw unit Gaussian random Fourier coefficients:
         self.nmax = nmax
-        self.fn = np.array([])
-        self.klst = []
-        for nx in range(-self.nmax,self.nmax+1):
-            for ny in range(-self.nmax,self.nmax+1):
-                for nz in range(-self.nmax,self.nmax+1):
-                    if (nx*nx+ny*ny+nz*nz <= self.nmax*self.nmax and not np.all(nx,ny,nz)):
-                        self.klst.append([nx,ny,nz])
-                        re,im = np.random.randn(),np.random.randn()
-                        self.fn = np.append(self.fn,np.complex(re,im))
-                        # Hmm. Need to enforce that f_k = f_-k* ...
+		self.high_k_cutoff=high_k_cutoff
+		self.low_k_cutoff=low_k_cutoff
 
-        self.klst = np.array(self.klst)
-        print "Generated ",len(self.fn)," potential Fourier coefficients"
+		self.Deltak=2*np.pi/self.BOXSIZE;
+		self.kmax=self.nmax*self.Deltak;
+		self.N=2*self.nmax;
+		
+		self.kx, self.ky, self.kz = np.meshgrid(np.linspace(-kmax,kmax,N+1),np.linspace(-kmax,kmax,N+1),np.linspace(-kmax,kmax,N+1), indexing='ij');
+		self.k = np.sqrt(np.power(self.kx, 2)+np.power(self.ky,2)+np.power(self.kz,2));
+		
+		# Define filter in k-space
+		low_k_filter = (~(self.k <= self.low_k_cutoff)).astype(int)
+		high_k_filter = (~(self.k >= self.high_k_cutoff)).astype(int)
+		self.filter = high_k_filter*low_k_filter
+		
+		# Define the constants that go in the power spectrum
+		# scalar spectral index
+		self.n_s=n_s
+		# Power spectrum normalization
+		self.PSnorm=PSnorm
+		# Change units of the pivot scale kstar from Mpc^-1 to normalize the smallest k
+		# mode to 1 (i.e. the radius of the CMB photosphere at 13.94Gpc)
+		self.kstar=kstar*1.394e4
+		
+        # Draw Gaussian random Fourier coefficients with a k^{-3+(n_s-1)} power spectrum:
+		self.Power_Spectrum = self.PSnorm*np.power((self.k/self.kstar) ,(-3+(self.n_s-1)))
+		self.Power_Spectrum[np.isinf(self.Power_Spectrum)]=10**-9
+
+		fn_R = np.random.normal(0, np.sqrt(self.Power_Spectrum/2) )*np.power(self.filter,2)
+		fn_I = np.random.normal(0, np.sqrt(self.Power_Spectrum/2) )*np.power(self.filter,2)
+
+		#Need to ensure that f_-k=f^*_k!!!!!
+		FT=fn_R+fn_I*1j
+		
+		X=np.concatenate((np.append(FT[:nmax, nmax+1 ,nmax+1 ], 0), np.conjugate(np.flipud(FT[:nmax, nmax+1 ,nmax+1 ]))), axis=0)
+		Z=np.concatenate( ( FT[:, :nmax ,nmax ], X.reshape(21,1), np.conjugate(np.fliplr(np.flipud(FT[:, :nmax ,nmax ])))), axis=1 )
+		self.fn= np.concatenate( (FT[:,:,:nmax], Z.reshape(21,21,1), np.conjugate( np.fliplr(np.flipud(FT[:,:,:nmax])))[:,:,::-1] ), axis=2  )
+
+        print "Generated ",self.fn[~(self.fn[:,:,:] == 0)].size," potential Fourier coefficients"
 
         # Evaluate it on our Phi grid:
         self.evaluate_potential_given_fourier_coefficients()
@@ -169,17 +194,17 @@ class Universe(object):
 
     def evaluate_potential_given_fourier_coefficients(self):
 
-        deltak = 2.0*np.pi/self.BOXSIZE
+        
         i = 0
-        for nx in range(-self.nmax,self.nmax+1):
-            for ny in range(-self.nmax,self.nmax+1):
-                for nz in range(-self.nmax,self.nmax+1):
-                    if (nx*nx+ny*ny+nz*nz <= self.nmax*self.nmax and not np.all(nx,ny,nz)):
-                        kx,ky,kz = deltak*self.klst[i]
-                        phase = kx * self.x + ky * self.y + kz * self.z
-                        self.phi += self.fn[i]*np.complex(np.cos(phase),np.sin(phase))
+        #for nx in range(-self.nmax,self.nmax+1):
+        #   for ny in range(-self.nmax,self.nmax+1):
+        #       for nz in range(-self.nmax,self.nmax+1):
+        #           if (nx*nx+ny*ny+nz*nz <= self.nmax*self.nmax and not np.all(nx,ny,nz)):
+        #               kx,ky,kz = self.Deltak*self.klst[i]
+        phase = self.kx * self.x + self.ky * self.y + self.kz * self.z
+        self.phi += self.fn * np.complex(np.cos(phase),np.sin(phase))
                         # Bug: this potential is not Real. Need to make coeffs obey f_k = f_-k*
-                        i += 1
+                        #i += 1
 
         print " Built potential grid, with dimensions ",self.phi.shape,\
               " and mean value ", round(np.mean(self.phi)),"+/-",round(np.std(self.phi))

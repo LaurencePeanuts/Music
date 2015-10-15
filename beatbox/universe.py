@@ -152,7 +152,7 @@ class Universe(object):
         for nx in range(-self.nmax,self.nmax+1):
             for ny in range(-self.nmax,self.nmax+1):
                 for nz in range(-self.nmax,self.nmax+1):
-                    if (nx*nx+ny*ny+nz*nz <= self.nmax*self.nmax and not np.all(nx,ny,nz)):
+                    if ((nx*nx+ny*ny+nz*nz <= self.nmax*self.nmax) & np.any(np.array([nx,ny,nz]))):
                         self.klst.append([nx,ny,nz])
                         re,im = np.random.randn(),np.random.randn()
                         self.fn = np.append(self.fn,np.complex(re,im))
@@ -174,11 +174,10 @@ class Universe(object):
         for nx in range(-self.nmax,self.nmax+1):
             for ny in range(-self.nmax,self.nmax+1):
                 for nz in range(-self.nmax,self.nmax+1):
-                    if (nx*nx+ny*ny+nz*nz <= self.nmax*self.nmax and not np.all(nx,ny,nz)):
-                        kx,ky,kz = deltak*self.klst[i]
-                        phase = kx * self.x + ky * self.y + kz * self.z
-                        self.phi += self.fn[i]*np.complex(np.cos(phase),np.sin(phase))
-                        # Bug: this potential is not Real. Need to make coeffs obey f_k = f_-k*
+                    if ((nx*nx+ny*ny+nz*nz <= self.nmax*self.nmax) & np.any(np.array([nx,ny,nz]))):
+                        k = deltak*self.klst[i]
+                        phase = k[0] * self.x + k[1] * self.y + k[2] * self.z
+                        self.phi += np.real(self.fn[i])*np.cos(phase) + np.imag(self.fn[i])*np.sin(phase)
                         i += 1
 
         print " Built potential grid, with dimensions ",self.phi.shape,\

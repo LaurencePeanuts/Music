@@ -158,43 +158,43 @@ class Universe(object):
 
         self.nmax = nmax
 
-		self.high_k_cutoff=high_k_cutoff
-		self.low_k_cutoff=low_k_cutoff
+        self.high_k_cutoff=high_k_cutoff
+        self.low_k_cutoff=low_k_cutoff
 
-		self.Deltak=2*np.pi/self.BOXSIZE;
-		self.kmax=self.nmax*self.Deltak;
-		self.N=2*self.nmax;
+        self.Deltak=2*np.pi/self.BOXSIZE;
+        self.kmax=self.nmax*self.Deltak;
+        self.N=2*self.nmax;
 		
-		self.kx, self.ky, self.kz = np.meshgrid(np.linspace(-kmax,kmax,N+1),np.linspace(-kmax,kmax,N+1),np.linspace(-kmax,kmax,N+1), indexing='ij');
-		self.k = np.sqrt(np.power(self.kx, 2)+np.power(self.ky,2)+np.power(self.kz,2));
+        self.kx, self.ky, self.kz = np.meshgrid(np.linspace(-self.kmax,self.kmax,self.N+1),np.linspace(-self.kmax,self.kmax,self.N+1),np.linspace(-self.kmax,self.kmax,self.N+1), indexing='ij');
+        self.k = np.sqrt(np.power(self.kx, 2)+np.power(self.ky,2)+np.power(self.kz,2));
 		
-		# Define filter in k-space
-		low_k_filter = (~(self.k <= self.low_k_cutoff)).astype(int)
-		high_k_filter = (~(self.k >= self.high_k_cutoff)).astype(int)
-		self.filter = high_k_filter*low_k_filter
+        # Define filter in k-space
+        low_k_filter = (~(self.k <= self.low_k_cutoff)).astype(int)
+        high_k_filter = (~(self.k >= self.high_k_cutoff)).astype(int)
+        self.filter = high_k_filter*low_k_filter
 		
-		# Define the constants that go in the power spectrum
-		# scalar spectral index
-		self.n_s=n_s
-		# Power spectrum normalization
-		self.PSnorm=PSnorm
-		# Change units of the pivot scale kstar from Mpc^-1 to normalize the smallest k
-		# mode to 1 (i.e. the radius of the CMB photosphere at 13.94Gpc)
-		self.kstar=kstar*1.394e4
-		
+        # Define the constants that go in the power spectrum
+        # scalar spectral index
+        self.n_s=n_s
+        # Power spectrum normalization
+        self.PSnorm=PSnorm
+        # Change units of the pivot scale kstar from Mpc^-1 to normalize the smallest k
+        # mode to 1 (i.e. the radius of the CMB photosphere at 13.94Gpc)
+        self.kstar=kstar*1.394e4
+        
         # Draw Gaussian random Fourier coefficients with a k^{-3+(n_s-1)} power spectrum:
-		self.Power_Spectrum = self.PSnorm*np.power((self.k/self.kstar) ,(-3+(self.n_s-1)))
-		self.Power_Spectrum[np.isinf(self.Power_Spectrum)]=10**-9
+        self.Power_Spectrum = self.PSnorm*np.power((self.k/self.kstar) ,(-3+(self.n_s-1)))
+        self.Power_Spectrum[np.isinf(self.Power_Spectrum)]=10**-9
 
-		fn_R = np.random.normal(0, np.sqrt(self.Power_Spectrum/2) )*np.power(self.filter,2)
-		fn_I = np.random.normal(0, np.sqrt(self.Power_Spectrum/2) )*np.power(self.filter,2)
+        fn_R = np.random.normal(0, np.sqrt(self.Power_Spectrum/2) )*np.power(self.filter,2)
+        fn_I = np.random.normal(0, np.sqrt(self.Power_Spectrum/2) )*np.power(self.filter,2)
 
-		#Need to ensure that f_-k=f^*_k!!!!!
-		FT=fn_R+fn_I*1j
-		
-		X=np.concatenate((np.append(FT[:nmax, nmax+1 ,nmax+1 ], 0), np.conjugate(np.flipud(FT[:nmax, nmax+1 ,nmax+1 ]))), axis=0)
-		Z=np.concatenate( ( FT[:, :nmax ,nmax ], X.reshape(21,1), np.conjugate(np.fliplr(np.flipud(FT[:, :nmax ,nmax ])))), axis=1 )
-		self.fn= np.concatenate( (FT[:,:,:nmax], Z.reshape(21,21,1), np.conjugate( np.fliplr(np.flipud(FT[:,:,:nmax])))[:,:,::-1] ), axis=2  )
+        #Need to ensure that f_-k=f^*_k!!!!!
+        FT=fn_R+fn_I*1j
+        
+        X=np.concatenate((np.append(FT[:nmax, nmax+1 ,nmax+1 ], 0), np.conjugate(np.flipud(FT[:nmax, nmax+1 ,nmax+1 ]))), axis=0)
+        Z=np.concatenate( ( FT[:, :nmax ,nmax ], X.reshape(2*self.nmax+1,1), np.conjugate(np.fliplr(np.flipud(FT[:, :nmax ,nmax ])))), axis=1 )
+        self.fn= np.concatenate( (FT[:,:,:nmax], Z.reshape(2*self.nmax+1,2*self.nmax+1,1), np.conjugate( np.fliplr(np.flipud(FT[:,:,:nmax])))[:,:,::-1] ), axis=2  )
 
         print "Generated ",self.fn[~(self.fn[:,:,:] == 0)].size," potential Fourier coefficients"
 
@@ -204,25 +204,21 @@ class Universe(object):
 
         return
 
-
     def evaluate_potential_given_fourier_coefficients(self):
 
+        self.phi=np.zeros(self.x.shape,dtype=np.float_)
+        ComplexPhi=np.zeros(self.x.shape,dtype=np.complex128)
+
+        for i in range((2*self.nmax+1)**3):
+            phase = self.kx.reshape((2*self.nmax+1)**3,1)[i] * self.x + self.ky.reshape((2*self.nmax+1)**3,1)[i] * self.y + self.kz.reshape((2*self.nmax+1)**3,1)[i] * self.z
+            ComplexPhi += self.fn.reshape((2*self.nmax+1)**3,1)[i] * (np.cos(phase)+np.sin(phase)*1j)                     
         
-        i = 0
-
-        #for nx in range(-self.nmax,self.nmax+1):
-        #   for ny in range(-self.nmax,self.nmax+1):
-        #       for nz in range(-self.nmax,self.nmax+1):
-        #           if (nx*nx+ny*ny+nz*nz <= self.nmax*self.nmax and not np.all(nx,ny,nz)):
-        #               kx,ky,kz = self.Deltak*self.klst[i]
-        phase = self.kx * self.x + self.ky * self.y + self.kz * self.z
-        self.phi += self.fn * np.complex(np.cos(phase),np.sin(phase))
-                        # Bug: this potential is not Real. Need to make coeffs obey f_k = f_-k*
-                        #i += 1
-
-
+        #Throw out the residual imaginary part of the potential 
+        #(From my tests I got it's O(10^-17) so I was confident it works)
+        self.phi = ComplexPhi.real
+        
         print " Built potential grid, with dimensions ",self.phi.shape,\
-              " and mean value ", round(np.mean(self.phi)),"+/-",round(np.std(self.phi))
+              " and mean value ", round(np.mean(self.phi),3),"+/-",round(np.std(self.phi),3)
 
         return
 

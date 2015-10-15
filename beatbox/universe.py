@@ -2,6 +2,11 @@ import numpy as np
 import matplotlib.pylab as plt
 import healpy as hp
 import string
+import yt
+import os
+import glob
+from PIL import Image as PIL_Image
+from images2gif import writeGif
 
 import beatbox
 
@@ -19,6 +24,8 @@ class Universe(object):
         self.x, self.y, self.z = np.mgrid[-self.BOXSIZE/2.0:self.BOXSIZE/2.0:Nj, -self.BOXSIZE/2.0:self.BOXSIZE/2.0:Nj, -self.BOXSIZE/2.0:self.BOXSIZE/2.0:Nj]
         # self.phi = np.zeros([3,self.NPIX])
         self.phi = self.x * 0.0
+        self.Tmap = None
+        self.NSIDE = None
         return
 
     def __str__(self):
@@ -30,15 +37,19 @@ class Universe(object):
         if from_this is None:
             print "No CMB T map file supplied."
             self.Tmapfile = None
-            self.Tmap = None
-            self.NSIDE = None
         else:
             self.Tmapfile = from_this
             self.Tmap = hp.read_map(from_this)
             self.NSIDE = hp.npix2nside(len(self.Tmap))
         return
 
+
     def show_CMB_T_map(self,from_perspective_of="observer"):
+
+        if self.Tmap is None:
+            self.NSIDE = 16
+            self.Tmap = hp.alm2map(self.alm,self.NSIDE)
+
         if from_perspective_of == "observer":
             # Sky map:
             hp.mollview(self.Tmap,title="CMB temperature fluctuations as seen from inside the LSS")
@@ -146,6 +157,7 @@ class Universe(object):
     def generate_a_random_potential_field(self, high_k_cutoff=6, low_k_cutoff=2, nmax=10, n_s=0.96, kstar=0.02, PSnorm=2.43e-9):
 
         self.nmax = nmax
+
 		self.high_k_cutoff=high_k_cutoff
 		self.low_k_cutoff=low_k_cutoff
 
@@ -186,6 +198,7 @@ class Universe(object):
 
         print "Generated ",self.fn[~(self.fn[:,:,:] == 0)].size," potential Fourier coefficients"
 
+
         # Evaluate it on our Phi grid:
         self.evaluate_potential_given_fourier_coefficients()
 
@@ -196,6 +209,7 @@ class Universe(object):
 
         
         i = 0
+
         #for nx in range(-self.nmax,self.nmax+1):
         #   for ny in range(-self.nmax,self.nmax+1):
         #       for nz in range(-self.nmax,self.nmax+1):
@@ -206,25 +220,95 @@ class Universe(object):
                         # Bug: this potential is not Real. Need to make coeffs obey f_k = f_-k*
                         #i += 1
 
+
         print " Built potential grid, with dimensions ",self.phi.shape,\
               " and mean value ", round(np.mean(self.phi)),"+/-",round(np.std(self.phi))
 
         return
 
 
-    def show_potential_with_yt(self):
+    def show_potential_with_yt(self,output='phi.png',angle=np.pi/4.0):
         """
-        Vaporware to make a beautiful visualization of the gravitational
-        potential of the entire universe, using yt. We're after something
+        Visualize the gravitational potential using yt. We're after something
         like http://yt-project.org/doc/_images/vr_sample.jpg - described
         at http://yt-project.org/doc/visualizing/volume_rendering.html
-        Hopefully someone out there can help us out!
         """
 
-        # make_amazing_yt_3D_plot(self.phi)
+        # Load the potential field into a yt data structure,
+        # offsetting such that minimum value is zero:
+        offset = np.abs(np.min(self.phi))
+        ds = yt.load_uniform_grid(dict(phi=self.phi+offset), self.phi.shape)
 
-        # Until then, hang our heads:
-        print "We need someone with yt skillz to code this."
+        # Here's Sam's gist, from https://gist.github.com/samskillman/0e574d1a4f67d3a3b1b1
+        #   im, sc = yt.volume_render(ds, field='phi')
+        #   sc.annotate_domain(ds)
+        #   sc.annotate_axes()
+        #   im = sc.render()
+        #   im.write_png(output, background='white')
+        # volume_render is not yet available, though.
+
+        # Following the example at http://yt-project.org/doc/visualizing/volume_rendering.html
+
+        # Set minimum and maximum of plotting range, taking offset
+        # into account so that zero appears in center of color map:
+        mi, ma = ds.all_data().quantities.extrema('phi')
+        print "Extrema of ds phi:",mi,ma
+        mi -= offset
+        ma -= offset
+        ma = np.max(np.abs([mi,ma]))
+        mi = -ma + offset
+        ma += offset
+        print "Extrema after symmetrizing:", mi,ma
+
+        # Instantiate the ColorTransferFunction.
+        tf = yt.ColorTransferFunction((mi, ma))
+
+        # Set up the camera parameters: center, looking direction, width, resolution
+        c = (ds.domain_right_edge + ds.domain_left_edge)/2.0
+
+        Lx = np.sqrt(2.0)*np.cos(angle)
+        Ly = np.sqrt(2.0)*np.sin(angle)
+        Lz = 1.0
+        L = np.array([Lx, Ly, Lz])
+        W = ds.quan(1.6, 'unitary')
+        N = 256
+
+        # Create a camera object
+        cam = ds.camera(c, L, W, N, tf, fields=['phi'])
+
+        # Now let's add some isocontours, and take a snapshot:
+        tf.add_layers(21, colormap='BrBG')
+        im = cam.snapshot(output)
+
+        # Add the domain box to the image:
+        nim = cam.draw_domain(im)
+
+        # Save the image to a file:
+        nim.write_png(output)
+
+        return
+
+
+    def show_potential_from_all_angles_with_yt(self,output='phi.gif'):
+
+        # Create 36 frames for the animated gif, one for each angle:
+        steps = 36
+        angles = np.arange(steps)*2.0*np.pi/np.float(steps)
+
+        # book-keeping:
+        folder = 'frames/'
+        os.system("rm -rf "+folder)
+        os.system("mkdir -p "+folder)
+
+        # Now create the individual frames:
+        for k,angle in enumerate(angles):
+            framefile = folder+str(k).zfill(3)+'.png'
+            print "Making frame",k,": ",framefile,"at viewing angle",angle
+            self.show_potential_with_yt(output=framefile,angle=angle)
+
+        # Create an animated gif of all the frames:
+        images = [PIL_Image.open(framefile) for framefile in glob.glob(folder+'*.png')]
+        writeGif(output, images, duration=0.2)
 
         return
 
@@ -240,7 +324,11 @@ class Universe(object):
         # Dummy code until I figure out Roger's matrix:
         self.R = np.zeros([Nalm,len(self.fn)])
 
-        self.alm = np.multiply(self.R,self.fn)
+        Re = np.multiply(self.R,self.fn)
+        Im = Re.copy()
+        self.alm = np.flatten(Re + 1.0j*Im)
+        # This does not work - healpy book-keeping is wrong:
+        #   TypeError: The a_lm must be a 1D array.
 
         return
 

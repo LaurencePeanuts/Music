@@ -164,15 +164,15 @@ class Universe(object):
         self.Deltak=2*np.pi/self.BOXSIZE;
         self.kmax=self.nmax*self.Deltak;
         self.N=2*self.nmax;
-		
+
         self.kx, self.ky, self.kz = np.meshgrid(np.linspace(-self.kmax,self.kmax,self.N+1),np.linspace(-self.kmax,self.kmax,self.N+1),np.linspace(-self.kmax,self.kmax,self.N+1), indexing='ij');
         self.k = np.sqrt(np.power(self.kx, 2)+np.power(self.ky,2)+np.power(self.kz,2));
-		
+
         # Define filter in k-space
         low_k_filter = (~(self.k <= self.low_k_cutoff)).astype(int)
         high_k_filter = (~(self.k >= self.high_k_cutoff)).astype(int)
         self.filter = high_k_filter*low_k_filter
-		
+
         # Define the constants that go in the power spectrum
         # scalar spectral index
         self.n_s=n_s
@@ -181,7 +181,7 @@ class Universe(object):
         # Change units of the pivot scale kstar from Mpc^-1 to normalize the smallest k
         # mode to 1 (i.e. the radius of the CMB photosphere at 13.94Gpc)
         self.kstar=kstar*1.394e4
-        
+
         # Draw Gaussian random Fourier coefficients with a k^{-3+(n_s-1)} power spectrum:
         self.Power_Spectrum = self.PSnorm*np.power((self.k/self.kstar) ,(-3+(self.n_s-1)))
         self.Power_Spectrum[np.isinf(self.Power_Spectrum)]=10**-9
@@ -189,15 +189,14 @@ class Universe(object):
         fn_R = np.random.normal(0, np.sqrt(self.Power_Spectrum/2) )*np.power(self.filter,2)
         fn_I = np.random.normal(0, np.sqrt(self.Power_Spectrum/2) )*np.power(self.filter,2)
 
-        #Need to ensure that f_-k=f^*_k!!!!!
-        FT=fn_R+fn_I*1j
-        
+        # Need to ensure that f_-k = f^*_k
+        FT = fn_R + fn_I*1j
+
         X=np.concatenate((np.append(FT[:nmax, nmax+1 ,nmax+1 ], 0), np.conjugate(np.flipud(FT[:nmax, nmax+1 ,nmax+1 ]))), axis=0)
         Z=np.concatenate( ( FT[:, :nmax ,nmax ], X.reshape(2*self.nmax+1,1), np.conjugate(np.fliplr(np.flipud(FT[:, :nmax ,nmax ])))), axis=1 )
         self.fn= np.concatenate( (FT[:,:,:nmax], Z.reshape(2*self.nmax+1,2*self.nmax+1,1), np.conjugate( np.fliplr(np.flipud(FT[:,:,:nmax])))[:,:,::-1] ), axis=2  )
 
         print "Generated ",self.fn[~(self.fn[:,:,:] == 0)].size," potential Fourier coefficients"
-
 
         # Evaluate it on our Phi grid:
         self.evaluate_potential_given_fourier_coefficients()
@@ -211,12 +210,12 @@ class Universe(object):
 
         for i in range((2*self.nmax+1)**3):
             phase = self.kx.reshape((2*self.nmax+1)**3,1)[i] * self.x + self.ky.reshape((2*self.nmax+1)**3,1)[i] * self.y + self.kz.reshape((2*self.nmax+1)**3,1)[i] * self.z
-            ComplexPhi += self.fn.reshape((2*self.nmax+1)**3,1)[i] * (np.cos(phase)+np.sin(phase)*1j)                     
-        
-        #Throw out the residual imaginary part of the potential 
-        #(From my tests I got it's O(10^-17) so I was confident it works)
+            ComplexPhi += self.fn.reshape((2*self.nmax+1)**3,1)[i] * (np.cos(phase)+np.sin(phase)*1j)
+
+        # Throw out the residual imaginary part of the potential
+        # (LPL: From my tests I got it's O(10^-17) so I was confident it works)
         self.phi = ComplexPhi.real
-        
+
         print " Built potential grid, with dimensions ",self.phi.shape,\
               " and mean value ", round(np.mean(self.phi),3),"+/-",round(np.std(self.phi),3)
 
@@ -231,8 +230,19 @@ class Universe(object):
         """
 
         # Load the potential field into a yt data structure,
-        # offsetting such that minimum value is zero:
-        offset = np.abs(np.min(self.phi))
+        #   offsetting such that minimum value is zero.
+        # First get extrema of phi array:
+        mi = np.min(self.phi)
+        ma = np.max(self.phi)
+        # Symmetrize to put zero at center of range:
+        ma = np.max(np.abs([mi,ma]))
+        mi = -ma
+        # Offset to make minimum value zero:
+        offset = ma
+        ma = 2.0*ma
+        mi = 0.0
+
+        # Apply offset and store phi array in a yt data structure:
         ds = yt.load_uniform_grid(dict(phi=self.phi+offset), self.phi.shape)
 
         # Here's Sam's gist, from https://gist.github.com/samskillman/0e574d1a4f67d3a3b1b1
@@ -245,16 +255,9 @@ class Universe(object):
 
         # Following the example at http://yt-project.org/doc/visualizing/volume_rendering.html
 
-        # Set minimum and maximum of plotting range, taking offset
-        # into account so that zero appears in center of color map:
-        mi, ma = ds.all_data().quantities.extrema('phi')
-        print "Extrema of ds phi:",mi,ma
-        mi -= offset
-        ma -= offset
-        ma = np.max(np.abs([mi,ma]))
-        mi = -ma + offset
-        ma += offset
-        print "Extrema after symmetrizing:", mi,ma
+        # Set minimum and maximum of plotting range:
+        # mi, ma = ds.all_data().quantities.extrema('phi')
+        # print "Extrema of ds phi:",mi,ma
 
         # Instantiate the ColorTransferFunction.
         tf = yt.ColorTransferFunction((mi, ma))
@@ -272,9 +275,11 @@ class Universe(object):
         # Create a camera object
         cam = ds.camera(c, L, W, N, tf, fields=['phi'])
 
-        # Now let's add some isocontours, and take a snapshot:
+        # Now let's add some isopotential surface layers, and take a snapshot:
         tf.add_layers(21, colormap='BrBG')
         im = cam.snapshot(output)
+        # BUG: only one yellow layer is displayed...
+
 
         # Add the domain box to the image:
         nim = cam.draw_domain(im)

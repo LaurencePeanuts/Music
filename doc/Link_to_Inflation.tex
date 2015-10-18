@@ -168,7 +168,7 @@ Finally, the tensor-to-scalar ratio is given by:
 \be
 	r=16\epsilon\, .
 \ee
-The amplitude of the power spectrum is usually given at a pivot scale, denoted by $k_*$. For $k_*=0.05Mpc^{-1}$, we have $\Delta^2_\zeta=2.4\times10^{-9}$ from the latest Planck data.
+The amplitude of the power spectrum is usually given at a pivot scale, denoted by $k_*$. For $k_*=0.05Mpc^{-1}$, we have $\Delta^2_\zeta=2.199\times10^{-9}$ from the latest Planck data.
 
 \section{Relation to the CMB}
 
@@ -311,14 +311,17 @@ The quantity we are after is $\mathcal{P}(\vec{\eta}| a_{lm})$, which is margina
 
 We have:
 \be
+\label{eq:aPDF}
 	\mathcal{P}( a_{lm}| f_n) =\frac{1}{\sqrt{(2\pi)^{p}\mathrm{Det}(C_a)}} \exp\left[ -\frac{1}{2}\left(a_{lm}-\mathbf{R} f_n\right)^{\mathrm{T}}C^{-1}_a\left(a_{lm}-\mathbf{R} f_n\right)\right]\, ,
 \ee
 where $p=l_{max}^2+2l_{max}+1$ is the total number of independent measurements in $a_{lm}$ up to the harmonic $l_{max}$. Assuming the CMB fluctuations are Gaussian, the $f_n$s are described by a Gaussian distribution with variance given by the inflationary power spectrum:
 \be
+\label{eq:fnPDF}
 	\mathcal{P}( f_n|\vec{\eta})= \sqrt{\frac{\mathrm{Det}(C_f^{-1})}{(2\pi)^{n_{tot}}}}\exp\left[ f_n^{\mathrm{T}}C_f^{-1}f_n \right]\,, 
 \ee
 with $C_f^{-1}$ a diagonal matrix given by:
 \be
+\label{eq:fncovariancematrix}
 	C_f^{-1}  =\left(  \begin{array}{ccccccc} 1/\sigma_{n_1}^1&0&0&... &0 &...&0\\ 0& 1/\sigma_{n_2}^2 &0& &... \\ ... & & & &\\ 0&...&  & &1/\sigma_{n_i}^2\\
 	...&&&&&...&\\
 	0&&&&&&1/\sigma_{n_{tot}}^2
@@ -329,26 +332,45 @@ where the $\sigma_{n_i}$ only depend on the norm of the $\vec{n}_i$ vector to wh
 	\sigma_k^2&=&\mathcal{P}_\zeta(k)\nonumber\\
 	&=&\frac{1}{4k^{3}}\frac{V(\varphi_*)\left[1+d_1\frac{\Delta\varphi}{\Mp}+\frac{1}{2}d_2\frac{\Delta\varphi^2}{\Mp^2}+\frac{1}{3!}d_3\frac{\Delta\varphi^3}{\Mp^3} +\frac{1}{4!}d_4\frac{\Delta\varphi^4}{\Mp^4}\right]}{\Mp^2\left( \epsilon_*+\Gamma_1\frac{\Delta\varphi}{\Mp}+\frac{\Gamma_2}{2}\frac{\Delta\varphi^2}{\Mp^2}+\frac{\Gamma_3}{3!}\frac{\Delta\varphi^3}{\Mp^3}+\frac{\Gamma_4}{4!}\frac{\Delta\varphi^4}{\Mp^4})\right)\left(3-\epsilon_*+\Gamma_1\frac{\Delta\varphi}{\Mp}+\frac{\Gamma_2}{2}\frac{\Delta\varphi^2}{\Mp^2}+\frac{\Gamma_3}{3!}\frac{\Delta\varphi^3}{\Mp^3}+\frac{\Gamma_4}{4!}\frac{\Delta\varphi^4}{\Mp^4}\right)}\, .
 \eea
-Here, the mapping between $k$ and $\Delta \varphi$ has to be done using equation (\ref{eq:kDeltavarphimapping}). We therefore obtain that the $f_n$ covariance matrix only depends on the $\vec{\eta}$ vector. To completely define the problem, we are left with the task of specifying a prior on $\vec{\eta}$. This can be done using the following constraints:
+Here, the mapping between $k$ and $\Delta \varphi$ has to be done using equation (\ref{eq:kDeltavarphimapping}). We therefore obtain that the $f_n$ covariance matrix only depends on the $\vec{\eta}$ vector. 
+
+To completely define the problem, we are left with the task of specifying a prior on $\vec{\eta}$.  First, the energy scale of inflation must lie between the BBN scale and (hopefully) the string scale. Actually, given the observed amplitude of the power spectrum, we can safely lower the upper bound by two orders of magnitude. Therefore, we know $\rho=3H^2\Mp^2$ should lie within $\left[ (10^{17}\mathrm{GeV})^4, \, (10 \, \mathrm{TeV})^4 \right]$. This can be translated into an allowed range of $H$ values, $[2.4\times 10^{-14}\mathrm{eV} ,\,2.4\times10^{15}\mathrm{GeV}]$. Note that these values are taken for the parameters at the time when the scale $k=0.05$Mpc$^{-1}$ exited the Hubble horizon during inflation.
+
+Because of this huge range of allowed $H$ values, and because we expect $H_*$ and $\epsilon_*$ to be degenerate since only their ratio appears in the expression for the power spectrum, it is convenient to change variables in our inflationary parameter vector as follows:
+\be
+	\vec{\eta}=\left(\frac{H^2_*}{\epsilon_*},\, \epsilon_*, \,\eta_*, \, (\eta_2)_*, \,(\eta_3)_*\right)\, .
+\ee
+We make this choice of parametrization for the first element of $\vec{\eta}$ because we expect the amplitude of the power spectrum to be well-constrained by the data $a_{lm}$, whereas $H_*$ and $V(\varphi_*)$, while degenerate with $\epsilon_*$, are easily obtained from the $\Delta^2_\zeta(k_*)$ amplitude once a value of $\epsilon_*$ is picked:
+\bea
+	\frac{H^2_*}{\epsilon_*}=8\pi^2\Mp^2\Delta^2_\zeta(k_*)\quad&\Rightarrow&\quad H_*=\sqrt{\Delta^2_\zeta(k_*)\, 8\pi^2\epsilon_*(2.435\times10^{18}\mathrm{GeV})^2}\, ,\\
+	&\&&\quad V(\varphi_*)=H_*^2 \,(2.435\times10^{18}\mathrm{GeV})^2 \, (3-\epsilon_*)
+\eea
+where we used $\Mp=2.435\times10^{18}\mathrm{GeV}$.
+
+We finally arrive at the following set of constraints on the parameters of the new $\vec{\eta}$ vector:
 \be
 \label{eq:priors}
-	\left\{\begin{array}{ccl} V(\varphi_*)&\rightarrow &\mathrm{fixed~by~}H_*\, \varepsilon\, \left[10^{11.5}\, \mathrm{GeV},\,  10^{15}\, \mathrm{GeV}\right] \\
-	\epsilon_* &\varepsilon& \left[10^{-6},\, 1 \right[\\
+	\left\{\begin{array}{ccl} %H^2_*/\epsilon_*&\varepsilon & \left[ 8\pi^2\Mp^2 10^{-9},\,  8\pi^2\Mp^2 10^{-8}\right] \\
+	\epsilon_* &\varepsilon& \left[10^{-76},\, 1 \right[\\
 	\eta_*  &\varepsilon& \left]-1,\, 1 \right[\\
 	(\eta_2)_*  &\varepsilon& \left[-1,\, 1 \right]\\
 	|(\eta_3)_*|  &<& |(\eta_2)_*|
 	\end{array} \right.
 \ee
-These are very conservative bounds, drawn only from the requirement that the slow-roll approximation holds. This should be the case since the low $k$ values that we are interested in here correspond to the first few of the 60 $e$-folds of inflation that should have occurred to solve e.g. the flatness and homogeneity problems. For example, $\epsilon<1$ is equivalent to the statement the Universe is inflating, and $|\eta|\leq1$ translate to the requirement that inflation can last for long enough. $\eta_2$ and $\eta_3$ being higher-order parameters, it is then expected that they should be somewhat smaller. It would be possible put a somewhat stronger prior on $\epsilon_*$ using the bound on $r$ from the latest Planck results, however this bound is for a different scale from the one we are looking at here (i.e. the first acoustic peak in the power spectrum), and it varies a lot depending on the assumptions made on other parameters (e.g. the running of the power spectrum). 
+and
+\be
+	\mathcal{P}(x\equiv H^2_*/\epsilon_*)=\frac{1}{(\sigma=0.22)\sqrt{2\pi}}\exp\left[-\frac{1}{2}\frac{(x-(\mu=2.43))^2}{(\sigma=0.22)^2}Ê\right]\, .
+\ee
+These are very conservative bounds. The bound on $ H^2_*/\epsilon_*$ is taken to be a wide Gaussian centered on the WMAP7 value of $\Delta^2_\zeta=(2.43\pm0.11)\times10^{-9}$ at the pivot scale $k_0=0.02$Mpc$^{-1}$. The lower bound on $\epsilon_*$ is calculated from the lower bound on the energy scale of inflation. The rest of the bounds are drawn only from the requirement that the slow-roll approximation holds. This should be the case since the low $k$ values that we are interested in here correspond to the first few of the 60 $e$-folds of inflation that should have occurred to solve e.g. the flatness and homogeneity problems. For example, $\epsilon<1$ is equivalent to the statement the Universe is inflating, and $|\eta|\leq1$ translate to the requirement that inflation can last for long enough. $\eta_2$ and $\eta_3$ being higher-order parameters, it is then expected that they should be somewhat smaller. It would be possible put a somewhat stronger prior on $\epsilon_*$ using the bound on $r$ from the latest Planck results, however this bound is for a different scale from the one we are looking at here (i.e. the first acoustic peak in the power spectrum), and it varies a lot depending on the assumptions made on other parameters (e.g. the running of the power spectrum). 
 
-To get a specific range of allowed $V(\varphi_*)$, in (\ref{eq:priors}) we first used the normalization of the power spectrum at the scale $k_*$ (which I believe was called $\alpha$) and the allowed range of $\epsilon_*$ to obtain a ranged of allowed $H_*$ 
-\be
-	\alpha=\frac{H^2_*}{8\pi^2\epsilon_*\Mp^2}\quad\Rightarrow\quad H_*=\sqrt{2.4\times10^{-9}\, 8\pi^2\epsilon_*(2.435\times10^{10}\mathrm{GeV})^2}\, ,
-\ee
-where we used $\alpha=2.4\times10^{-9}$ and $\Mp=2.435\times10^{10}\mathrm{GeV})^2$. From there, the range of values of $V(\varphi_*)$ can be found as follows
-\be
-	H_*^2\Mp^2 (3-\epsilon_*)=V(\varphi_*)\quad\Rightarrow\quad V(\varphi_*)\quad\varepsilon\quad[10^{61}\mathrm{GeV}^4,\, 1.5\times10^{67}\mathrm{GeV}^4]
-\ee
+%To get a specific range of allowed $V(\varphi_*)$, in (\ref{eq:priors}) we first used the normalization of the power spectrum at the scale $k_*$ (which I believe was called $\alpha$) and the allowed range of $\epsilon_*$ to obtain a ranged of allowed $H_*$ 
+%\be
+%	\alpha=\frac{H^2_*}{8\pi^2\epsilon_*\Mp^2}\quad\Rightarrow\quad H_*=\sqrt{2.4\times10^{-9}\, 8\pi^2\epsilon_*(2.435\times10^{18}\mathrm{GeV})^2}\, ,
+%\ee
+%where we used $\alpha=2.4\times10^{-9}$ and $\Mp=2.435\times10^{18}\mathrm{GeV}$. From there, the range of values of $V(\varphi_*)$ can be found as follows
+%\be
+%	H_*^2\Mp^2 (3-\epsilon_*)=V(\varphi_*)\quad\Rightarrow\quad V(\varphi_*)\quad\varepsilon\quad[10^{57}\mathrm{GeV}^4,\, 1.5\times10^{68}\mathrm{GeV}^4]
+%\ee
 \bigskip
 
 Performing the integral over $\mathrm{d}f_n$, we obtain (see handwritten notes for details):
@@ -361,6 +383,107 @@ where the $\mathbf{A}$ and $\mathbf{B}$ matrices are given by:
 	\mathbf{A}~~&=&\mathbf{R}^{\mathrm{T}}C^{-1}_a \mathbf{R}+C_f^{-1}\\
 	 \mathbf{B}^{\mathrm{T}}&=&a_{lm}^{\mathrm{T}}C_a^{-1}\mathbf{R}
 \eea
+
+\section{Potential map inference}
+We are also interested in inferring the potential maps from the $f_n$, given the data $a_{lm}$ and an assumed prior on the $f_n$s given by (\ref{eq:fnPDF}) with the covariance matrix (\ref{eq:fncovariancematrix}). We write
+\be
+	\mathcal{P}(f_n | a_{lm}, \vec{\eta}, C_f^{-1})=\frac{\mathcal{P}(a_{lm}|f_n) \mathcal{P}(f_n|  \vec{\eta}, C_f^{-1})}{\mathcal{P}(a_{lm}| \vec{\eta}, C_f^{-1})}\, .
+\ee
+
+
+
+\begin{figure*}[H]
+\begin{center}
+\centering
+\includegraphics[width=0.50\textwidth]{pgm/simple-map.png}\\
+\caption{\label{simplepng} Probabilistic graphical model for the joint distribution $\mathcal{P}(a_{lm},\,f_n |\vec{\eta}, C_f^{-1} )$.
+}
+
+\end{center}
+\end{figure*}
+
+The PGM for this inference is given in figure \ref{simplepng}. The numerator is given by (\ref{eq:aPDF}) and (\ref{eq:fnPDF}). Completing the square, we can rewrite this expression as:
+\bea
+	&\mathcal{P}&(f_n | a_{lm}, \vec{\eta}, C_f^{-1})=\\
+	&&\exp\left[-\frac{1}{2} \left( f_n^T-a^T_{lm}C_a^{-1}\mathbf{R}\mathbf{A}^{-1} \right) \mathbf{A}\left(f_n-\mathbf{A}^{-1}\mathbf{R}^TC_a^{-1} a_{lm} \right) \right]\exp\left[\frac{1}{2} a_{lm}^T\left(C_a^{-1}\mathrm{R} \mathrm{A}^{-1} \mathrm{R}^TC_a^{-1} -C_a^{-1} \right) a_{lm} \right]\, .
+\eea
+From this, we can read the most likely values of the $f_n$s,
+\be
+	\langle f_n \rangle=\mathbf{A}^{-1}\mathbf{R}^TC_a^{-1} a_{lm}\, .
+\ee
+
+
+\newpage
+\section{Appendix A: Calculating the minimum value of $\epsilon_*$ from stochastic noise}
+
+Bottom line: there is no model-independent minimum value of $\epsilon_*$ coming form the stochastic contribution of $\varphi$ to the background evolution.
+
+To see this, we decompose $\epsilon_*$ into a classical piece, $\epsilon_{C*}$, and a stochastic piece, $\epsilon_{\xi*}$,
+\bea
+\label{eq:epsilonsplitdotvarphi}
+	\epsilon_*=\epsilon_{C*}+\epsilon_{\xi*}&= &\frac{\dot\varphi_*^2}{2\Mp^2H_*^2}+\frac{\dot\varphi_*}{2\pi}\tilde{\xi}\, ,
+\eea
+where $\tilde\xi$ is white noise with mean zero and variance 1. The first term on the r.h.s. of the above equation still has a stochastic piece. In order to cleanly separate $\epsilon_{C*}$ and $\epsilon_{\xi*}$, we make use of the stochastic equation of motion for $\varphi$
+\be
+	\dot\varphi=-\frac{V_{,\varphi}}{3H}+\frac{H^2}{2\pi}\tilde\xi\, . 
+\ee
+We then obtain 
+\be
+\label{eq:splitepsilonstar}
+	\epsilon_*=-\frac{V_{,\varphi_*}^2}{2\Mp^29H_*^4}-\frac{V_{,\varphi_*}}{12\pi H_*\Mp^2}\tilde{\xi}\, .
+\ee 
+Now, $V_{,\varphi}$ possibly still has some stochastic piece (this is a model-dependent statement: for some models it is purely classical), but in cases where we remain away from eternal inflation, that piece should remain small. Requiring that the $\epsilon_*$ allowed by our prior distribution aren't the ones describing eternal inflation is sensible (since we know that in our Hubble patch, inflation ended!)
+
+\subsubsection{$\lambda\varphi^n$ - class of models}
+To see how this works out in the case of a specific model of inflation, take the class of chaotic models with $V=\lambda\varphi^n$. The two terms of (\ref{eq:splitepsilonstar}) can be re-expressed as follows:
+\\
+First term:
+\be
+	\frac{V_{,\varphi_*}^2}{2\Mp^29H_*^4}=\frac{\left(\lambda\varphi_*^{(n-1)}\right)^2}{9H_*^22\Mp^2}\left(\frac{\lambda \varphi_*^n}{3\Mp^2}\right)^{-1}=\frac{n\lambda}{6 H_*^2}\varphi^{(n-2)}_*=\frac{n\Mp^2}{2\varphi_*^2}\, .
+\ee
+Second term:
+\be
+	\frac{V_{,\varphi_*}}{12\pi H_*\Mp^2}\tilde{\xi}=\frac{n\lambda\varphi_*^{(n-1)}}{12\pi H_*\Mp^2}\tilde\xi= \frac{nH_*}{2\pi\varphi_*}\tilde\xi=\frac{n}{2\pi}\sqrt{\frac{\lambda}{3}}\frac{\varphi_*^{(\frac{n}{2}-1)}}{\Mp}\, .
+\ee
+
+Looking at the first term first, we can expand $\varphi_*$ itself into a classical piece and a stochastic piece, $\varphi_*=\varphi_{cl\,*}+W_*$, and, assuming that we are outside of the regime of eternal inflation, we can safely assume $\varphi_{cl\,*}\gg W_*$. Therefore, the first term of (\ref{eq:splitepsilonstar}) becomes:
+\be
+	\frac{V_{,\varphi_*}^2}{2\Mp^29H_*^4}\approx \frac{n}{2}\frac{\Mp^2}{\varphi_{cl\,*}^2}\left( 1-2 \frac{W_*}{\varphi_{cl\, *}}\right)\, ,
+\ee
+and the stochastic contribution of this term to $\epsilon_{\xi*}$ is therefore 
+\be
+	\epsilon_{\xi*}  ~ \supset~ n\frac{\Mp^2}{\varphi_{cl\,*}^2}\left(  \frac{W_*}{\varphi_{cl\, *}}\right)\, .
+\ee
+The remain part, $ \frac{n}{2}\frac{\Mp^2}{\varphi_{cl\,*}^2}$, is then the classical $\epsilon_{C*}$. We then see that this stochastic contribution to the first slow-roll parameter is always smaller than its classical countrepiece, and therefore from theoretical grounds, it can be tuned arbitrarily close to zero. 
+
+Turning to the second term in (\ref{eq:splitepsilonstar}), and expanding $\varphi_*$ in a similar way as above, we obtain:
+\bea
+	\frac{V_{,\varphi_*}}{12\pi H_*\Mp^2}\tilde{\xi}&\approx&  \frac{n}{2\pi}\sqrt{\frac{\lambda}{3}}\frac{\varphi_{cl\,*}^{(\frac{n}{2}-1)}}{\Mp}\left(1+\frac{n-2}{2}\frac{W_*}{\varphi_{cl\,*}} \right)\tilde\xi \, ;\\
+	&\approx&\frac{n}{2\pi}\sqrt{\frac{\lambda}{3}}\frac{\varphi_{cl\,*}^{(\frac{n}{2}-1)}}{\Mp}\tilde\xi \, .
+\eea
+This is a pure contribution to $\epsilon_{\xi\, *}$. Even if the ratio $\varphi/\Mp$ could potentially be large provided the slow-roll condition is satisfied, the $\sqrt{\lambda}$ pre-factor can be tuned arbitrary close to zero, and therefore there is no minimum value of $\epsilon_*$ from a theoretical standpoint.
+
+\subsubsection{Model-independent case}
+To derive a model-independent statement, we need to find a model-independent expression for $\dot\varphi_*$. 
+From (\ref{eq:epsilonsplitdotvarphi}), we get
+\be
+	\dot\varphi_*=\frac{\tilde\xi H_*^2}{4\pi}+H_*\Mp\sqrt{2\epsilon_*+\frac{H^2_*}{(4\pi)^2}\frac{\tilde\xi^2}{\Mp^2}}
+\ee
+Plugging this into Friedmann equation, we can get an expression for $V(\varphi_*)$:
+\be
+	3H^2_*\Mp^2=\frac{1}{2}\left[\frac{H_*^4\tilde\xi_*^2}{(4\pi)^2} +\frac{H^3_*\Mp}{2\pi}\tilde\xi\sqrt{2\epsilon_* +\frac{H^2_*\tilde\xi^2}{(4\pi)^2\Mp^2}} +H_*^2\Mp^2\left(2\epsilon_*+\frac{H^2_*}{(4\pi)^2}\frac{\tilde\xi^2}{\Mp^2}\right)\right]+V(\varphi_*)\, .
+\ee
+From here, it is easy (but tedious) to derive an expression for $V_{,\varphi_*}$
+\bea
+	V_{,\varphi_*}&=& -\Mp H^2_*\sqrt{\frac{\epsilon_*}{2}}(6-2\epsilon_*+\eta_*)+H^2_*\left[ \frac{H_*}{4\pi}\tilde\xi +\Mp\sqrt{2\epsilon_*+\frac{H^2_*}{(4\pi)^2}\frac{\tilde\xi^2}{\Mp^2}}\right]^{-1}\nonumber\\
+	&&\qquad\times\left[ \frac{H^2\epsilon_*}{4\pi^2}\tilde\xi - \frac{\epsilon_*H_*\Mp}{2\pi}\sqrt{2\epsilon_*+\frac{H^2_*}{(4\pi)^2}\frac{\tilde\xi^2}{\Mp^2}}-\frac{H_*\Mp}{8\pi}\frac{(2\epsilon_*\eta_*-\tilde\xi^2\frac{H^2_*}{\Mp^2}\frac{\epsilon_*}{2\pi})}{\sqrt{2\epsilon_*+\frac{H^2_*}{(4\pi)^2}\frac{\tilde\xi^2}{\Mp^2}}} \right]\, .
+\eea
+From here, we see that all terms in $V_{,\varphi_*}$ are proportional to at least one power of the slow-roll parameters, even the stochastic ones. Therefore, by tuning the classical value of $\epsilon_*$ arbitrarily close to zero, it's possible to make the stochastic contribution also arbitrarily close to zero, hence there is no minimum value of epsilon coming form stochastic effects. 
+
+
+
+
+
 
 
 

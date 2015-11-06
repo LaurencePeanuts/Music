@@ -16,6 +16,10 @@
 \parskip = 0.2in
 \parindent = 0.0in
 
+<<<<<<< HEAD
+\title{The Music of the Sphere: Mapping Large Scale Structure in Our Universe }
+\author{RDB\dots}
+=======
 % \def\Response{m_{yn}}
 \def\Response{R_{yn}}
 \def\ResponseMatrix{R}
@@ -24,12 +28,13 @@
 \title{The Music of the Sphere: Inferring the Evolution of the Universe on the Largest Scale from Cosmic Microwave Background Observations and Deep Survey Data.}
 \author{Roger D. Blandford, Philip J. Marshall, \dots}
 
+>>>>>>> 57b82e01c37c3b842dec4bc1bdd7961c5aa226d1
 \begin{document}
 
 \maketitle
 
 \section{Overview}
-Observations of temperature fluctuations in the CMB measure the 2D potential $\Phi$ (considered as a linear perturbation to the Robertson-Walker metric tensor under the Newtoniain gauge) on the sphere of last scattering (where the scale factor $a\sim0.0009$ and the time is $t\sim380$~kyr). The measurement is quite direct on large angular scale ($\ell\lesssim30$) in the ``Sachs-Wolfe'' regime; it is indirect on small angular scales where velocity and density perturbations are more important, which are linearly related to the potential perturbation. It is also possible, at least in principle, to learn about the first and second radial derivatives of this potential through studying the polarization. This 2D potential is derived from a 3D potential which fills the sphere and extends beyond our horizon. This potential is derived from one specific realization of an initial Fourier spectrum of inferred type and statistical properties.  This paper reports on an investigation of what can be learned, at least in principle, about the 3D potential at the time of recombination from the 2D information. Furthermore, any set of Fourier components can be evolved assuming the now standard ``Flat $\Lambda$ CDM'' cosmology and connected to the potential information derivable from large surveys conducted out to modest redshift. What is being discussed here is an exercise in basic cartography and not in measuring the physical behavior of the universe at either early or late times. As with many such exercises the goal is to understand the approximate arrangement of structure within the observable universe on the largest linear scales. We shall be more concerned with the topological organization of this structure than with precise measurement. However, success in this endeavor ought to improve the investigation of physics questions through contributing constraining priors to Bayesian inference studies.
+Observations of temperature fluctuations in the CMB measure the 2D potential $\Phi$ (considered as a linear perturbation to the Robertson-Walker metric tensor under the Newtonian gauge) on the sphere of last scattering (where the scale factor $a\sim0.0009$ and the time is $t\sim380$~kyr). The measurement is quite direct on large angular scale ($\ell\lesssim30$) in the ``Sachs-Wolfe'' regime; it is indirect on small angular scales where velocity and density perturbations are more important, which are linearly related to the potential perturbation. It is also possible, at least in principle, to learn about the first and second radial derivatives of this potential through studying the polarization. This 2D potential is derived from a 3D potential which fills the sphere and extends beyond our horizon. This potential is derived from one specific realization of an initial Fourier spectrum of inferred type and statistical properties.  This paper reports on an investigation of what can be learned, at least in principle, about the 3D potential at the time of recombination from the 2D information. Furthermore, any set of Fourier components can be evolved assuming the now standard ``Flat $\Lambda$ CDM'' cosmology and connected to the potential information derivable from large surveys conducted out to modest redshift. What is being discussed here is an exercise in basic cartography and not in measuring the physical behavior of the universe at either early or late times. As with many such exercises the goal is to understand the approximate arrangement of structure within the observable universe on the largest linear scales. We shall be more concerned with the topological organization of this structure than with precise measurement. However, success in this endeavor ought to improve the investigation of physics questions through contributing constraining priors to Bayesian inference studies.
 
 In Sec. 2, we discuss the basic assumptions that we will make in our idealized versions of the problem. This is followed in Sec. 3 by a description o fate Fourier representation of the 3D potential and its relationship to the spherical harmonic decomposition on the last scattering sphere. The nesting of equipotential contours on the last scattering photosphere is analyzed in Sec. 4 and this is generalized to surfaces in 3D in the following section.  The relationship between the 2D and 3D equipotentials is discussed in Sec.6. In Sec. 7., we outline a Bayesian approach to calculating the likeliest form of the 3D potential, paying special attention to the criteria which dictate the effective resolution of the reconstruction and how this may be improved by adding interior data. Our conclusions are collected in Sec. 8. A future publication will apply this approach to actual data.
 
@@ -44,22 +49,25 @@ We  work with an idealized problem which we specify as follows:
 \end{itemize}
 
 \section{Fourier Modes}
-We represent the potential $\Phi$ within the box in polar coordinates as a Fourier series
+We represent the potential $\Phi$ within the box in polar coordinates as a Fourier series with wave vectors ${\bf k}=\Delta k\{n_1,n_2,n_3\}$, with $n_1,n_2,n_3$ integers and $\Delta k=2\pi/L$. As $\Phi$ is real, we only need to assign one real number to each mode. We approximate Eq.~(1) by a finite sum restricted to $(n_1^2+n_2^2+n_3^2)^{1/2}\le n_{\rm max}$ and we label the coefficients $f_{\bf k}$ by the index $n$ running from $1$ to $N\sim4\pi n_{\rm max}^3/3$. ($N=6,32,122, 256,514,924,1418,2108,3070,4168$ for $n_{\rm max}=1$ through $10$.) It is simplest to restrict ${\bf k}$ to a hemisphere and to write:
 \begin{equation}
-\Phi({\bf x,\ell})=\sum_{\bf k}f_{\bf k}e^{i{\bf k}\cdot{\bf x}},
+\Phi[{\bf x}(x,\theta,\phi)]=\sum_{n=1}^{N/2}[f_n\cos({\bf k}_n\cdot{\bf x})+f_{N+1-n}\sin({\bf k}_n\cdot{\bf x})]
 \end{equation}
-where ${\bf k}=\Delta k\{n_1,n_2,n_3\}$, with $n_1,n_2,n_3$ integers and omitting $\Delta k\{0,0,0\}$. As $\Phi$ is real, $f_{{\bf k}}=f_{-{\bf k}}^\ast$ and we only need to assign one real number to each mode. We approximate Eq.~(1) by a finite sum restricted to $(n_1^2+n_2^2+n_3^2)^{1/2}\le n_{\rm max}$ and we label the coefficients $f_{\bf k}$ by the index $n$ running from $1$ to $N\sim4\pi n_{\rm max}^3/3$. ($N=6,32,122, 256,514,924,1418,2108,3070,4168$ for $n_{\rm max}=1$ through $10$.)
 \begin{figure}[h!]
 \centering
 \includegraphics[width=6in]{fig1.jpg}
 \caption{Aitoff projections of the potential on the cosmic photosphere $\Phi(\theta,\phi;\ell)$ at $x=1$ for different angular resolutions, parametrized by $\ell$. The contour levels are $0\pm1$. A fixed set of random Fourier components truncated with $n_{max}=3$ is used.}
 \end{figure}
 
+<<<<<<< HEAD
+Our first goal is to relate the interior potential to the photospheric measurement.\footnote{This is sometimes called \emph{holography}, though it is not the original meaning of the word.} The approach that we will follow is constructive. The potential, $\Phi({\bf x})$ can be expanded exactly as an infinite sum of Legendre polynomials which we truncate at a finite value of $\ell$ to furnish an approximation:
+=======
 Our main goal is to relate surface information on the photosphere to the underlying $f_n$.\footnote{This is sometimes called \emph{holography}, though it is not the original meaning of the word.} The approach that we will follow is constructive. $\Phi$ can be expanded exactly as an infinite sum of Legendre polynomials which we truncate at a finite value of $\ell$, starting with $\ell=1$.
+>>>>>>> 57b82e01c37c3b842dec4bc1bdd7961c5aa226d1
 \begin{equation}
-\Phi({\bf x,\ell})=\sum_{\ell'=0} ^\ell(2\ell'+1)i^{\ell'}\sum_nj_{\ell'}(kx)P_{\ell'}({\hat{\bf k}}\cdot{\hat{\bf x}})f_n,
+\Phi({\bf x;\ell})=\sum_{\ell'=0} ^\ell(2\ell'+1)\sum_{n=1}^Nj_{\ell'}(k_nx)P_{\ell'}({\hat{\bf k}}_n\cdot{\hat{\bf x}}){\cal S}(n,\ell')f_n,
 \end{equation}
-As $\ell$ is increased the effective resolution of $\Phi$, in radius and angle, improves. It is convenient to treat $\ell$ as a continuous variable by the device of summing up to $\lfloor\ell\rfloor$  and then adding the next term in the sum multiplied by $(\ell-\lfloor\ell\rfloor)$. To describe the potential generated by modes with a given value of $n_{\rm max}$, we need spherical harmonics up to $\ell\sim3n_{\rm max}$ and {\it vice versa} (Fig.~1). An immediate implication is that an accurate $\Phi$ map on the sphere, degraded to resolution $\ell$ provides $L=(\ell-1)(\ell+3)$ real numbers which can be used to solve for $N$ real Fourier coefficients suggesting that there is enough information in a $\ell=9$ map to solve for $\sim100$ Fourier components up to $n_{\rm max}\sim3$ independent of the priors on their actual values. When we include the priors, we can proceed to finer scale. Also, when we reduce the radius of the sphere, the value of $n_{\rm max}$  probed by a given $\ell$ scales $\propto x^{-1}$ (Fig. 2).
+where ${\bf k}_n={\bf k}_{N+1-n}$ and ${\cal S}(n,\ell)=[\cos(\ell\pi/2),\sin\ell\pi/2)]$, for $[1\le n\le N/2,N/2<n\le N]$. As $\ell$ is increased the effective resolution of $\Phi$, in radius and angle, improves. It is convenient to treat $\ell$ as a continuous variable by the device of summing up to $\lfloor\ell\rfloor$  and then adding the next term in the sum multiplied by $(\ell-\lfloor\ell\rfloor)$. To describe the potential generated by modes with a given value of $n_{\rm max}$, we need spherical harmonics up to $\ell\sim3n_{\rm max}$ and {\it vice versa} (Fig.~1). An immediate implication is that an accurate $\Phi$ map on the sphere, degraded to resolution $\ell$ provides $L=(\ell-1)(\ell+3)$ real numbers which can be used to solve for $N$ real Fourier coefficients suggesting that there is enough information in a $\ell=9$ map to solve for $\sim100$ Fourier components up to $n_{\rm max}\sim3$ independent of the priors on their actual values. When we include the priors, we can proceed to finer scale. Also, when we reduce the radius of the sphere, the value of $n_{\rm max}$  probed by a given $\ell$ scales $\propto x^{-1}$ (Fig. 2).
 
 \begin{figure}[h!]
 \centering
@@ -116,19 +124,32 @@ Now let us outline how to extract information about the interior potential from 
 
 Our first task is to describe the inferred potential on the sky. We suppose this is approximated by a finite sum over spherical harmonics:
 \begin{equation}
-\Phi(1,\theta,\phi;\ell)=\sum_{y=1}^La_yY_y(\theta,\phi),
+\Phi(1,\theta,\phi;\ell_{\rm max})=\sum_{y=1}^{(\ell_{\rm max}+1)^2}a_yY_y(\theta,\phi),
 \end{equation}
+where $Y_y=\{Y_{0,0},Y_{1,0},2^{1/2}\Re[Y_{1,1}],2^{1/2}\Im[Y_{1,1}],Y_{2,0},\dots,2^{1/2}\Im[Y_{\ell_{\rm max},\ell_{\rm max}}]\}$. Note that there are $2\ell+1$ independent, real, basis function in each $\ell$-shell. Note also that $\int d\Omega Y_yY_{y'}=\delta_{yy'}$.
 
 Next, we describe the potential using Eq.~(2) and the identity
 \begin{equation}
-P_{\ell'}(\hat{\bf k}\cdot\hat{\bf x})=\frac{4\pi}{2\ell'+1}\sum_{m'=-\ell'}^{\ell'}Y_{\ell'm'}^\ast(\theta',\phi')Y_{\ell'm'}(\theta,\phi)
+P_{\ell}[\hat{\bf k}(\theta',\phi')\cdot\hat{\bf x}(\theta,\phi)]=\frac{4\pi}{2\ell+1}\sum_{y=\ell^2+1}^{(\ell+1)^2}Y_y(\theta',\phi')Y_y(\theta,\phi)
 \end{equation}
 The spherical harmonic coefficients are then given by the linear relation
 \begin{equation}
+<<<<<<< HEAD
+a_y=R_{yn}f_n,
+=======
 a_y=\Response f_n,
+>>>>>>> 57b82e01c37c3b842dec4bc1bdd7961c5aa226d1
 \end{equation}
 where we adopt the summation convention and
 \begin{equation}
+<<<<<<< HEAD
+R_{yn}=4\pi Y_y(\theta',\phi')j_{\ell(y)}(k){\cal S}(n,\ell(y)),
+\end{equation}
+with $\cos\theta'=n_3/n,\tan\phi'=n_2/n_1$. We estimate the importance of spherical harmonics with order $\ell$ to the signal at a given given range of $k$ by evaluating the sum:
+\begin{equation}
+P(\ell;n_{\rm max})=\sum_{n=N(n_{\rm max}-1)+1}^{N(n_{\rm max})}\sum_{y=\ell^2+1}^{(\ell+1)^2}R_{yn}^2
+\end{equation} 
+=======
 \Response =4\pi i^\ell Y_y^\ast(\theta',\phi')j_\ell(k),
 \end{equation}
 with $\cos\theta'=n_3/n,\tan\phi'=n_2/n_1$. The elements of the transformation matrix $\Response$ have been tabulated up to $n_{\rm max}=6$, $l=10$ which should be sufficient for our purpose.
@@ -137,6 +158,7 @@ We estimate the importance of spherical harmonics with order $\ell$ to the signa
 \begin{equation}
 P(\ell;n_{\rm max})=\sum_{n=N(n_{\rm max}-1)+1}^{N(n_{\rm max})}\sum_{y=\ell^2-3}^{(\ell-1)(\ell+2)}|\Response|^2
 \end{equation}
+>>>>>>> 57b82e01c37c3b842dec4bc1bdd7961c5aa226d1
 \begin{figure}[h!]
 \centering
 \includegraphics[width=6in]{fig6.jpg}

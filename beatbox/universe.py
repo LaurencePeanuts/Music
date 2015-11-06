@@ -1,271 +1,383 @@
 import numpy as np
 import matplotlib.pylab as plt
-import ipdb
+import healpy as hp
+import string
+import yt
+import os
+import glob
+from PIL import Image as PIL_Image
+from images2gif import writeGif
 
-plt.ion()
-np.random.seed(3) # for reproduceability
-r_cmb_mpc = 14.0
-cmap = 'gray'
-vscale = 15.
+import beatbox
 
-def demo():
-     # Generate fake CMB data on a Healpix sphere.
-     f = FakeHealpixData()
-     f.show()
-
-     # Define a 2d slice through our universe.
-     s = SliceSurface()
-
-     # Define an Inference object, then infer and visualize 
-     # the minimum-variance phi field on the slice, given data
-     # on the sphere.
-     inf = Inference(f, s)
-     inf.calculate_mv_phi()
-     inf.view_phi_mv_slice()
-
-     # Make a bunch of realizations and analyze/visualize them.
-     '''
-
-     # RK: realizations have lower variance around the CMB ring (good), but
-     # have too-high variance in center of ring.  I think it's an artifact
-     # of how I've defined the correlation/covariance function, namely as 
-     # an integral that starts at k_min = 2*pi/(2*r_cmb).  Not sure where 
-     # to go from here.
-
-     slice_realizations = []
-     for i in range(20):
-          print i
-          this_slice_realization = inf.calculate_phi_realization()
-          slice_realizations.append(this_slice_realization)
-     slice_realizations = np.array(slice_realizations)
-     ipdb.set_trace()
-     '''
-
+# ====================================================================
 
 class Universe(object):
     """
     A simple model universe in a box.
     """
     def __init__(self):
-        self.size = 100
-        self.phi = np.zeros([3,self.size])
+        self.PIXSCALE = 0.1
+        self.BOXSIZE = 4.0
+        self.NPIX = int(self.BOXSIZE/self.PIXSCALE) + 1
+        Nj = np.complex(0.0,self.NPIX)
+        self.x, self.y, self.z = np.mgrid[-self.BOXSIZE/2.0:self.BOXSIZE/2.0:Nj, -self.BOXSIZE/2.0:self.BOXSIZE/2.0:Nj, -self.BOXSIZE/2.0:self.BOXSIZE/2.0:Nj]
+        # self.phi = np.zeros([3,self.NPIX])
+        self.phi = self.x * 0.0
+        self.Tmap = None
+        self.NSIDE = None
         return
 
     def __str__(self):
         return "a model universe, containing potential map phi"
 
+    # ----------------------------------------------------------------
 
-class CartesianCoordinates(object):
-    def __init__(self):
-        pass
-
-    def update_xyz(self):
-        self.xyz = np.vstack([self.x, self.y, self.z]).T
-
-    def make_distance_array(self, other_cart_coord):
-        #print '...making distance array...'
-        # Fast pairwise distances, see 
-        # https://jakevdp.github.io/blog/2013/06/15/numba-vs-cython-take-2/
-        from scipy.spatial.distance import cdist
-        return cdist(self.xyz, other_cart_coord.xyz)
-
-    def make_auto_distance_array(self):
-        return self.make_distance_array(self)
+    def read_in_CMB_T_map(self,from_this=None):
+        if from_this is None:
+            print "No CMB T map file supplied."
+            self.Tmapfile = None
+        else:
+            self.Tmapfile = from_this
+            self.Tmap = hp.read_map(from_this)
+            self.NSIDE = hp.npix2nside(len(self.Tmap))
+        return
 
 
-class SliceSurface(CartesianCoordinates):
-    def __init__(self, position=0., side_mpc=30., reso_mpc=0.8):
-        self.side_mpc = side_mpc
-        self.reso_mpc = reso_mpc
-        n_side = np.ceil(side_mpc/reso_mpc)
-        self.n_side = n_side
-        x_2d = self.reso_mpc*np.tile(np.arange(n_side),n_side).reshape(n_side, n_side)
-        x_2d -= x_2d.mean()
-        y_2d = self.reso_mpc*np.tile(np.arange(n_side),n_side).reshape(n_side, n_side).T
-        y_2d -= y_2d.mean()
-        z_2d = self.reso_mpc*np.zeros_like(x_2d) + position
-        z_2d -= z_2d.mean()
-        self.n_side = n_side
-        self.x = x_2d.ravel()
-        self.y = y_2d.ravel()
-        self.z = z_2d.ravel()
-        self.update_xyz()
+    def show_CMB_T_map(self,from_perspective_of="observer"):
+
+        if self.Tmap is None:
+            self.NSIDE = 16
+            self.Tmap = hp.alm2map(self.alm,self.NSIDE)
+
+        if from_perspective_of == "observer":
+            # Sky map:
+            hp.mollview(self.Tmap,title="CMB temperature fluctuations as seen from inside the LSS")
+        else:
+            # Interactive "external" view ([like this](http://zonca.github.io/2013/03/interactive-3d-plot-of-sky-map.html))            pass
+            #   beatbox.zoncaview(self.Tmap)
+            # This did not work, sadly. Maybe we can find a 3D
+            # spherical surface plot routine using matplotlib? For
+            # now, just use the healpix vis.
+            R = (0.0,0.0,0.0) # (lon,lat,psi) to specify center of map and rotation to apply
+            hp.orthview(self.Tmap,rot=R,flip='geo',half_sky=True,title="CMB temperature fluctuations as seen from outside the LSS")
+            # print "Ahem - we can't visualize maps on the surface of the sphere yet, sorry."
+        return
+
+    def decompose_T_map_into_spherical_harmonics(self,lmax=None):
+        """
+        See healpy documentation at https://healpy.readthedocs.org/en/latest/generated/healpy.sphtfunc.map2alm.html
+        self.alm is a 1D numpy array of type=complex128.
+        Indexing is described at https://healpy.readthedocs.org/en/latest/generated/healpy.sphtfunc.Alm.html
+        """
+        if lmax is None:
+            self.lmax = 3*self.NSIDE - 1
+        else:
+            self.lmax = lmax
+        self.mmax = self.lmax
+
+        self.alm = hp.sphtfunc.map2alm(self.Tmap,lmax=self.lmax,mmax=self.mmax)
+
+        return
 
 
-
-class HealpixSphericalSurface(CartesianCoordinates):
-    def __init__(self, radius_mpc=r_cmb_mpc, n_side=2**4):
-        # FYI: n_side = 2**4 corresponds to 
-        # 0.064 radians resolution = ~0.9 Mpc at z~1000.
-        from healpy import nside2npix, pix2vec
-        self.n_pix = nside2npix(n_side)
-        x, y, z = pix2vec(n_side, range(self.n_pix))
-        self.radius_mpc = radius_mpc
-        self.x = self.radius_mpc*x
-        self.y = self.radius_mpc*y
-        self.z = self.radius_mpc*z
-        self.update_xyz()
-        
-
-class FakeHealpixData(HealpixSphericalSurface):
-    def __init__(self, sigma=1e-10):
-        HealpixSphericalSurface.__init__(self)
-        self.sigma = sigma
-        self.data = np.zeros(self.n_pix)
-        self.add_truth() 
-        self.add_noise()
-
-    def add_truth(self):
-        #print '...adding truth...'
-        distance = self.make_auto_distance_array()
-        delta = distance[distance!=0].min()
-        cov = large_scale_phi_covariance(distance)
-        from numpy.random import multivariate_normal
-        self.data += multivariate_normal(np.zeros(self.n_pix), cov)
-
-    def add_noise(self):
-        #print '...adding noise...'
-        from numpy.random import randn
-        self.data += self.sigma*randn(self.n_pix)
-        pass
-
-    def show(self):
-        from healpy import mollview
-        mollview(self.data)#, cmap=cmap, min=-vscale, max=+vscale)
+    def show_one_spherical_harmonic_of_CMB_T_map(self,l=1,m=1,max=20):
+        """
+        To do this we need to make a healpy-format alm array, with
+        just one non-zero complex value in it, which we extract
+        from the parent alm array. Since healpy only returns positive
+        m coefficients, we just ask to see component with that |m|.
+        """
+        projected_alm = self.alm * 0.0
+        i = hp.Alm.getidx(self.lmax, l, np.abs(m)) # Note |m| here
+        projected_alm[i] = self.alm[i]
+        projected_map = hp.alm2map(projected_alm,self.NSIDE)
+        hp.mollview(projected_map,min=-max,max=max)
+        return
 
 
-class HealpixPlusSlice(CartesianCoordinates):
-     def __init__(self):
-          healpix = HealpixSphericalSurface()
-          slice = SliceSurface()
-          self.n_healpix = len(healpix.x)
-          self.n_slice = len(slice.x)
-          self.n_total = self.n_healpix + self.n_slice
-          self.ind_healpix = range(0, self.n_healpix)
-          self.ind_slice = range(self.n_healpix, self.n_total)
-          self.x = np.hstack([healpix.x, slice.x])
-          self.y = np.hstack([healpix.y, slice.y])
-          self.z = np.hstack([healpix.z, slice.z])
-          self.update_xyz()
+    def show_lowest_spherical_harmonics_of_CMB_T_map(self,lmax=10,max=20):
+        """
+        To do this, we construct a healpy-formatted alm array based on
+        a subset of the parent one, again observing the positive m-only
+        convention.
+        """
+        truncated_alm = self.alm * 0.0
+        i = []
+        for l in range(lmax+1):
+            for m in range(l+1):
+                i.append(hp.Alm.getidx(self.lmax, l, m))
+        print "Displaying sky map of the l = ",l," and lower spherical harmonics only..."
+        truncated_alm[i] = self.alm[i]
+        truncated_map = hp.alm2map(truncated_alm,self.NSIDE)
+        hp.mollview(truncated_map,min=-max,max=max)
+        return
 
 
-def large_scale_phi_covariance(distance):
-    # should be something like 
-    # cov(r) ~ Int(dk * sin(k*r)/(k**2 * r) )
-    # see Equation 9.32 from Dodelson's Cosmology.
+    def get_alm(self,l=None,m=None):
+        """
+        hp.map2alm only returns the positive m coefficients - we need
+        to derive the negative ones ourselves if we are going to
+        do anything with them outside healpy. See
+        http://stackoverflow.com/questions/30888908/healpy-map2alm-function-does-not-return-expected-number-of-alm-values?lq=1
+        for discussion.
+        """
+        if l is None or m is None:
+            return None
 
-    # The integral will diverge unless we put in this k_min.
-    k_min = 2.*np.pi / (2. * r_cmb_mpc) # hack
-    k_max = 2.*np.pi / (2. * 0.25) # hack
-     
-    # Evaluate covariance on 1d grid.
-    k_vec = np.arange(k_min, k_max, k_min/4.)
-    d_vec = np.arange(0., 1.01*distance.max(), 0.1)
-    pk_phi = k_vec**(-3.)
-    kd_vec = k_vec * d_vec[:,np.newaxis]
-    from scipy.special import jv
-    cov_vec = np.sum(pk_phi / k_vec * k_vec**3. * jv(0, kd_vec), axis=1)
-    #plt.plot(d_vec, cov_vec)
+        elif m >= 0:
+            index = hp.Alm.getidx(self.lmax, l, m)
+            prefactor = 1.0
+            value = self.alm[index]
+        else:
+            index = hp.Alm.getidx(self.lmax, l, -m)
+            prefactor = (-1.0)**m
+            value = np.conjugate(self.alm[index])
 
-    # Now interpolate onto 2d grid.
-    from scipy import interpolate
-    f = interpolate.interp1d(d_vec, cov_vec)
-    cov = f(distance)
-
-    # Let's force the covariance to be unity along the diagonal.
-    # I.e. let's define the variance of each point to be 1.0.
-    #cov_diag = cov.diagonal().copy()
-    #cov /= np.sqrt(cov_diag)
-    #cov /= np.sqrt(cov_diag.T)
-    
-    return cov
+        return prefactor * value
 
 
+    def write_out_spherical_harmonic_coefficients(self,lmax=10):
+        outfile = string.join(string.split(self.Tmapfile,'.')[0:-1],'.') + '_alm_lmax' + str(lmax) + '.txt'
+        f = open(outfile, 'w')
+        f.write("#    l    m    alm_real   alm_imag\n")
+        count = 0
+        for l in range(lmax+1):
+            for m in range(-l,l+1):
+                alm = self.get_alm(l,m)
+                line = " {0:d}  {1:d}  {2:g}  {3:g}\n".format(l,m,float(np.real(alm)),float(np.imag(alm)))
+                f.write(line)
+                count += 1
+        f.close()
+        print count,"alm's (lmax =",lmax,") written to",outfile
+        return
 
-class Inference(object):
-     def __init__(self, data_object, test_object):
-          # DATA_OBJECT is e.g. a FakeHealpixData object.
-          #    It's where you have data.
-          # TEST_OBJECT is e.g. a SliceSurface object.
-          #     It's where you want to make inferences.
-          self.data = data_object
-          self.test = test_object
+    # ----------------------------------------------------------------
 
-     def calculate_phi_realization(self):
-          ###############################################################
-          # Coded up from Equation 18 in Roland's note, 
-          # https://www.dropbox.com/s/hsq44r7cs1rwkuq/MusicofSphere.pdf
-          # Is there a faster algorithm than this?
-          ###############################################################
-          # Ryan's understanding of this:
+    def generate_a_random_potential_field(self, high_k_cutoff=6, low_k_cutoff=2, nmax=10, n_s=0.96, kstar=0.02, PSnorm=2.43e-9):
 
-          # Define a coordinate object that includes points on the sphere 
-          # and on a 2d slice.
-          joint = HealpixPlusSlice()
-          
-          # Do some preparatory work.
-          # We only do this once when making multiple realizations.
-          if not(hasattr(self, 'cov_joint')):
-               dist = joint.make_auto_distance_array()
-               cov_joint = large_scale_phi_covariance(dist)
-               self.cov_joint = cov_joint
-          if not(hasattr(self, 'phi_mv')):
-               self.calculate_mv_phi()
+        self.nmax = nmax
 
-          # Generate noise-free truth *simultaneously* on Sphere and Slice.
-          from numpy.random import multivariate_normal
-          realization_truth = multivariate_normal(np.zeros(joint.n_total), self.cov_joint)
-          sphere_truth = realization_truth[joint.ind_healpix]
-          slice_truth = realization_truth[joint.ind_slice]
+        self.high_k_cutoff=high_k_cutoff
+        self.low_k_cutoff=low_k_cutoff
 
-          # Add noise to Sphere points.
-          noise = self.data.sigma*np.random.randn(joint.n_healpix)
-          sphere_data = sphere_truth + noise
+        self.Deltak=2*np.pi/self.BOXSIZE;
+        self.kmax=self.nmax*self.Deltak;
+        self.N=2*self.nmax;
 
-          # Generate MV estimate on Slice.
-          tmp = np.dot(self.inv_cov_data_data , sphere_data)
-          this_phi_mv_slice = np.dot(self.cov_data_test.T, tmp)
+        self.kx, self.ky, self.kz = np.meshgrid(np.linspace(-self.kmax,self.kmax,self.N+1),np.linspace(-self.kmax,self.kmax,self.N+1),np.linspace(-self.kmax,self.kmax,self.N+1), indexing='ij');
+        self.k = np.sqrt(np.power(self.kx, 2)+np.power(self.ky,2)+np.power(self.kz,2));
 
-          # Get the difference of the MV estimate on Slice and the truth on Slice.
-          diff_mv = this_phi_mv_slice - slice_truth
+        # Define filter in k-space
+        low_k_filter = (~(self.k <= self.low_k_cutoff)).astype(int)
+        high_k_filter = (~(self.k >= self.high_k_cutoff)).astype(int)
+        self.filter = high_k_filter*low_k_filter
 
-          # Add that difference to your *original* MV estimate on Slice.
-          # Now you have a sample/realization of the posterior on the Slice, given original data.
-          this_realization = self.phi_mv + diff_mv
+        # Define the constants that go in the power spectrum
+        # scalar spectral index
+        self.n_s=n_s
+        # Power spectrum normalization
+        self.PSnorm=PSnorm
+        # Change units of the pivot scale kstar from Mpc^-1 to normalize the smallest k
+        # mode to 1 (i.e. the radius of the CMB photosphere at 13.94Gpc)
+        self.kstar=kstar*1.394e4
 
-          return this_realization
+        # Draw Gaussian random Fourier coefficients with a k^{-3+(n_s-1)} power spectrum:
+        self.Power_Spectrum = self.PSnorm*np.power((self.k/self.kstar) ,(-3+(self.n_s-1)))
+        self.Power_Spectrum[np.isinf(self.Power_Spectrum)]=10**-9
 
+        fn_R = np.random.normal(0, np.sqrt(self.Power_Spectrum/2) )*np.power(self.filter,2)
+        fn_I = np.random.normal(0, np.sqrt(self.Power_Spectrum/2) )*np.power(self.filter,2)
 
+        # Need to ensure that f_-k = f^*_k
+        FT = fn_R + fn_I*1j
 
-     def calculate_mv_phi(self):
-          self.get_data_data_covariance()
-          self.get_data_test_covariance()
-          tmp = np.dot(self.inv_cov_data_data , self.data.data)
-          self.phi_mv = np.dot(self.cov_data_test.T, tmp)
+        X=np.concatenate((np.append(FT[:nmax, nmax+1 ,nmax+1 ], 0), np.conjugate(np.flipud(FT[:nmax, nmax+1 ,nmax+1 ]))), axis=0)
+        Z=np.concatenate( ( FT[:, :nmax ,nmax ], X.reshape(2*self.nmax+1,1), np.conjugate(np.fliplr(np.flipud(FT[:, :nmax ,nmax ])))), axis=1 )
+        self.fn= np.concatenate( (FT[:,:,:nmax], Z.reshape(2*self.nmax+1,2*self.nmax+1,1), np.conjugate( np.fliplr(np.flipud(FT[:,:,:nmax])))[:,:,::-1] ), axis=2  )
 
-     def get_data_data_covariance(self):
-          # Get phi covariance between data space and data space.
-          from numpy.linalg import inv
-          dist_data_data = self.data.make_auto_distance_array()
-          cov_data_data = large_scale_phi_covariance(dist_data_data)
-          self.inv_cov_data_data = inv(cov_data_data)
+        print "Generated ",self.fn[~(self.fn[:,:,:] == 0)].size," potential Fourier coefficients"
 
-     def get_data_test_covariance(self):
-          # Get phi covariance between data space and test space.
-          dist_data_test = self.data.make_distance_array(self.test)
-          cov_data_test = large_scale_phi_covariance(dist_data_test)
-          self.cov_data_test = cov_data_test
+        # Evaluate it on our Phi grid:
+        self.evaluate_potential_given_fourier_coefficients()
 
-     def view_phi_mv_slice(self):
-          self.view_slice(self.phi_mv)
+        return
 
-     def view_slice(self, slice_1d):
-          slice_2d = slice_1d.reshape(self.test.n_side, self.test.n_side)
-          plt.figure(figsize=(7,7))
-          plt.imshow(slice_2d, cmap=cmap, vmin=-vscale, vmax=+vscale)
+    def evaluate_potential_given_fourier_coefficients(self):
 
-     
+        self.phi=np.zeros(self.x.shape,dtype=np.float_)
+        ComplexPhi=np.zeros(self.x.shape,dtype=np.complex128)
 
+        for i in range((2*self.nmax+1)**3):
+            phase = self.kx.reshape((2*self.nmax+1)**3,1)[i] * self.x + self.ky.reshape((2*self.nmax+1)**3,1)[i] * self.y + self.kz.reshape((2*self.nmax+1)**3,1)[i] * self.z
+            ComplexPhi += self.fn.reshape((2*self.nmax+1)**3,1)[i] * (np.cos(phase)+np.sin(phase)*1j)
+
+        # Throw out the residual imaginary part of the potential
+        # (LPL: From my tests I got it's O(10^-17) so I was confident it works)
+        self.phi = ComplexPhi.real
+
+        print " Built potential grid, with dimensions ",self.phi.shape,\
+              " and mean value ", round(np.mean(self.phi),3),"+/-",round(np.std(self.phi),3)
+
+        return
 
 
-     
+    def show_potential_with_yt(self,output='phi.png',angle=np.pi/4.0):
+        """
+        Visualize the gravitational potential using yt. We're after something
+        like http://yt-project.org/doc/_images/vr_sample.jpg - described
+        at http://yt-project.org/doc/visualizing/volume_rendering.html
+        """
+
+        # Load the potential field into a yt data structure,
+        #   offsetting such that minimum value is zero.
+        # First get extrema of phi array:
+        mi = np.min(self.phi)
+        ma = np.max(self.phi)
+        # Symmetrize to put zero at center of range:
+        ma = np.max(np.abs([mi,ma]))
+        mi = -ma
+        # Offset to make minimum value zero:
+        offset = ma
+        ma = 2.0*ma
+        mi = 0.0
+
+        # Apply offset and store phi array in a yt data structure:
+        ds = yt.load_uniform_grid(dict(phi=self.phi+offset), self.phi.shape)
+
+        # Here's Sam's gist, from https://gist.github.com/samskillman/0e574d1a4f67d3a3b1b1
+        #   im, sc = yt.volume_render(ds, field='phi')
+        #   sc.annotate_domain(ds)
+        #   sc.annotate_axes()
+        #   im = sc.render()
+        #   im.write_png(output, background='white')
+        # volume_render is not yet available, though.
+
+        # Following the example at http://yt-project.org/doc/visualizing/volume_rendering.html
+
+        # Set minimum and maximum of plotting range:
+        # mi, ma = ds.all_data().quantities.extrema('phi')
+        # print "Extrema of ds phi:",mi,ma
+
+        # Instantiate the ColorTransferFunction.
+        tf = yt.ColorTransferFunction((mi, ma))
+
+        # Set up the camera parameters: center, looking direction, width, resolution
+        c = (ds.domain_right_edge + ds.domain_left_edge)/2.0
+
+        Lx = np.sqrt(2.0)*np.cos(angle)
+        Ly = np.sqrt(2.0)*np.sin(angle)
+        Lz = 1.0
+        L = np.array([Lx, Ly, Lz])
+        W = ds.quan(1.6, 'unitary')
+        N = 256
+
+        # Create a camera object
+        cam = ds.camera(c, L, W, N, tf, fields=['phi'])
+
+        # Now let's add some isopotential surface layers, and take a snapshot:
+        tf.add_layers(21, colormap='BrBG')
+        im = cam.snapshot(output)
+        # BUG: only one yellow layer is displayed...
+
+
+        # Add the domain box to the image:
+        nim = cam.draw_domain(im)
+
+        # Save the image to a file:
+        nim.write_png(output)
+
+        return
+
+
+    def show_potential_from_all_angles_with_yt(self,output='phi.gif'):
+
+        # Create 36 frames for the animated gif, one for each angle:
+        steps = 36
+        angles = np.arange(steps)*2.0*np.pi/np.float(steps)
+
+        # book-keeping:
+        folder = 'frames/'
+        os.system("rm -rf "+folder)
+        os.system("mkdir -p "+folder)
+
+        # Now create the individual frames:
+        for k,angle in enumerate(angles):
+            framefile = folder+str(k).zfill(3)+'.png'
+            print "Making frame",k,": ",framefile,"at viewing angle",angle
+            self.show_potential_with_yt(output=framefile,angle=angle)
+
+        # Create an animated gif of all the frames:
+        images = [PIL_Image.open(framefile) for framefile in glob.glob(folder+'*.png')]
+        writeGif(output, images, duration=0.2)
+
+        return
+
+
+    def transform_3D_potential_fourier_series_into_T_spherical_harmonics(self,lmax=3):
+
+        self.lmax = lmax
+        Nalm = 0
+        for l in range(self.lmax+1):
+            for m in range(-l,l+1):
+                Nalm += 1
+
+        # Dummy code until I figure out Roger's matrix:
+        self.R = np.zeros([Nalm,len(self.fn)])
+
+        Re = np.multiply(self.R,self.fn)
+        Im = Re.copy()
+        self.alm = np.flatten(Re + 1.0j*Im)
+        # This does not work - healpy book-keeping is wrong:
+        #   TypeError: The a_lm must be a 1D array.
+
+        return
+
+# ====================================================================
+
+"""
+Response matrix from Roger's mathematica notebook:
+
+# Construct the klst:
+nmax = 6;
+klst = {};
+Do[
+  If[0 < n1^2 + n2^2 + n3^2 <= nmax^2, klst = Append[klst, {n1, n2, n3}]],
+      {n1, -nmax, nmax}, {n2, -nmax, nmax}, {n3, -nmax, nmax}
+  ];
+NN = Length[klst];
+
+# Set size of box, via separation in k space:
+[CapitalDelta]k = .5 [Pi];
+
+# Construct llst, an array of l's and m's for use in Spherical Harmonics:
+# Note that the monopole and dipole are ignored!
+lmax = 10;
+llst = {};
+Do[
+  If[1 < l <= lmax, llst = Append[llst, {l, m}]], {l, 2, lmax}, {m, -l, l}
+  ];
+llst; # Not sure what this line does.
+L = Length[llst];
+
+# Construct R matrix:
+R = Chop[ # Clean out rounding errors (esp in imaginary parts)
+     Table[4. [Pi] I^llst[[y, 1]] # i^l - imaginary i!
+
+      SphericalHarmonicY[llst[[y, 1]],
+                        llst[[y, 2]],
+                        ArcCos[klst[[n, 3]]/Norm[klst[[n]]]], # theta'
+                        If[klst[[n, 1]] == klst[[n, 2]] == 0, 0, ArcTan[klst[[n, 1]], klst[[n, 2]]]]] # phi'
+                      [Conjugate] # Take complex conjugate of the Ylm
+
+      SphericalBesselJ[llst[[y, 1]], [CapitalDelta]k Norm[klst[[n]]]], # Norm gives the length of the k vector
+
+      {y, 1, L}, # for y in range 1 to L
+      {n, 1, NN} # for n in range 1 to NN
+     ] # End of Table command
+  ];
+
+# Write it out:
+(*Export["myn.txt",R]*)
+
+"""

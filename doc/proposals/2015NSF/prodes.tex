@@ -26,7 +26,7 @@
 
 \section{Introduction}
 
-\subsection{Mapping our Universe}
+\subsection{Mapping Our Universe}
 
 The earliest examples of astronomy included following the nearby planets and charting the ``fixed'' stars which were projected onto the celestial sphere and organized into constellations. Ultimately this led to a physics-based, low resolution,  3D description of the Galaxy. The situation today in cosmology is somewhat similar. We have large surveys of comparatively nearby galaxies and a splendid two dimensional map of the microwave background and this has led to a standard model of the universe in which inflation-based, Gaussian, potential fluctuations, with a well-defined spectrum, grew according to deterministic laws to produce contemporary large scale structure in a flat universe that is endowed with a cosmological constant. However, the traditional goal of astronomy, to describe the complete disposition of this actual structure, has hitherto been subsumed into statistical investigations designed to elucidate the underlying physics.
 
@@ -75,9 +75,9 @@ The first stage of our proposed program uses 2D Cosmic Microwave Background (CMB
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-\subsection{Stage 1. From 2D to 3D: Gravitational Potential Reconstruction from CMB Surface Data}
+\subsection{Stage 1. From 2D to 3D: Potential Reconstruction from CMB Data}
 
-\subsubsection{CMB temperature fluctuations}
+\subsubsection{Temperature fluctuations}
 
 Most quantitative cosmology derives from CMB observations. The conventional way to describe the observations is in terms of spherical harmonics -- the generalization of Fourier modes to a sphere -- labeled by $\ell$ and $m$. It is convenient to use an equivalent vector of real spherical harmonics, $Y_y(\theta,\phi)=\{Y_{0,0},Y_{1,0},2^{1/2}\Re[Y_{1,1}],2^{1/2}\Im[Y_{1,1}],Y_{2,0},\dots,2^{1/2}\Im[Y_{\ell_{\rm max},\ell_{\rm max}}]\}$ of length $(\ell_{\rm max}+1)^2$ and where $\theta,\phi$ are standard spherical polar coordinates. Note that there are $2\ell+1$ independent, real, basis function in each $\ell$-shell. Note also that $\int d\Omega Y_yY_{y'}=\delta_{yy'}$. It is convenient to treat $\ell_{\rm max}$ as a continuous variable by adding a fraction between zero and unity of the largest $\ell$ shell and therefore smoothly change the angular resolution.
 \begin{figure}[t]
@@ -88,7 +88,7 @@ Most quantitative cosmology derives from CMB observations. The conventional way 
 
 Most investigations have focused on measuring the ``power'' in the temperature fluctuations (including polarization) associated with a given $\ell$, obtained by summing products of the coefficients of the harmonic components over $m$, and comparing it with the predictions of various cosmological models. This program has been wonderfully productive, and has resulted in the world model just outlined. Furthermore this power spectrum has been successfully reconciled with features of the local universe, such as galaxy counts. One common assumption is that the particular realization of the universe that we are observing is drawn from a statistical ensemble of universes. When $\ell$ is large, we have many independent measurements on the associated angular scale, $\sim\pi/\ell$, and so we can measure an rms value for the harmonic component with a small variance. However, when $\ell$ is small, we have only a few such measurements and the ``cosmic'' variance is large. Despite their great value, these statistical measurements inevitably discard information which may be valuable.\footnote{This is in the sense that music is far more than a ``flicker'' power spectrum. To pursue our musical metaphor, different voices and instruments contribute different ranges of frequencies to a musical performance over a total range of roughly ten octaves. We are only listening to the bass range but higher voices and instruments can still contribute to what we hear.}  In the proposed study, only one specific realization of the universe -- the one we inhabit --  is considered.
 
-In order to start us on a pilot investigation, the Planck team (IDENTIFY INGE OR NOT?) has kindly supplied us with 100 realizations of Planck temperature fluctuation data for $0\le\ell\le10$ or $1\le y\le121$. From this we are able to compute the mean photospheric potential fluctuation maps at the time of recombination $\Phi=a_yY_y$, (including the monopole and dipole components and adopting the summation convention) and the covariance matrix $C_{yy'}$ associated with the harmonic components $a_y$. We find that this matrix is invertible and can be used directly up to $\ell=8$. More careful treatment of the data is needed beyond this. The fractional variance in individual harmonics varies between $\sim0.0001$ and $\sim0.01$. Undoubtedly there are systematic effects present in this data set which need to be explored but the accuracy is high enough to proceed without this.
+In order to start us on a pilot investigation, the Planck team (IDENTIFY INGE OR NOT?) has kindly supplied us with 100 realizations of Planck temperature fluctuation data for $0\le\ell\le10$ or $1\le y\le121$. From this we are able to compute the mean photospheric potential fluctuation maps at the time of recombination $\Phi=a_yY_y$, (including the monopole and dipole components and adopting the summation convention) and the covariance matrix $C_{yy'}$ associated with the harmonic components $a_y$. We find that this matrix is invertible and can be used directly up to $\ell=8$. More careful treatment of the data is needed beyond this. The fractional variance in individual harmonics varies between $\sim0.0001$ and $\sim0.01$. Undoubtedly, there are systematic effects present in this data set which need to be explored but the accuracy is high enough to proceed without this.
 
 \subsubsection{Fourier Modes}
 It is conventional to Fourier expand the potential $\Phi$ at a given time, usually the present; the expansion at other times is then simply calculable. Although the full spectrum of the Fourier modes we are discussing is continuous in ${\bf k}$, the fact that our observations are made over a restricted volume means that we can treat the waves as a discrete Fourier transform of modes associated with a box in comoving space of side $L$ on which periodic boundary conditions are imposed. $L$ is chosen here to have a compromise value of four times the radius of the cosmic photosphere, $13.9$~Gpc\footnote{The comoving radius of the big bang is $14.2$~Gpc.} which we adopt as our unit of length.
@@ -101,24 +101,24 @@ where the coefficients $f_n$ are real and ${\bf k}=\Delta k\{n_1,n_2,n_3\}$, wit
 \end{equation}
 
 \subsubsection{Gaussian Prior}
-Detailed study of the CMB has led to the conclusion that the amplitude of each discrete mode with wave vector $\bf k$ is drawn from a Gaussian distribution of variance $\sigma_n^2=A(n_1^2+n_2^2+n_3^2)^{-3/2}$. We determine the coefficient $A$ by first expressing the spherical harmonic coefficients $a_y$ in terms of the Fourier coefficients according to:
+Detailed study of the CMB has led to the conclusion that the amplitude of each discrete mode with wave vector $\bf k$ is drawn from a Gaussian distribution of variance $\sigma_{(n)}^2=A(n_1^2+n_2^2+n_3^2)^{-3/2}$. We determine the coefficient $A$ by first expressing the spherical harmonic coefficients $a_y$ in terms of the Fourier coefficients according to:
 \begin{equation}
 a_y=R_{yn}f_n, {\rm where}\ R_{yn}=4\pi Y_y(\theta'\phi')j_\ell(k)[\cos(\pi\ell/2),\sin(\pi\ell/2)]\ {\rm for}\ [1\le n\le N/2,N/2<n\le N],
 \end{equation}
-and fitting the mean measured spherical harmonics to this relation. We find that $A=????$. (This is adequate for our pilot study, but an improved determination using the evidence follows the approach of Suyu et al. 2006.)
+and fitting the mean measured spherical harmonics to this relation. $R_{yn}$ is known as the response matrix. We find that $A=????$. (This is adequate for our pilot study, but an improved determination using the evidence follows the approach of Suyu et al. 2006.)
 \subsubsection{Preliminary Results}
 The simple question that motivated this investigation, and which did not seem to have a well-known answer, was how much of the 3D potential could be reconstructed interior to the 2D CMB photosphere using CMB observations alone. This is an example of what is sometimes called holography.\footnote{This is not the original meaning of the word.}  At first sight this might seem hopeless, because if one associates $\ell$ with $kx_{\rm CMB}$, then we are trying to solve for $O((k_{max}r_{\rm CMB})^3)$ Fourier modes using only $O(\ell_{max}^2)$ spherical harmonics. However, if we confine our attention to the longest wavelength waves, use all the information that is at our disposal exploit the high accuracy of the measurements while accepting uncertainty in the result, then it is possible to make some progress.
 
 We do this by estimating the coefficients $f_n$ through maximizing the likelihood or, equivalently, minimizing the quantity 
 \begin{equation}
--2\ln{\cal P}=(a_y-R_{yn}f_n)C_{yy'}^{-1}(a_{y'}-R_{y'n}f_n)+\frac{f_n^2}{\sigma_n^2}
+-2\ln{\cal P}=(a_y-R_{yn}f_n)C_{yy'}^{-1}(a_{y'}-R_{y'n'}f_n')+\frac{f_n^2}{\sigma_{(n)}^2}
 \end{equation}
-where $C_{yy'}^{-1}$ is the inverse of the covariance matrix, with respect to $f_n$. This leads to the linear equations:
+with respect to variation of $f_n$. Here, $C_{yy'}^{-1}$ is the inverse of the covariance matrix, This leads to the linear equations:
 \begin{equation}
-f_n=\left(\sigma_n^{-2}+C_{yy'}^{-1}R_{yn}R_{y'n}\right)^{-1}R_{yn}C_{yy'}^{-1}a_{y'}
+f_n=\left(\frac{\delta_{nn'}}{\sigma_{(n)}^2}+C_{yy'}^{-1}R_{yn}R_{y'n'}\right)^{-1}R_{yn'}C_{yy'}^{-1}a_{y'}
 \end{equation}
 
-So far, we have tested this procedure using fake data and found that it is generally possible to recover low order Fourier coefficients. We have also used the actual Planck data and our results are exhibited in Fig.~3. 
+So far, we have tested this procedure using fake data and found that it is generally possible to solve for stable, low order Fourier coefficients which can be used to recover the original harmonic coefficients $a_y$. We have also followed this procedure on the actual Planck data and our results are exhibited in Fig.~3. It is proposed to refine and improve upon this basic approach to obtain the best map we can based upon the CMB data alone. In particular we intend to set clear, statistical criteria for assessing when we can add additional Fourier components to the map. 
 \begin{figure}[t]
 \centering
 %\includegraphics{nsffig.pdf}

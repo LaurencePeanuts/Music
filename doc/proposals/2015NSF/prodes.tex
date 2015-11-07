@@ -16,6 +16,8 @@
 \def\go{\mathrel{\raise.3ex\hbox{$>$}\mkern-14mu\lower0.6ex\hbox{$\sim$}}}
 \def\lo{\mathrel{\raise.3ex\hbox{$<$}\mkern-14mu\lower0.6ex\hbox{$\sim$}}}
 
+\usepackage[numbers,sort&compress]{natbib}
+%\usepackage{jheppub}
 % ====================================================================
 
 \begin{document}
@@ -57,12 +59,14 @@ The potential associated with a mode was essentially frozen until it ``entered t
 
 \subsection{Inflation}
 
-The flatness of the geometry today, the isotropy of the CMB temperature, and the very existence of fluctuations with wavelengths longer than naively allowed by causality are all consistent with the simplest version of a much more specific and even bolder conjecture by Guth(1981), Linde(1982) and others, that the universe underwent a period of so-called ``inflation'' at much earlier times. This theory is based on the idea that all the structures in the observed universe emerged from quantum fluctuations about $10^{-33}$ seconds after the Big Bang. Inflation, which describes a phase of accelerated cosmic expansion, is the leading theory providing a causal mechanism for generating these fluctuations and stretching them to cosmological scales. The microphysics of inflation makes detailed predictions for the spectra of these fluctuations as observed in the CMB, in particular their slightly tilted power spectrum.
+The flatness of the geometry today, the isotropy of the CMB temperature, and the very existence of fluctuations with wavelengths longer than naively allowed by causality are all consistent with the simplest version of a much more specific and even bolder conjecture by Guth~\cite{Guth1981}, Linde~\cite{Linde1982a} and others~\cite{Press1980, Mukhanov:1981xt, Sato1981, Albrecht1982, Linde1982b, Abbott1982, Linde1983, Turner1983, Brandenberger1983, Moss1985, Linde1986a, Linde1986b, Linde1993}, that the universe underwent a period of so-called ``inflation'' at much earlier times. This theory is based on the idea that all the structures in the observed universe emerged from quantum fluctuations about $10^{-33}$ seconds after the Big Bang. Inflation, which describes a phase of accelerated cosmic expansion, is the leading theory providing a causal mechanism for generating these fluctuations and stretching them to cosmological scales~\cite{Sato1981, Mukhanov:1982nu, Guth1982, Hawking1982, Starobinsky1982, Bardeen1983, Brandenberger1984, Mukhanov1985, Sasaki1986, Mukhanov1988}. The microphysics of inflation makes detailed predictions for the spectra of these fluctuations as observed in the CMB, in particular their slightly tilted power spectrum.
 
 %This paragraph is facultative:
-Qualitatively, the causal mechanism seeding the primordial perturbations is easily understood. During inflation, the Hubble radius, $H^{-1}$, which can be thought of as the ``apparent horizon", remains (quasi) constant. Meanwhile, quantum fluctuations in the matter field(s) and metric are constantly generated with wavelength $H ^{-1}$ at most. Once produced, a fluctuation with comoving wavelength $\lambda$ is stretched with the expansion of space past the Hubble radius, at which point its dynamical timescale, $a/k$, becomes larger than the Hubble time, it ``exits the horizon'', and its amplitude freezes.  Throughout inflation, such fluctuations are continuously created at the physical scale $H^{-1}$. Therefore, by the end of inflation, perturbations will finally have been produced on a whole spectrum of physical scales.
+Qualitatively, the causal mechanism seeding the primordial perturbations is easily understood. During inflation, the Hubble radius, $H^{-1}$, which can be thought of as the ``apparent horizon", remains (quasi) constant. Meanwhile, quantum fluctuations in the matter field(s) and metric are constantly generated with wavelength $H ^{-1}$ at most~\cite{BirrellsBook1984}. Once produced, a fluctuation with comoving wavelength $\lambda$ is stretched with the expansion of space past the Hubble radius, at which point its dynamical timescale, $a/k$, becomes larger than the Hubble time: it ``exits the horizon'' and its amplitude freezes.  Throughout inflation, such fluctuations are continuously created at the physical scale $H^{-1}$. Therefore, by the end of inflation, perturbations will finally have been produced on a whole spectrum of physical scales.
 
 
+% therory of cosmological perturbations: Bardeen:1980
+% quantum perts in curved spacetime: BirrellsBook1984
 
 
 \section{Proposed Research}
@@ -170,6 +174,9 @@ Most of the use of surveys has been for drawing statistical inferences relating 
 
 It is helpful at this point to consider a volume limited-survey of objects out to some radius $r$. Suppose we have a set of objects, ($L^\ast$ galaxies, quasars, bright, star-forming galaxies $\dots$) with space density $n$ and we want to measure the amplitude of a given Fourier component with wave vector $k$ of the relative density perturbation associated with this potential $\delta\sim-2k^2\Phi/3a^2H^2$. Now the precision with which the amplitude of a single relative density perturbation Fourier mode can be measured is comparable with the precision with which the fractional density perturbation can be measured in a single region of size equal to the associated length scale. This is $\sim k^{3/2}n^{-1/2}$ and must exceed $\delta$. This suggests that the density of such objects must exceed $\sim H_0^4/c^2\Phi k_max$ if local surveys can possible connect with the CMB. A slightly more careful calculation indicates that making such a connection with existing survey and CMB data from stage 1 is just possible and so it is worth exploring this further. If, this is achievable, then although the data increment will be small, its value will be much greater because it can act as a phase reference for anchoring the imperfectly specified modes measured by CMB observations.
 
+\subsubsection{Constraints on Inflation}
+\cite{Carrasco2012}
+
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 \subsection{Stage 3. Future Surveys}
@@ -270,6 +277,11 @@ Suyu, Blandford, Freedman and Treu, organized a highly successful workshop on th
 Blandford is collaborating with Morganson and Schrabback on the measurement of cosmic shear using asymmetry in the angular correlation function on arc second angular scales following earlier work by Morganson and Blandford. The theory has been developed and an attempt is underway to seek this effect in existing data.
 \subsubsection{Microlensing studies of nomad planets}
 Blandford, Barnabe and Marshall have collaborated with former postdoc Strigari on an investigation of the use of microlensing observations, from ground and space, to enhance our statistical understanding of the frequency of planetary companions to main sequence stars in mass - semi major axis - eccentricity space in the light of the results from the Kepler space mission.  They have gone on  to assess the prospects of detecting interstellar planets and dwarf planets using microlensing. They argued that there could be as many as a hundred thousand of these �nomads� per star with masses larger than that of Pluto. In collaboration with Porter, they considered $\gamma$-ray limits on the incidence of nomads and began a study the probabilities of their carrying microbial life between stars (Panspermia). This last has led to a discussion of several experiments designed to quantify the viability of microorganisms under interstellar and re-entry conditions.
+
+
+\bibliographystyle{JHEP}
+\bibliography{prodes}
+
 \end{document}
 %%%%%%%%%%%%
 
@@ -295,3 +307,5 @@ Blandford, Barnabe and Marshall have collaborated with former postdoc Strigari o
 (Clowe \etal 2006, Bradac \etal 2007;  Fig.~\ref{fig:bc} ).
 
 % ====================================================================
+
+

@@ -16,6 +16,11 @@
 \def\go{\mathrel{\raise.3ex\hbox{$>$}\mkern-14mu\lower0.6ex\hbox{$\sim$}}}
 \def\lo{\mathrel{\raise.3ex\hbox{$<$}\mkern-14mu\lower0.6ex\hbox{$\sim$}}}
 
+\def\be{\begin{equation}}
+\def\ee{\end{equation}}
+\def\bea{\begin{eqnarray}}
+\def\eea{\end{eqnarray}}
+
 \usepackage[numbers,sort&compress]{natbib}
 
 % ====================================================================
@@ -46,11 +51,9 @@ The description of the average expansion of the universe is relatively uncontrov
 
 The observed fluctuations are conventionally described by a set of spatial Fourier modes expressed in terms of contemporary or comoving coordinates. These modes are longitudinal and the ones that mostly concern us here evolved linearly. It is convenient to describe their amplitude using the (effective) Newtonian potential $\Phi$,\footnote{It is simplest to work in the ``Newtonian'' gauge throughout.} from which the density and fluid velocity perturbations can be simply computed (in the "Sachs-Wolfe" limit at long wavelength). The radiation and neutrinos have to be treated kinetically and a second scalar curvature potential needs to be introduced for accurate calculations. There may also be tensor modes which we shall ignore here. If, and when, they are detected, only minor modifications will be needed. The modes that mostly concern us remain linear and are ``adiabatic'', so that we only need to know their amplitude and phase at one epoch, e.g. recombination, to predict them for all time.
 
-It has recently been demonstrated, mainly using CMB observations, that the adiabatic hypothesis is quite accurate. Furthermore, the amplitudes associated with each mode of the initial potential scale as $k^{-3/2}$ and are drawn from a Gaussian distribution, so that the potential fluctuations associated with each length scale are scale-independent.\footnote{Actually there is a small tilt in their power spectrum in the sense of there being slightly larger amplitudes at longer wavelengths. This requires a small correction to what follows.} This behavior is consistent with a remarkable early conjecture by Harrison (1970) as elaborated by Zel'dovich (1972). 
+It has recently been demonstrated, mainly using CMB observations~\cite{Planck2013}, that the adiabatic hypothesis is quite accurate. Furthermore, the amplitudes associated with each mode of the initial potential scale as $k^{-3/2}$ and are drawn from a Gaussian distribution, so that the potential fluctuations associated with each length scale are scale-independent.\footnote{Actually there is a small tilt in their power spectrum in the sense of there being slightly larger amplitudes at longer wavelengths. This requires a small correction to what follows.} This behavior is consistent with a remarkable early conjecture by Harrison~\cite{Harrison1970} as elaborated by Zel'dovich~\cite{Zeldovich1972}. 
 
-The potential associated with a mode was essentially frozen until it ``entered the horizon,'' that is, until the timescale for its dynamical evolution, $a/k$, became smaller than the Hubble timescale (which can be thought of as the estimated age of the Universe if the expansion rate were constant).
-%until its wavelength became smaller than the Hubble radius. If
-   We are mostly concerned with wavelength modes for which this happened before recombination and $k<k_0\sim40{\rm Gpc}^{-1}$.\footnote{$k_0$ can be considered as approximately the wavenumber associated with the first acoustic peak and its consequence, Baryon Acoustic Oscillations (BAO).} For such wavenumbers, the waves evolve at roughly constant $\Phi$ until the cosmological constant takes over and the potential falls by roughly 20 percent today. We make this explicit in Fig.~1 where we show the interior of the last scattering surface in comoving coordinate space and a particular wave whose amplitude and phase we are trying to measure.
+The potential associated with a mode was essentially frozen until it ``entered the horizon,'' that is, until the timescale for its dynamical evolution, $a/k$, became smaller than the Hubble timescale (which can be thought of as the estimated age of the Universe if the expansion rate were constant). We are mostly concerned with wavelength modes for which this happened before recombination and $k<k_0\sim40{\rm Gpc}^{-1}$.\footnote{$k_0$ can be considered as approximately the wavenumber associated with the first acoustic peak and its consequence, Baryon Acoustic Oscillations (BAO).} For such wavenumbers, the waves evolve at roughly constant $\Phi$ until the cosmological constant takes over and the potential falls by roughly 20 percent today. We make this explicit in Fig.~1 where we show the interior of the last scattering surface in comoving coordinate space and a particular wave whose amplitude and phase we are trying to measure.
 \begin{figure}[t]
 \centering
 \includegraphics{nsffig.pdf}
@@ -59,14 +62,15 @@ The potential associated with a mode was essentially frozen until it ``entered t
 
 \subsection{Inflation}
 
-The flatness of the geometry today, the isotropy of the CMB temperature, and the very existence of fluctuations with wavelengths longer than naively allowed by causality are all consistent with the simplest version of a much more specific and even bolder conjecture by Guth~\cite{Guth1981}, Linde~\cite{Linde1982a} and others~\cite{Press1980, Mukhanov:1981xt, Sato1981, Albrecht1982, Linde1982b, Abbott1982, Linde1983, Turner1983, Brandenberger1983, Moss1985, Linde1986a, Linde1986b, Linde1993}, that the universe underwent a period of so-called ``inflation'' at much earlier times. This theory is based on the idea that all the structures in the observed universe emerged from quantum fluctuations about $10^{-33}$ seconds after the Big Bang. Inflation, which describes a phase of accelerated cosmic expansion, is the leading theory providing a causal mechanism for generating these fluctuations and stretching them to cosmological scales~\cite{Sato1981, Mukhanov:1982nu, Guth1982, Hawking1982, Starobinsky1982, Bardeen1983, Brandenberger1984, Mukhanov1985, Sasaki1986, Mukhanov1988}. The microphysics of inflation makes detailed predictions for the spectra of these fluctuations as observed in the CMB, in particular their slightly tilted power spectrum.
+\label{sec:introinflation}
+
+The flatness of the geometry today, the isotropy of the CMB temperature, and the very existence of fluctuations with wavelengths longer than naively allowed by causality are all consistent with the simplest version of a much more specific and even bolder conjecture by Guth~\cite{Guth1981}, Linde~\cite{Linde1982a} and others (e.g.~\cite{Press1980, Mukhanov:1981xt, Sato1981, Albrecht1982, Linde1982b, Abbott1982, Linde1983, Turner1983, Brandenberger1983, Moss1985, Linde1986a, Linde1986b, Linde1993}), that the universe underwent a period of so-called ``inflation'' at much earlier times. This theory is based on the idea that all the structures in the observed universe emerged from quantum fluctuations about $10^{-33}$ seconds after the Big Bang. Inflation, which describes a phase of accelerated cosmic expansion, is the leading theory providing a causal mechanism for generating these fluctuations and stretching them to cosmological scales (as first realized in~\cite{Sato1981, Mukhanov:1982nu, Guth1982, Hawking1982, Starobinsky1982, Bardeen1983, Brandenberger1984, Mukhanov1985, Sasaki1986, Mukhanov1988}). The microphysics of inflation makes detailed predictions for the spectra of these fluctuations as observed in the CMB, in particular their slightly tilted power spectrum (see e.g.~\cite{Malik2008, Gordon2000} for reviews).
 
 %This paragraph is facultative:
 Qualitatively, the causal mechanism seeding the primordial perturbations is easily understood. During inflation, the Hubble radius, $H^{-1}$, which can be thought of as the ``apparent horizon", remains (quasi) constant. Meanwhile, quantum fluctuations in the matter field(s) and metric are constantly generated with wavelength $H ^{-1}$ at most~\cite{BirrellsBook1984}. Once produced, a fluctuation with comoving wavelength $\lambda$ is stretched with the expansion of space past the Hubble radius, at which point its dynamical timescale, $a/k$, becomes larger than the Hubble time: it ``exits the horizon'' and its amplitude freezes.  Throughout inflation, such fluctuations are continuously created at the physical scale $H^{-1}$. Therefore, by the end of inflation, perturbations will finally have been produced on a whole spectrum of physical scales.
 
 
-% therory of cosmological perturbations: Bardeen:1980
-% quantum perts in curved spacetime: BirrellsBook1984
+% therory of cosmological perturbations: Lifshitz1946, Lifshitz1963, Bardeen:1980
 
 
 \section{Proposed Research}
@@ -128,9 +132,62 @@ We have tested this procedure using fake data and found that it is generally pos
 %\includegraphics{nsffig.pdf}
 \caption{Preliminary recovery of the potential $\Phi$ at the time of inflation from the CMB data alone. Fourier coefficients up to $n_{\rm max}=???$ are used. A higher resolution map should be possible using a more sophisticated inversion process and including polarization data.}
 \end{figure}
-\subsubsection{Inflationary Origin of Observed Perturbations and Hyperparameter Estimation}
+\subsubsection{Inflationary Origin of Perturbations and Hyperparameter Estimation}
 
-LAURENCE TO DRAFT UP TO 1PAGE INCLUDING FIGURE
+As explained in section~\ref{sec:introinflation}, inflation provides a mechanism for seeding perturbations in the CMB from quantum fluctuations in the early Universe. It is standard, as we shall do here, for most models to assume that the main matter components during inflation are in the form of scalar fields%, an assumption which shall be adopted in what follows
+. Moreover, for simplicity, we shall assume that only one scalar field is dynamically relevant, so that we will work within the framework of 'single-field' inflation. Appart from these caveats, the framework developed in what follows will remain model independent.
+
+We want to describe perturbations of the scalar field, which we call $\varphi$, about a homogeneous background. It is common to quantify these perturbations with the gauge-invariant curvature perturbation, $\zeta$.\footnote{At late times (i.e. after the time of BBN) and inside of the horizon, when we use the Newtonian gauge to describe the Newtonian potential $\Phi$, one can think of $\zeta$ and $\Phi$ interchangeably. The main advantage of using $\zeta$ during inflation is that, in single-field inflation, the amplitude of its Fourier modes remain constant from horizon exit to horizon re-entry, significantly simplifying their evaluation.}
+%which is defined by:
+%\be
+%	-\zeta=\psi+H\frac{\delta\rho}{\rho}\, ,
+%\ee
+%where $\psi$ is the trace part of the spatial scalar metric perturbations, i.e. writing the most general spatial scalar perturbation to a 4-d metric by $\delta g_{ij}=2(\psi\delta_{ij}-E_{ij})$ with $\nabla^2E=0$, then $\psi$ contains the trace of the perturbation. We also define $\rho$ and $\delta \rho$ to be the mean energy density and the linear energy density perturbation, respectively, as well as the $H$, the Hubble parameter. 
+ In the co-moving gauge, the Fourier modes of $\zeta$ as they exit the horizon are
+\be
+	\zeta_{\vec{k}}=\sqrt{\frac{\pi}{2}}e^{i\theta}e^{i\frac{\pi}{2}\left(\nu+\frac{1}{2}\right)}(-\tau)^{\nu}\mathcal{H}^{(1)}_\nu(-k\tau)\, .
+\ee
+Here, $\nu$ is a slowly varying function which encapsulates the specific dynamics of the inflationary model, $\mathcal{H}^{(1)}_\nu$ is a Hankel function of the first kind, $\tau$ is the conformal time, defined by $d\tau=a(t)dt$, and $\theta$ is a random variable endowing each mode with a random phase. A prediction of inflation is that $\theta$ should have a uniform probability distribution between 0 and $2\pi$. This is a fundamental prediction of inflation which stems from the assumption that the fluctuations are quantum mechanical in origin, the very assumption the idea of inflation is based upon. 
+
+However, the actual distribution of the phases for the modes of $\zeta$ (or $\Phi$) in the CMB has yet to be measured. This is because, so far, most experiments have strived to measure the power spectrum, $\Delta_\zeta^2$, of fluctuations. %defined by:
+%\be
+%	\Delta_\zeta^2=\frac{k^3}{2\pi^2}\mathcal{P}_\zeta \propto |\zeta_{\vec{k}}|^2\,.
+%\ee
+Because the power spectrum is proportional to $ |\zeta_{\vec{k}}|^2$, when such a measurement is made, the phase information of the modes is lost. With the reconstruction method proposed in this proposal, such measurement will become possible.
+
+\begin{figure*}[t]
+\vspace{-2cm}
+\begin{center}
+\centering
+\begin{minipage}[t]{0.48\linewidth}
+\centering
+\includegraphics[trim = 80 -32 0 50 mm, width=.8\textwidth]{onemodeThetadist.pdf}\\
+\end{minipage}
+\begin{minipage}[t]{0.48\linewidth}
+\centering
+\includegraphics[trim = 0 0 0 0 mm, clip, width=.8\textwidth]{first10modesThetadist.pdf}\\
+\end{minipage}
+\caption{\label{f:variations} 
+{\it Left panel}: \small{Distribution of the modes of $\zeta_{\vec{k}}$ at fixed $|\vec{k}|$.} {\it Right panel}: \small{Representation of  the norm of the first few $k$-modes ($|\vec{n}|$ from 2 to 10),versus their random spatial angle $\theta$. If the individual modes were clustering around an angle, this would demonstrate that $\theta$ is actually not a uniformly distributed random variable, representing a serious challenge for inflation. Regardless of the distribution of $\theta$, observations of $\Delta_\zeta^2$ would not be affected. }
+\vspace{-1cm}
+}
+
+\end{center}
+\end{figure*}
+
+One on the main uncertainty pertaining to inflation remains the shape of the potential for the scalar field $\varphi$, which determines the specific dynamics of inflation, like its energy scale, the precise shape of the power spectrum, bi-spectrum, etc. it produces, among others. Using our low-$k$ 3-D reconstruction of the potential $\Phi$, it will also be possible to reconstruct the inflationary potential over a limited range of $\varphi$. This is achieved by expanding the potential locally around a fixed $\varphi=\varphi_*$ in a model independent way in terms of the so-called slow-roll parameters. We can then define the inflationary vector parameter
+\be
+	\vec{\eta}=\left(H^2_*/\epsilon_*,\, \epsilon_*, \,\eta_*, \, (\eta_2)_*, \,(\eta_3)_*\right)\, ,
+\ee
+which defines uniquely a shape for the potential around $\varphi_*$. Here, the star quantities refer to their values when $\varphi=\varphi_*$. Using Bayse's theorem, it is then possible to infer the probability of a given vector $\vec{\eta}$ given the observations, marginalized over the potential map $f_n$, $\mathcal{P}(\vec{\eta}| a_{y})$,
+\be
+\mathcal{P}(\vec{\eta}| a_{y})=\frac{1}{(2\pi)^{p/2}} \frac{1}{\left[\mathrm{Det}(C_{nn'})\mathrm{Det}(C_{yy'})\mathrm{Det}\,\mathbf{A}\right]^{1/2}}\exp\left\{\frac{1}{2}\mathbf{B}^{\mathrm{T}}\mathbf{A}^{-1}\mathbf{B}-\frac{1}{2}a^{\mathrm{T}}_{y'}C_{y'y}^{-1}a_{y} \right\}\frac{\mathcal{P}(\vec{\eta})}{\mathcal{P}(a_{y})}\, ,
+\ee
+where $\mathcal{P}(\vec{\eta})$ is the prior on $\vec{\eta}$, ~$C_{nn'}^{-1}$ is a diagonal matrix with diagonal elements given by $1/|\zeta_{\vec{k}}|^2$, and the $\mathbf{A}$ and $\mathbf{B}$ matrices are given by:
+\be
+	\mathbf{A}=\mathbf{R}_{y'n'}^{\mathrm{T}}C^{-1}_{y'y} \mathbf{R}_{yn}+C_{nn'}^{-1}\, ,\qquad \qquad
+	 \mathbf{B}^{\mathrm{T}}=a_{y'}^{\mathrm{T}}C_{y'y}^{-1}\mathbf{R}_{yn}\, .
+\ee
 
 
 \subsubsection{Detailed Approach Incorporating Planck Polarization DATA}

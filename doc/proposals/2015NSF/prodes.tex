@@ -120,7 +120,7 @@ where the coefficients $f_n$ are real and ${\bf k}=\Delta k\{n_1,n_2,n_3\}$, wit
 \subsubsection{Gaussian Prior}
 \label{sec:fnGaussianPrior}
 
-Detailed study of the CMB (e.g.~\cite{Aghanim:2015xee, Ade:2015ava}) has led to the conclusion that the amplitude of each discrete mode with wave vector $\bf k$ is well modeled as having been drawn from a Gaussian distribution of variance $\sigma_{\bf n}^2=\alpha(n_1^2+n_2^2+n_3^2)^{-3/2}$. Adopting this model, we can determine the coefficient $\alpha$ approximately and empirically, by computing the spherical harmonic coefficients $a_y \mathbf{R}_{yn}f_n$ for sets of Gaussian $f_n$s where the ``response matrix'' is given by:
+Detailed study of the CMB (e.g.~\cite{Aghanim:2015xee, Ade:2015ava}) has led to the conclusion that the amplitude of each discrete mode with wave vector $\bf k$ is well modeled as having been drawn from a Gaussian distribution of variance $\sigma_{ n}^2=\alpha(n_1^2+n_2^2+n_3^2)^{-3/2}$. Adopting this model, we can determine the coefficient $\alpha$ approximately and empirically, by computing the spherical harmonic coefficients $a_y \mathbf{R}_{yn}f_n$ for sets of Gaussian $f_n$s where the ``response matrix'' is given by:
 \begin{equation}
 \mathbf{R}_{yn}=4\pi Y_y(\theta'\phi')j_\ell(k)[\cos(\pi\ell/2),\sin(\pi\ell/2)]\ {\rm for}\ [1\le n\le N/2,\ N/2<n\le N]\, ,
 \end{equation}
@@ -133,7 +133,7 @@ The simple question that motivated this investigation, and which did not seem to
 
 We approximately characterize the posterior PDF (which under our assumptions is a multi-variate Gaussian distribution) for the coefficients $f_n$ by first finding its peak, minimizing the quantity
 \begin{equation}
--2\ln{\cal P} \approx (a_y- \mathbf{R}_{yn}f_n)^{\mathrm{T}}C_{yy'}^{-1}(a_{y'}-\mathbf{R}_{y'n'}f_n')+\frac{f_n^2}{\sigma_{\bf n}^2} + \mathrm{const.}
+-2\ln{\cal P}\left(f_n|a_n\right) \approx (a_y- \mathbf{R}_{yn}f_n)^{\mathrm{T}}C_{yy'}^{-1}(a_{y'}-\mathbf{R}_{y'n'}f_n')+\frac{f_n^2}{\sigma_{ n}^2} + \mathrm{const.}
 \end{equation}
 with respect to variation of $f_n$. Note that $\sigma_{\bf n}$ contains the normalization $\alpha$ referred to in Section~\ref{sec:fnGaussianPrior} above.
 
@@ -143,7 +143,8 @@ of the covariance matrix. This leads to the linear equations:
 f_n=\left(\frac{\delta_{nn'}}{\sigma_{(n)}^2}+\mathbf{R}_{yn}^{\mathrm{T}}C_{yy'}^{-1}\mathbf{R}_{y'n'}\right)^{-1}\mathbf{R}^{\mathrm{T}}_{yn'}C_{yy'}^{-1}a_{y'}
 \end{equation}
 
-In Section~\ref{} below, we give a more rigorously-derived expression for the posterior PDF ${\cal P}$. The approximate form given here is sufficient for a vital early feasibility check:
+%In Section~\ref{} below, we give a more rigorously-derived expression for the posterior PDF ${\cal P}$.
+The approximate form given here is sufficient for a vital early feasibility check:
 using mock data, we have found that {\it it is generally possible to solve for stable, low order maximum posterior Fourier coefficients, which successfully predict replica harmonic coefficients $a_y$ that are statistically consistent with the original data.} We have also applied this approximate procedure to the actual Planck data, and our results are exhibited in Fig.~3. It is proposed to refine and improve upon this basic approach to obtain the best map we can based upon the CMB data alone. In particular we intend to set clear, statistical criteria for assessing when it is significant to add additional Fourier components to the map.
 \begin{figure}[t]
 \centering
@@ -206,7 +207,7 @@ which defines uniquely a shape for the potential around $\varphi_*$. Here, the s
 \be
 \mathcal{P}(\vec{\eta}| a_{y})=\frac{1}{(2\pi)^{p/2}} \left[\mathrm{Det}(C_{nn'})\mathrm{Det}(C_{yy'})\mathrm{Det}\,\mathbf{A}_{nn'}\right]^{-1/2}e^{\left\{\frac{1}{2}\mathbf{B}_{n}^{\mathrm{T}}\mathbf{A}_{nn'}^{-1}\mathbf{B}_{n'}-\frac{1}{2}a^{\mathrm{T}}_{y'}C_{y'y}^{-1}a_{y} \right\}}\frac{\mathcal{P}(\vec{\eta})}{\mathcal{P}(a_{y})}\, ,
 \ee
-where $\mathcal{P}(\vec{\eta})$ is the prior on $\vec{\eta}$, ~$C_{n'n}^{-1}$ is a diagonal matrix with diagonal elements given by $1/|\zeta_{{\bf k}}|^2$ or, equivalently, $1/{\sigma_{\bf n}^2}$ as defined in Section~\ref{sec:fnGaussianPrior},\footnote{$C_{n'n}^{-1}$ therefore corresponds to the covariance matrix of the Gaussian prior from Section~\ref{sec:fnGaussianPrior} for fixed $\vec{\eta}$ values} and the $\mathbf{A}$ matrix and $\mathbf{B}$ vector are given by:
+where $\mathcal{P}(\vec{\eta})$ is the prior on $\vec{\eta}$, ~$C_{n'n}^{-1}$ is a diagonal matrix with diagonal elements given by $1/|\zeta_{{\bf k}}|^2$ or, equivalently, $1/{\sigma_{ n}^2}$ as defined in Section~\ref{sec:fnGaussianPrior},\footnote{$C_{n'n}^{-1}$ therefore corresponds to the covariance matrix of the Gaussian prior from Section~\ref{sec:fnGaussianPrior} for fixed $\vec{\eta}$ values} and the $\mathbf{A}$ matrix and $\mathbf{B}$ vector are given by:
 \be
 	\mathbf{A}_{nn'}=\mathbf{R}_{y'n}^{\mathrm{T}}C^{-1}_{y'y} \mathbf{R}_{yn'}+C_{nn'}^{-1}\, ,\qquad \qquad
 	 \mathbf{B}_{n}^{\mathrm{T}}=a_{y'}^{\mathrm{T}}C_{y'y}^{-1}\mathbf{R}_{yn}\, .

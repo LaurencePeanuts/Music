@@ -133,16 +133,17 @@ The simple question that motivated this investigation, and which did not seem to
 
 We approximately characterize the posterior PDF (which under our assumptions is a multi-variate Gaussian distribution) for the coefficients $f_n$ by first finding its peak, minimizing the quantity
 \begin{equation}
--2\ln{\cal P}=(a_y- \mathbf{R}_{yn}f_n)^{\mathrm{T}}C_{yy'}^{-1}(a_{y'}-\mathbf{R}_{y'n'}f_n')+\frac{f_n^2}{\sigma_{\bf n}^2}
+-2\ln{\cal P} \approx (a_y- \mathbf{R}_{yn}f_n)^{\mathrm{T}}C_{yy'}^{-1}(a_{y'}-\mathbf{R}_{y'n'}f_n')+\frac{f_n^2}{\sigma_{\bf n}^2} + \mathrm{const.}
 \end{equation}
-with respect to variation of $f_n$. (Note that $\sigma_{\bf n}$ contains the normalization $\alpha$ referred to in Section~\ref{sec:fnGaussianPrior} above.)
+with respect to variation of $f_n$. Note that $\sigma_{\bf n}$ contains the normalization $\alpha$ referred to in Section~\ref{sec:fnGaussianPrior} above.
 Here, $C_{yy'}^{-1}$ is the inverse
 of the covariance matrix. This leads to the linear equations:
 \begin{equation}
 f_n=\left(\frac{\delta_{nn'}}{\sigma_{(n)}^2}+\mathbf{R}_{yn}^{\mathrm{T}}C_{yy'}^{-1}\mathbf{R}_{y'n'}\right)^{-1}\mathbf{R}^{\mathrm{T}}_{yn'}C_{yy'}^{-1}a_{y'}
 \end{equation}
 
-We have tested this procedure using mock data and found that it is generally possible to solve for stable, low order maximum posterior Fourier coefficients which can then be used to recover the original harmonic coefficients $a_y$. We have also followed this procedure on the actual Planck data, and our results are exhibited in Fig.~3. It is proposed to refine and improve upon this basic approach to obtain the best map we can based upon the CMB data alone. In particular we intend to set clear, statistical criteria for assessing when it is significant to add additional Fourier components to the map.
+In Section~\ref{} below, we give a more rigorously-derived expression for the posterior PDF ${\cal P}$. The approximate form given here is sufficient for a vital early feasibility check:
+using mock data, we have found that {\it it is generally possible to solve for stable, low order maximum posterior Fourier coefficients, which successfully predict replica harmonic coefficients $a_y$ that are statistically consistent with the original data.} We have also applied this approximate procedure to the actual Planck data, and our results are exhibited in Fig.~3. It is proposed to refine and improve upon this basic approach to obtain the best map we can based upon the CMB data alone. In particular we intend to set clear, statistical criteria for assessing when it is significant to add additional Fourier components to the map.
 \begin{figure}[t]
 \centering
 %\includegraphics{nsffig.pdf}

@@ -51,7 +51,7 @@ The description of the average expansion of the universe is relatively uncontrov
 
 The observed fluctuations are conventionally described by a set of spatial Fourier modes expressed in terms of contemporary or comoving coordinates. These modes are longitudinal and the ones that mostly concern us here evolved linearly. It is convenient to describe their amplitude using the (effective) Newtonian potential $\Phi$,\footnote{It is simplest to work in the ``Newtonian'' gauge throughout.} from which the density and fluid velocity perturbations can be simply computed (in the "Sachs-Wolfe" limit at long wavelength~\cite{Sachs1967}). The radiation and neutrinos have to be treated kinetically and a second scalar curvature potential needs to be introduced for accurate calculations. There may also be tensor modes which we shall ignore here. If, and when, they are detected, only minor modifications will be needed. The modes that mostly concern us remain linear and are ``adiabatic'', so that we only need to know their amplitude and phase at one epoch, e.g. recombination, to predict them for all time.
 
-It has recently been demonstrated, mainly using CMB observations~\cite{Planck2015cosmopara}, that the adiabatic hypothesis is quite accurate. Furthermore, the amplitudes associated with each mode of the initial potential scale as $k^{-3/2}$ and are drawn from a Gaussian distribution, so that the potential fluctuations associated with each length scale are scale-independent.\footnote{Actually there is a small tilt in their power spectrum in the sense of there being slightly larger amplitudes at longer wavelengths. This requires a small correction to what follows and is addressed in sec.~\ref{sec:researchinflation}.} This behavior is consistent with a remarkable early conjecture by Harrison~\cite{Harrison1970} as elaborated by Zel'dovich~\cite{Zeldovich1972}. 
+It has recently been demonstrated, mainly using CMB observations~\cite{Planck2015cosmopara}, that the adiabatic hypothesis is quite accurate. Furthermore, the amplitudes associated with each mode of the initial potential scale as $k^{-3/2}$ and are drawn from a Gaussian distribution, so that the potential fluctuations associated with each length scale are scale-independent.\footnote{Actually there is a small tilt in their power spectrum in the sense of there being slightly larger amplitudes at longer wavelengths. This requires a small correction to what follows and is addressed in Section~\ref{sec:researchinflation}.} This behavior is consistent with a remarkable early conjecture by Harrison~\cite{Harrison1970} as elaborated by Zel'dovich~\cite{Zeldovich1972}.
 
 The potential associated with a mode was essentially frozen until it ``entered the horizon,'' that is, until the timescale for its dynamical evolution, $a/k$, became smaller than the Hubble timescale (which can be thought of as the estimated age of the Universe if the expansion rate were constant). We are mostly concerned with wavelength modes for which this happened before recombination and $k<k_0\sim40{\rm Gpc}^{-1}$.\footnote{$k_0$ can be considered as approximately the wavenumber associated with the first acoustic peak and its consequence, Baryon Acoustic Oscillations (BAO).} For such wavenumbers, the waves evolve at roughly constant $\Phi$ until the cosmological constant takes over and the potential falls by roughly 20 percent today. We make this explicit in Fig.~1 where we show the interior of the last scattering surface in comoving coordinate space and a particular wave whose amplitude and phase we are trying to measure.
 \begin{figure}[t]
@@ -65,7 +65,7 @@ The potential associated with a mode was essentially frozen until it ``entered t
 \label{sec:introinflation}
 
 The flatness of the geometry today, the isotropy of the CMB temperature, and the very existence of fluctuations with wavelengths longer than naively allowed by causality are all consistent with the simplest version of a much more specific and even bolder conjecture by Guth~\cite{Guth1981}, Linde~\cite{Linde1982a} and others (e.g.~\cite{%Press1980,
- Mukhanov:1981xt, Sato1981, Hawking1982, Starobinsky1982, Albrecht1982, %Linde1982b, Abbott1982, Guth1982, 
+ Mukhanov:1981xt, Sato1981, Hawking1982, Starobinsky1982, Albrecht1982, %Linde1982b, Abbott1982, Guth1982,
   Bardeen1983%, Linde1983, Turner1983, Brandenberger1983, Moss1985, Sasaki1986, Mukhanov1988
   }), that the universe underwent a period of so-called ``inflation'' at much earlier times. This theory is based on the idea that all the structures in the observed universe emerged from quantum fluctuations about $10^{-33}$ seconds after the Big Bang. Inflation, which describes a phase of accelerated cosmic expansion, is the leading theory providing a causal mechanism for generating these fluctuations and stretching them to cosmological scales%(as first realized in~\cite{Mukhanov:1982nu,  %Brandenberger1984, Linde1986a, Linde1986b, Linde1993 Mukhanov1985, })
 . The microphysics of inflation makes detailed predictions for the spectra of these fluctuations as observed in the CMB, in particular their slightly tilted power spectrum (see e.g.~\cite{Malik2008, Gordon2000} and references therein).
@@ -100,66 +100,77 @@ Most quantitative cosmology derives from CMB observations. The conventional way 
 
 Most investigations have focused on measuring the ``power'' in the temperature fluctuations (including polarization) associated with a given $\ell$, obtained by summing products of the coefficients of the harmonic components over $m$, and comparing it with the predictions of various cosmological models. This program has been wonderfully productive, and has resulted in the world model just outlined. Furthermore this power spectrum has been successfully reconciled with features of the local universe, such as galaxy counts. One common assumption is that the particular realization of the universe that we are observing is drawn from a statistical ensemble of universes. When $\ell$ is large, we have many independent measurements on the associated angular scale, $\sim\pi/\ell$, and so we can measure an rms value for the harmonic component with a small variance. However, when $\ell$ is small, we have only a few such measurements and the ``cosmic'' variance is large. Despite their great value, these statistical measurements inevitably discard information which may be valuable.\footnote{This is in the sense that music is far more than a ``flicker'' power spectrum. To pursue our musical metaphor, different voices and instruments contribute different ranges of frequencies to a musical performance over a total range of roughly ten octaves. We are only listening to the bass range but higher voices and instruments can still contribute to what we hear.}  In the proposed study, only one specific realization of the universe -- the one we inhabit --  is considered.
 
-In order to start us on a pilot investigation, the Planck team (IDENTIFY INGE OR NOT?) has kindly supplied us with 100 realizations of Planck temperature fluctuation data for $0\le\ell\le10$ or $1\le y\le121$. From this we are able to compute the mean photospheric potential fluctuation maps at the time of recombination $\Phi=a_yY_y$, (including the monopole and dipole components and adopting the summation convention) and the covariance matrix $C_{yy'}$ associated with the harmonic components $a_y$. We find that this matrix is invertible and can be used directly up to $\ell=8$. More careful treatment of the data is needed beyond this. The fractional variance in individual harmonics varies between $\sim0.0001$ and $\sim0.01$. Undoubtedly, there are systematic effects present in this data set which need to be explored but the accuracy is high enough to proceed without this.
+In order to start us on a pilot investigation, Planck team members Wehus \& Eriksen  (Oslo) have kindly supplied us with 100 sample Planck temperature fluctuation maps for $0\le\ell\le10$ or $1\le y\le121$. From this ensemble we are able to compute the mean photospheric potential fluctuation map at the time of recombination $\Phi=a_yY_y$, (including the monopole and dipole components and adopting the summation convention) and the covariance matrix $C_{yy'}$ associated with the harmonic components $a_y$. We find that this matrix is invertible and can be used directly up to $\ell=8$. More careful treatment of the data is needed beyond this. The fractional variance in individual harmonics varies between $\sim0.0001$ and $\sim0.01$. Undoubtedly, there are systematic effects present in this data set which need to be explored, but the accuracy is high enough to proceed without this.
 
 \subsubsection{Fourier Modes}
+
 It is conventional to Fourier expand the potential $\Phi$ at a given time, usually the present; the expansion at other times is then simply calculable. Although the full spectrum of the Fourier modes we are discussing is continuous in ${\bf k}$, the fact that our observations are made over a restricted volume means that we can treat the waves as a discrete Fourier transform of modes associated with a box in comoving space of side $L$ on which periodic boundary conditions are imposed. $L$ is chosen here to have a compromise value of four times the radius of the cosmic photosphere, $13.9$~Gpc\footnote{The comoving radius of the big bang is $14.2$~Gpc.} which we adopt as our unit of length.
 \begin{equation}
 \Phi[{\bf x}(r,\theta,\phi)]=\sum_{n=1}^{N/2}[f_n\cos({\bf k}_n\cdot{\bf x})+f_{N+1-n}\sin({\bf k}_n\cdot{\bf x})]
 \end{equation}
-where the coefficients $f_n$ are real and ${\bf k}=\Delta k\{n_1,n_2,n_3\}$, with $n_1,n_2,n_3$ integers and $\Delta k=2\pi/L=\pi/2$.  We restrict the sum to $(n_1^2+n_2^2+n_3^2)^{1/2}\le n_{\rm max}$ and only need consider $\bf k$ over a hemisphere. We label the coefficients by the index $n$ running from $1$ to $N\sim4\pi n_{\rm max}^3/3$. ($N=6$ through $4168$ for $n_{\rm max}=1$ through $10$.) $\Phi({\bf x})$ can be expanded formally as an infinite sum of Legendre polynomials and approximately as a finite sum:
+where the coefficients $f_n$ are real and ${\bf k}=\Delta k\{n_1,n_2,n_3\}$, with $n_1,n_2,n_3$ integers and $\Delta k=2\pi/L=\pi/2$.  We restrict the sum to $(n_1^2+n_2^2+n_3^2)^{1/2}\le n_{\rm max}$ and only need consider $\bf k$ over a hemisphere (since the potential must everywhere be real.) We label the coefficients by the index $n$ running from $1$ to $N\sim4\pi n_{\rm max}^3/3$. ($N=6$ through $4168$ for $n_{\rm max}=1$ through $10$.) $\Phi({\bf x})$ can be expanded formally as an infinite sum of Legendre polynomials and approximately as a finite sum:
 \begin{equation}
 \Phi({\bf x;\ell})=\sum_{\ell'=0} ^\ell(2\ell'+1)\sum_{n=1}^{N/2}j_{\ell'}(k_nx)P_{\ell'}({\hat{\bf k}}_n\cdot{\hat{\bf x}}[\cos(\ell\pi/2)f_n+\sin(\ell\pi/2)f_{N+1-n}].
 \end{equation}
 
-\subsubsection{Gaussian Prior}
 
+\subsubsection{Gaussian Prior}
 \label{sec:fnGaussianPrior}
 
-Detailed study of the CMB (e.g.~\cite{Aghanim:2015xee, Ade:2015ava}) has led to the conclusion that the amplitude of each discrete mode with wave vector $\bf k$ is drawn from a Gaussian distribution of variance $\sigma_{\bf n}^2=A(n_1^2+n_2^2+n_3^2)^{-3/2}$. We determine the coefficient $A$ by first expressing the spherical harmonic coefficients $a_y$ in terms of the Fourier coefficients according to:
+Detailed study of the CMB (e.g.~\cite{Aghanim:2015xee, Ade:2015ava}) has led to the conclusion that the amplitude of each discrete mode with wave vector $\bf k$ is well modeled as having been drawn from a Gaussian distribution of variance $\sigma_{\bf n}^2=\alpha(n_1^2+n_2^2+n_3^2)^{-3/2}$. Adopting this model, we determine the coefficient $\alpha$ by first expressing the spherical harmonic coefficients $a_y$ in terms of the Fourier coefficients according to:
 \begin{equation}
 a_y= \mathbf{R}_{yn}f_n, ~{\rm where}~  \mathbf{R}_{yn}=4\pi Y_y(\theta'\phi')j_\ell(k)[\cos(\pi\ell/2),\sin(\pi\ell/2)]\ {\rm for}\ [1\le n\le N/2,\ N/2<n\le N]\, ,
 \end{equation}
-and fitting the mean measured spherical harmonics to this relation. $ \mathbf{R}_{yn}$ is known as the response matrix. We will define an explicit expression for A in sec.~\ref{sec:researchinflation}. (This is adequate for our pilot study, but an improved determination using the evidence follows the approach of~\cite{Suyu2006})
+and fitting the mean measured spherical harmonics to this relation.
+
+PJM: WHERE IS $\alpha$ IN THIS PROCEDURE?
+
+(We refer to $\mathbf{R}_{yn}$ as the ``response matrix.'') This approach is adequate for our pilot study; an improved determination will be investigated following the evidence analysis of~\cite{Suyu2006}, en route to a hierarchical modeling of the system where $\alpha$ is one of a set of hyperparameters governing the statistics of the potential field (Section~\ref{sec:researchinflation}).
+
 
 \subsubsection{Preliminary Results}
 
-The simple question that motivated this investigation, and which did not seem to have a well-known answer, was how much of the 3D potential could be reconstructed interior to the 2D CMB photosphere using CMB observations alone. This is an example of what is sometimes called holography.\footnote{This is not the original meaning of the word.}  At first sight this might seem hopeless, because if one associates $\ell$ with $kx_{\rm CMB}$, then we are trying to solve for $O((k_{max}x_{\rm CMB})^3)$ Fourier modes using only $O(\ell_{max}^2)$ spherical harmonics. However, if we confine our attention to the longest wavelength waves,\footnote{In so doing, are approach is quite complementary to that of Yadav and Wandelt (2005) who are concerned with wavelengths comparable with the thickness of the recombination surface around the acoustic peak near $\ell\sim200$.} use all the information that is at our disposal exploit the high accuracy of the measurements while accepting uncertainty in the result, then it is possible to make some progress.
+The simple question that motivated this investigation, and which did not seem to have a well-known answer, was how much of the 3D potential could be reconstructed interior to the 2D CMB photosphere using CMB observations alone. This is an example of what is sometimes called {\it holography.}\footnote{This is not the original meaning of the word.}  At first sight this might seem hopeless, because if one associates $\ell$ with $k\,x_{\rm CMB}$, then we are trying to solve for $O((k_{\rm max}\,x_{\rm CMB})^3)$ Fourier modes using only $O(\ell_{max}^2)$ spherical harmonics. However, if we confine our attention to the longest wavelength waves,\footnote{In so doing, are approach is quite complementary to that of Yadav and Wandelt (2005) who are concerned with wavelengths comparable with the thickness of the recombination surface around the acoustic peak near $\ell\sim200$.} and use all the information that is at our disposal to exploit the high accuracy of the measurements while accepting uncertainty in the result, then it is possible to make some progress.
 
-We do this by estimating the coefficients $f_n$ through maximizing the likelihood or, equivalently, minimizing the quantity
+We approximately characterize the posterior PDF (which under our assumptions is a multi-variate Gaussian distribution) for the coefficients $f_n$ by first finding its peak, minimizing the quantity
 \begin{equation}
 -2\ln{\cal P}=(a_y- \mathbf{R}_{yn}f_n)^{\mathrm{T}}C_{yy'}^{-1}(a_{y'}-\mathbf{R}_{y'n'}f_n')+\frac{f_n^2}{\sigma_{\bf n}^2}
 \end{equation}
-with respect to variation of $f_n$. Here, $C_{yy'}^{-1}$ is the inverse of the covariance matrix. This leads to the linear equations:
+with respect to variation of $f_n$.
+
+PJM: SHOULDN'T THERE BE AN $\alpha$ IN THIS EQUATION?
+
+Here, $C_{yy'}^{-1}$ is the inverse
+of the covariance matrix. This leads to the linear equations:
 \begin{equation}
 f_n=\left(\frac{\delta_{nn'}}{\sigma_{(n)}^2}+\mathbf{R}_{yn}^{\mathrm{T}}C_{yy'}^{-1}\mathbf{R}_{y'n'}\right)^{-1}\mathbf{R}^{\mathrm{T}}_{yn'}C_{yy'}^{-1}a_{y'}
 \end{equation}
 
-We have tested this procedure using mock data and found that it is generally possible to solve for stable, low order Fourier coefficients which can then be used to recover the original harmonic coefficients $a_y$. We have also followed this procedure on the actual Planck data and our results are exhibited in Fig.~3. It is proposed to refine and improve upon this basic approach to obtain the best map we can based upon the CMB data alone. In particular we intend to set clear, statistical criteria for assessing when it is significant to add additional Fourier components to the map.
+We have tested this procedure using mock data and found that it is generally possible to solve for stable, low order maximum posterior Fourier coefficients which can then be used to recover the original harmonic coefficients $a_y$. We have also followed this procedure on the actual Planck data, and our results are exhibited in Fig.~3. It is proposed to refine and improve upon this basic approach to obtain the best map we can based upon the CMB data alone. In particular we intend to set clear, statistical criteria for assessing when it is significant to add additional Fourier components to the map.
 \begin{figure}[t]
 \centering
 %\includegraphics{nsffig.pdf}
-\caption{Preliminary recovery of the potential $\Phi$ at the time of inflation from the CMB data alone. Fourier coefficients up to $n_{\rm max}=???$ are used. A higher resolution map should be possible using a more sophisticated inversion process and including polarization data.}
+\caption{Preliminary recovery of the potential $\Phi$ at the time of inflation from the CMB data alone. Fourier coefficients up to $n_{\rm max}=???$ are used, and the posterior mode located. A higher resolution map should be possible using a more sophisticated inversion process and including polarization data.}
 \end{figure}
 
 \subsubsection{Inflationary Origin of Perturbations and Hyperparameter Estimation}
 
 \label{sec:researchinflation}
 
-As explained in sec.~\ref{sec:introinflation}, inflation provides a mechanism for seeding perturbations in the CMB from quantum fluctuations in the early Universe. It is standard, as we shall do here, for most models to assume that the main matter components during inflation are in the form of scalar fields%, an assumption which shall be adopted in what follows
-. Moreover, for simplicity, we shall assume that only one scalar field is dynamically relevant, so that we will work within the framework of 'single-field' inflation. Appart from these caveats, the framework developed in what follows will remain model independent.
+As explained in Section~\ref{sec:introinflation}, inflation provides a mechanism for seeding perturbations in the CMB from quantum fluctuations in the early Universe. It is standard, as we shall do here, for most models to assume that the main matter components during inflation are in the form of scalar fields.%, an assumption which shall be adopted in what follows
+Moreover, for simplicity, we shall assume that only one scalar field is dynamically relevant, so that we will work within the framework of ``single-field'' inflation. Appart from these caveats, the framework developed in what follows will remain model independent.
 
 We want to describe perturbations of the scalar field, which we call $\varphi$, about a homogeneous background. It is common to quantify these perturbations with the gauge-invariant curvature perturbation, $\zeta$.\footnote{At late times (i.e. after the time of BBN) and inside of the horizon, when we use the Newtonian gauge to describe the Newtonian potential $\Phi$, one can think of $\zeta$ and $\Phi$ interchangeably. The main advantage of using $\zeta$ during inflation is that, in single-field inflation, the amplitude of its Fourier modes remain constant from horizon exit to horizon re-entry, significantly simplifying their evaluation~\cite{Weinberg2008}.}
 %which is defined by:
 %\be
 %	-\zeta=\psi+H\frac{\delta\rho}{\rho}\, ,
 %\ee
-%where $\psi$ is the trace part of the spatial scalar metric perturbations, i.e. writing the most general spatial scalar perturbation to a 4-d metric by $\delta g_{ij}=2(\psi\delta_{ij}-E_{ij})$ with $\nabla^2E=0$, then $\psi$ contains the trace of the perturbation. We also define $\rho$ and $\delta \rho$ to be the mean energy density and the linear energy density perturbation, respectively, as well as the $H$, the Hubble parameter. 
+%where $\psi$ is the trace part of the spatial scalar metric perturbations, i.e. writing the most general spatial scalar perturbation to a 4-d metric by $\delta g_{ij}=2(\psi\delta_{ij}-E_{ij})$ with $\nabla^2E=0$, then $\psi$ contains the trace of the perturbation. We also define $\rho$ and $\delta \rho$ to be the mean energy density and the linear energy density perturbation, respectively, as well as the $H$, the Hubble parameter.
  In the co-moving gauge, the Fourier modes of $\zeta$ as they exit the horizon are
 \be
 	\zeta_{{\bf k}}=\sqrt{\frac{\pi}{2}}e^{i\theta}e^{i\frac{\pi}{2}\left(\nu+\frac{1}{2}\right)}(-\tau)^{\nu}\mathcal{H}^{(1)}_\nu(-k\tau)\, .
 \ee
-Here, $\nu$ is a slowly varying function which encapsulates the specific dynamics of the inflationary model, $\mathcal{H}^{(1)}_\nu$ is a Hankel function of the first kind, $\tau$ is the conformal time, defined by $d\tau=a(t)dt$, and $\theta$ is a random variable endowing each mode with a random phase. A prediction of inflation is that $\theta$ should have a uniform probability distribution between 0 and $2\pi$. This is a fundamental prediction of inflation which stems from the assumption that the fluctuations are quantum mechanical in origin, the very assumption the idea of inflation is based upon. 
+Here, $\nu$ is a slowly varying function which encapsulates the specific dynamics of the inflationary model, $\mathcal{H}^{(1)}_\nu$ is a Hankel function of the first kind, $\tau$ is the conformal time, defined by $d\tau=a(t)dt$, and $\theta$ is a random variable endowing each mode with a random phase. A prediction of inflation is that $\theta$ should have a uniform probability distribution between 0 and $2\pi$. This is a fundamental prediction of inflation which stems from the assumption that the fluctuations are quantum mechanical in origin, the very assumption the idea of inflation is based upon.
 
 However, the actual distribution of the phases for the modes of $\zeta$ (or $\Phi$) in the CMB has yet to be measured. This is because, so far, most experiments have strived to measure the power spectrum, $\Delta_\zeta^2$, of fluctuations. %defined by:
 %\be
@@ -179,7 +190,7 @@ Because the power spectrum is proportional to $ |\zeta_{{\bf k}}|^2$, when such 
 \centering
 \includegraphics[trim = 0 0 0 0 mm, clip, width=.8\textwidth]{first10modesThetadist.pdf}\\
 \end{minipage}
-\caption{\label{f:variations} 
+\caption{\label{f:variations}
 {\it Left panel}: \small{Distribution of the modes of $\zeta_{{\bf k}}$ at fixed $|{\bf k}|$.} {\it Right panel}: \small{Representation of  the norm of the first few $k$-modes ($|{\bf n}|$ from 2 to 10),
 versus their random spatial angle $\theta$. If the individual modes were clustering around an angle, this would demonstrate that $\theta$ is actually not a uniformly distributed random variable, representing a serious challenge for inflation. Regardless of the distribution of $\theta$, observations of $\Delta_\zeta^2$ would not be affected. }
 \vspace{-1cm}
@@ -196,19 +207,21 @@ which defines uniquely a shape for the potential around $\varphi_*$. Here, the s
 \be
 \mathcal{P}(\vec{\eta}| a_{y})=\frac{1}{(2\pi)^{p/2}} \frac{1}{\left[\mathrm{Det}(C_{nn'})\mathrm{Det}(C_{yy'})\mathrm{Det}\,\mathbf{A}_{nn'}\right]^{1/2}}\exp\left\{\frac{1}{2}\mathbf{B}_{n}^{\mathrm{T}}\mathbf{A}_{nn'}^{-1}\mathbf{B}_{n'}-\frac{1}{2}a^{\mathrm{T}}_{y'}C_{y'y}^{-1}a_{y} \right\}\frac{\mathcal{P}(\vec{\eta})}{\mathcal{P}(a_{y})}\, ,
 \ee
-where $\mathcal{P}(\vec{\eta})$ is the prior on $\vec{\eta}$, ~$C_{n'n}^{-1}$ is a diagonal matrix with diagonal elements given by $1/|\zeta_{{\bf k}}|^2$ or, equivalently, $1/{\sigma_{\bf n}^2}$ as defined in sec.~\ref{sec:fnGaussianPrior},\footnote{$C_{n'n}^{-1}$ therefore corresponds to the covariance matrix of the Gaussian prior from sec.~\ref{sec:fnGaussianPrior} for fixed $\vec{\eta}$ values} and the $\mathbf{A}$ matrix and $\mathbf{B}$ vector are given by:
+where $\mathcal{P}(\vec{\eta})$ is the prior on $\vec{\eta}$, ~$C_{n'n}^{-1}$ is a diagonal matrix with diagonal elements given by $1/|\zeta_{{\bf k}}|^2$ or, equivalently, $1/{\sigma_{\bf n}^2}$ as defined in Section~\ref{sec:fnGaussianPrior},\footnote{$C_{n'n}^{-1}$ therefore corresponds to the covariance matrix of the Gaussian prior from Section~\ref{sec:fnGaussianPrior} for fixed $\vec{\eta}$ values} and the $\mathbf{A}$ matrix and $\mathbf{B}$ vector are given by:
 \be
 	\mathbf{A}_{nn'}=\mathbf{R}_{y'n}^{\mathrm{T}}C^{-1}_{y'y} \mathbf{R}_{yn'}+C_{nn'}^{-1}\, ,\qquad \qquad
 	 \mathbf{B}_{n}^{\mathrm{T}}=a_{y'}^{\mathrm{T}}C_{y'y}^{-1}\mathbf{R}_{yn}\, .
 \ee
 
+PJM: WHERE DOES THE NORMALIZATION FACTOR $\alpha$ APPEAR? WE SHOULD MAKE A LINK BACK TO THE GAUSSIAN PRIOR SECTION HERE.
 
-\subsubsection{Detailed Approach Incorporating Planck Polarization DATA}
+\subsubsection{Detailed Approach Incorporating Planck Polarization Data}
 
 PHIL AND LAURENCE TO DRAFT UP TO 1PAGE
 
 
 \subsubsection{Tree Representation and Non-Parametric Investigation of Gaussianity}
+
 There is another way to think about this problem. Let us build up the resolution of the potential on the cosmic photosphere by increasing $\ell$ continuously from zero. Saddle points -- designated  S -- accompanied by extrema -- either maxima, designated H,  or minima, designated, L -- will be created. They will be accompanied by fresh separatrices -- the contours that pass through the saddles. These come in two types - ``lemniscates'', like an infinity symbol, and designated X, and ``lima\c cons'', with the shape of a pinched annulus, and designated K (cf. Blandford and Narayan 1986). New separatrices may be created between existing separatrices or out of a contour encircling a $L$ or a $H$.  Occasionally, the inverse process -- annihilation -- will occur. If we designate the total number of maxima, minima, saddles, lemniscates and lima\c cons by $N_H,N_L,N_S,N_X,N_K$, respectively, then clearly $N_S=N_X+N_K=N_H+N_L-2$.\footnote{It is also instructive to calculate the Hessian matrix for the potential on the sphere and divide the sphere into ``H-zones'' (where both eigenvalues are negative), ``L-zones'' (where they are both positive) and ``S-zones'' (where they have opposite signs). These ``curvature maps'' (cf. Nye, J. F. 1978 Proc. Roy. Soc. A361 21) are complementary to the tree representation.}
 
 The nesting of these contours defines a specific topology which suffices to describe all the equipotentials. It is convenient to represent it using a ``tree'' containing ``forks'' (corresponding to separatrices and labeled K or S ), and branches terminating on ``leaves'' (corresponding to extrema and labeled H or L) (e.g West, D. B. Introduction to Graph Theory1996 London: Prentice-Hall). There is only one ``path'' connecting any two leaves. Although our investigation has only begun, it is already clear that the statistics and structure of the tree, satisfy many rules if the underlying fluctuations are truly drawn from a random distribution, for example $N_K\sim N_X$ as $\ell\rightarrow\infty$. We propose to explore this novel approach to testing Gaussianity. We can actually extend this 2D approach on the photosphere to a 3D approach.\footnote{Another generalization that we plan to explore is describe the topological arrangement of the polarization patterns (e.g. Scheuer, Hannay and Hargrave 1977).} The equipotential contours become surfaces and we can describe their nesting by a very similar type of tree. We propose to explore this as well with similar goals in mind.

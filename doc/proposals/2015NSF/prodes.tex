@@ -120,15 +120,11 @@ where the coefficients $f_n$ are real and ${\bf k}=\Delta k\{n_1,n_2,n_3\}$, wit
 \subsubsection{Gaussian Prior}
 \label{sec:fnGaussianPrior}
 
-Detailed study of the CMB (e.g.~\cite{Aghanim:2015xee, Ade:2015ava}) has led to the conclusion that the amplitude of each discrete mode with wave vector $\bf k$ is well modeled as having been drawn from a Gaussian distribution of variance $\sigma_{\bf n}^2=\alpha(n_1^2+n_2^2+n_3^2)^{-3/2}$. Adopting this model, we determine the coefficient $\alpha$ by first expressing the spherical harmonic coefficients $a_y$ in terms of the Fourier coefficients according to:
+Detailed study of the CMB (e.g.~\cite{Aghanim:2015xee, Ade:2015ava}) has led to the conclusion that the amplitude of each discrete mode with wave vector $\bf k$ is well modeled as having been drawn from a Gaussian distribution of variance $\sigma_{\bf n}^2=\alpha(n_1^2+n_2^2+n_3^2)^{-3/2}$. Adopting this model, we can determine the coefficient $\alpha$ approximately and empirically, by first expressing the spherical harmonic coefficients $a_y$ in terms of the Fourier coefficients and a ``response matrix'' $\mathbf{R}_{yn}$, according to:
 \begin{equation}
 a_y= \mathbf{R}_{yn}f_n, ~{\rm where}~  \mathbf{R}_{yn}=4\pi Y_y(\theta'\phi')j_\ell(k)[\cos(\pi\ell/2),\sin(\pi\ell/2)]\ {\rm for}\ [1\le n\le N/2,\ N/2<n\le N]\, ,
 \end{equation}
-and fitting the mean measured spherical harmonics to this relation.
-
-PJM: WHERE IS $\alpha$ IN THIS PROCEDURE?
-
-(We refer to $\mathbf{R}_{yn}$ as the ``response matrix.'') This approach is adequate for our pilot study; an improved determination will be investigated following the evidence analysis of~\cite{Suyu2006}, en route to a hierarchical modeling of the system where $\alpha$ is one of a set of hyperparameters governing the statistics of the potential field (Section~\ref{sec:researchinflation}).
+and then adjusting $\alpha$ such that the model-predicted and measured spherical harmonics match. This approach is adequate for our pilot study; an improved determination will be investigated following the evidence analysis of~\cite{Suyu2006}, en route to a hierarchical modeling of the system where the normalization $\alpha$ is one of a set of hyperparameters governing the statistics of the potential field (Section~\ref{sec:researchinflation}).
 
 
 \subsubsection{Preliminary Results}
@@ -139,10 +135,7 @@ We approximately characterize the posterior PDF (which under our assumptions is 
 \begin{equation}
 -2\ln{\cal P}=(a_y- \mathbf{R}_{yn}f_n)^{\mathrm{T}}C_{yy'}^{-1}(a_{y'}-\mathbf{R}_{y'n'}f_n')+\frac{f_n^2}{\sigma_{\bf n}^2}
 \end{equation}
-with respect to variation of $f_n$.
-
-PJM: SHOULDN'T THERE BE AN $\alpha$ IN THIS EQUATION?
-
+with respect to variation of $f_n$. (Note that $\sigma_{\bf n}$ contains the normalization $\alpha$ referred to in Section~\ref{sec:fnGaussianPrior} above.)
 Here, $C_{yy'}^{-1}$ is the inverse
 of the covariance matrix. This leads to the linear equations:
 \begin{equation}
@@ -155,6 +148,7 @@ We have tested this procedure using mock data and found that it is generally pos
 %\includegraphics{nsffig.pdf}
 \caption{Preliminary recovery of the potential $\Phi$ at the time of inflation from the CMB data alone. Fourier coefficients up to $n_{\rm max}=???$ are used, and the posterior mode located. A higher resolution map should be possible using a more sophisticated inversion process and including polarization data.}
 \end{figure}
+
 
 \subsubsection{Inflationary Origin of Perturbations and Hyperparameter Estimation}
 
@@ -215,8 +209,6 @@ where $\mathcal{P}(\vec{\eta})$ is the prior on $\vec{\eta}$, ~$C_{n'n}^{-1}$ is
 	\mathbf{A}_{nn'}=\mathbf{R}_{y'n}^{\mathrm{T}}C^{-1}_{y'y} \mathbf{R}_{yn'}+C_{nn'}^{-1}\, ,\qquad \qquad
 	 \mathbf{B}_{n}^{\mathrm{T}}=a_{y'}^{\mathrm{T}}C_{y'y}^{-1}\mathbf{R}_{yn}\, .
 \ee
-
-PJM: WHERE DOES THE NORMALIZATION FACTOR $\alpha$ APPEAR? WE SHOULD MAKE A LINK BACK TO THE GAUSSIAN PRIOR SECTION HERE.
 
 
 \subsubsection{Detailed Approach Incorporating Planck Polarization Data}

@@ -92,7 +92,7 @@ The first stage of our proposed program uses 2D Cosmic Microwave Background (CMB
 
 \subsection{Stage 1. From 2D to 3D: Potential Reconstruction from CMB Data}
 
-\subsubsection{Temperature fluctuations}
+\subsubsection{Temperature Fluctuations}
 
 Most quantitative cosmology derives from CMB observations. The conventional way to describe the observations is in terms of spherical harmonics -- the generalization of Fourier modes to a sphere -- labeled by $\ell$ and $m$. It is convenient to use an equivalent vector of real spherical harmonics, $Y_y(\theta,\phi)=\{Y_{0,0},Y_{1,0},2^{1/2}\Re[Y_{1,1}],2^{1/2}\Im[Y_{1,1}],Y_{2,0},\dots,2^{1/2}\Im[Y_{\ell_{\rm max},\ell_{\rm max}}]\}$ of length $(\ell_{\rm max}+1)^2$ and where $\theta,\phi$ are standard spherical polar coordinates. Note that there are $2\ell+1$ independent, real, basis function in each $\ell$-shell. Note also that $\int d\Omega Y_yY_{y'}=\delta_{yy'}$. It is convenient to treat $\ell_{\rm max}$ as a continuous variable by adding a fraction between zero and unity of the largest $\ell$ shell and therefore smoothly change the angular resolution.
 \begin{figure}[t]
@@ -120,9 +120,9 @@ where the coefficients $f_n$ are real and ${\bf k}=\Delta k\{n_1,n_2,n_3\}$, wit
 \subsubsection{Gaussian Prior}
 \label{sec:fnGaussianPrior}
 
-Detailed study of the CMB (e.g.~\cite{Aghanim:2015xee, Ade:2015ava}) has led to the conclusion that the amplitude of each discrete mode with wave vector $\bf k$ is well modeled as having been drawn from a Gaussian distribution of variance $\sigma_{\bf n}^2=\alpha(n_1^2+n_2^2+n_3^2)^{-3/2}$. Adopting this model, we can determine the coefficient $\alpha$ approximately and empirically, by first expressing the spherical harmonic coefficients $a_y$ in terms of the Fourier coefficients and a ``response matrix'' $\mathbf{R}_{yn}$, according to:
+Detailed study of the CMB (e.g.~\cite{Aghanim:2015xee, Ade:2015ava}) has led to the conclusion that the amplitude of each discrete mode with wave vector $\bf k$ is well modeled as having been drawn from a Gaussian distribution of variance $\sigma_{\bf n}^2=\alpha(n_1^2+n_2^2+n_3^2)^{-3/2}$. Adopting this model, we can determine the coefficient $\alpha$ approximately and empirically, by computing the spherical harmonic coefficients $a_y \mathbf{R}_{yn}f_n$ for sets of Gaussian $f_n$s where the ``response matrix'' is given by:
 \begin{equation}
-a_y= \mathbf{R}_{yn}f_n, ~{\rm where}~  \mathbf{R}_{yn}=4\pi Y_y(\theta'\phi')j_\ell(k)[\cos(\pi\ell/2),\sin(\pi\ell/2)]\ {\rm for}\ [1\le n\le N/2,\ N/2<n\le N]\, ,
+\mathbf{R}_{yn}=4\pi Y_y(\theta'\phi')j_\ell(k)[\cos(\pi\ell/2),\sin(\pi\ell/2)]\ {\rm for}\ [1\le n\le N/2,\ N/2<n\le N]\, ,
 \end{equation}
 and then adjusting $\alpha$ such that the model-predicted and measured spherical harmonics match. This approach is adequate for our pilot study; an improved determination will be investigated following the evidence analysis of~\cite{Suyu2006}, en route to a hierarchical modeling of the system where the normalization $\alpha$ is one of a set of hyperparameters governing the statistics of the potential field (Section~\ref{sec:researchinflation}).
 
@@ -136,6 +136,7 @@ We approximately characterize the posterior PDF (which under our assumptions is 
 -2\ln{\cal P} \approx (a_y- \mathbf{R}_{yn}f_n)^{\mathrm{T}}C_{yy'}^{-1}(a_{y'}-\mathbf{R}_{y'n'}f_n')+\frac{f_n^2}{\sigma_{\bf n}^2} + \mathrm{const.}
 \end{equation}
 with respect to variation of $f_n$. Note that $\sigma_{\bf n}$ contains the normalization $\alpha$ referred to in Section~\ref{sec:fnGaussianPrior} above.
+
 Here, $C_{yy'}^{-1}$ is the inverse
 of the covariance matrix. This leads to the linear equations:
 \begin{equation}
@@ -238,7 +239,7 @@ The nesting of these contours defines a specific topology which suffices to desc
 
 \subsection{Stage 2. From 3D to 4D: Incorporating Existing Volumetric Data}
 
-\subsubsection{CMB Lensing and ISW measurements}
+\subsubsection{CMB Lensing and ISW Measurements}
 
 An important way to add 3D information is to include CMB lensing (Ade et al. 2014b). A uniform CMB is unchanged by gravitational lensing. However, if there is a gradient in the background temperature, intervening structure will appear as extra power on the scale of intervening large scale structure.\footnote{More subtle manifestations including those involving polarization are possible (Hu \& Okamoto 2002), but this is the main effect.} The consequences are largest on much smaller scales than those in which we are primarily interested. However there are still integral effects with $\ell\sim30-100$ which are relevant. Furthermore the intense interest in the claim that inflationary B-modes have been detected (Ade et. 2014c)  has focused much observational and analytical effort on this region of the spectrum. It is proposed to see if the addition of these measurements will improve the specification of the 3D body modes.
 

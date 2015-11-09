@@ -53,7 +53,7 @@ It has recently been demonstrated, mainly using CMB observations~\cite{Planck201
 The potential associated with a mode was essentially frozen until it ``entered the horizon,'' that is, until the timescale for its dynamical evolution, became smaller than the expansion timescale. We are mostly concerned with long wavelength modes for which this happened after recombination and $k\lo40{\rm Gpc}^{-1}$.\footnote{$k_0$ can be considered as approximately the wavenumber associated with the first acoustic peak and its consequence, Baryon Acoustic Oscillations (BAO).} For such wavenumbers, the waves evolve at roughly constant $\Phi$ until the cosmological constant takes over and the potential falls by roughly 20 percent today. We make this explicit in Fig.~1 where we show the interior of the last scattering surface in comoving coordinate space and a particular wave whose amplitude and phase we are trying to measure.
 \begin{figure}[t]
 \centering
-\includegraphics[width=2in]{nsffig.pdf}
+\includegraphics[width=2in]{figures/nsffig.pdf}
 \caption{\small{a) The local universe interior to the CMB photosphere expressed in comoving coordinates. The circles are, in order, redshift $z\sim0.7$, schematically the limit of present surveys, $z\sim2$ roughly the effective limit of future surveys, the nominal Epoch of Reionization at $z\sim10$ and the CMB photosphere at $z\sim1100$ and a distance $x_{\rm CMB}\sim14$~Gpc. Also shown as dashed lines are the nodes of a single wave mode with $k\sim3$~Gpc$^{-1}$ which contributes significantly to spherical harmonics with $\ell\lo10$. b) Variation of the amplitude of this wave with scale factor $a$.}}
 \end{figure}
 
@@ -83,7 +83,7 @@ The first stage of our proposed program uses 2D CMB observations alone to test i
 Most quantitative cosmology derives from CMB observations. The conventional way to describe the observations is in terms of spherical harmonics -- the generalization of Fourier modes to a sphere -- labeled by $\ell$ and $m$. It is convenient to use an equivalent vector of real spherical harmonics, $Y_y(\theta,\phi)=\{Y_{0,0},Y_{1,0},2^{1/2}\Re[Y_{1,1}],2^{1/2}\Im[Y_{1,1}],Y_{2,0},\dots,2^{1/2}\Im[Y_{\ell_{\rm max},\ell_{\rm max}}]\}$ of length $(\ell_{\rm max}+1)^2$ and where $\theta,\phi$ are standard spherical polar coordinates. Note that there are $2\ell+1$ independent, real, basis function in each $\ell$-shell. Note also that $\int d\Omega Y_yY_{y'}=\delta_{yy'}$. It is convenient to treat $\ell_{\rm max}$ as a continuous variable by adding a fraction between zero and unity of the largest $\ell$ shell and therefore smoothly change the angular resolution. (The use of a real basis helps identify systematic effects.)
 \begin{figure}[t]
 \centering
-\includegraphics[width=2in]{nsffig.pdf}
+\includegraphics[width=2in]{figures/nsffig.pdf}
 \caption{{\small Photospheric potential fluctuations of the CMB for $\ell_{\rm max}=2,4.5,10$ derived from Planck data shown as Mollweide projections.}}
 \end{figure}
 
@@ -128,7 +128,7 @@ The approximate form given here is sufficient for a vital early feasibility chec
 using mock data, we have found that {\it it is generally possible to solve for stable, low order maximum posterior Fourier coefficients, which successfully predict replica harmonic coefficients $a_y$ that are statistically consistent with the original data.} We have also applied this approximate procedure to the actual Planck data, and our results are exhibited in Fig.~3. It is proposed to refine and improve upon this basic approach to obtain the best map we can based upon the CMB data alone. In particular we intend to set clear, statistical criteria for assessing when it is significant to add additional Fourier components to the map.
 \begin{figure}[t]
 \centering
-\includegraphics[width=2in]{nsffig.pdf}
+\includegraphics[width=2in]{figures/nsffig.pdf}
 \caption{{\small Preliminary recovery of the potential $\Phi$ at the time of inflation from the CMB data alone. Fourier coefficients up to $n_{\rm max}=???$ are used, and the posterior mode located. A higher resolution map should be possible using a more sophisticated inversion process and including polarization data.}}
 \end{figure}
 
@@ -160,11 +160,11 @@ Because the power spectrum is proportional to $ |\zeta_{{\bf k}}|^2$, when such 
 \centering
 \begin{minipage}[t]{0.48\linewidth}
 \centering
-\includegraphics[trim = 80 -32 0 50 mm, width=.8\textwidth]{onemodeThetadist.pdf}\\
+\includegraphics[trim = 80 -32 0 50 mm, width=.8\textwidth]{figures/onemodeThetadist.pdf}\\
 \end{minipage}
 \begin{minipage}[t]{0.48\linewidth}
 \centering
-\includegraphics[trim = 0 0 0 0 mm, clip, width=.8\textwidth]{first10modesThetadist.pdf}\\
+\includegraphics[trim = 0 0 0 0 mm, clip, width=.8\textwidth]{figures/first10modesThetadist.pdf}\\
 \end{minipage}
 \caption{\label{f:variations}
 {\it Left panel}: \small{Distribution of the modes of $\zeta_{{\bf k}}$ at fixed $|{\bf k}|$.} {\it Right panel}: \small{Representation of  the norm of the first few $k$-modes ($|{\bf n}|$ from 2 to 10),
@@ -185,7 +185,7 @@ which defines uniquely a shape for the potential around $\varphi_*$. Here, the s
 \mathcal{P}(\vec{\eta}| a_{y})=\frac{1}{(2\pi)^{p/2}} \left[\mathrm{Det}(C_{nn'})\mathrm{Det}(C_{yy'})\mathrm{Det}\,\mathbf{A}_{nn'}\right]^{-1/2}e^{\left\{\frac{1}{2}\mathbf{B}_{n}^{\mathrm{T}}\mathbf{A}_{nn'}^{-1}\mathbf{B}_{n'}-\frac{1}{2}a^{\mathrm{T}}_{y'}C_{y'y}^{-1}a_{y} \right\}}\frac{\mathcal{P}(\vec{\eta})}{\mathcal{P}(a_{y})}\, ,
 \ee
 where $\mathcal{P}(\vec{\eta})$ is the prior on $\vec{\eta}$, ~$C_{n'n}^{-1}$ is a diagonal matrix with diagonal elements given by $1/|\zeta_{{\bf k}}|^2$, generalizing $1/{\sigma_{\bf n}^2}$ from our Gaussian prior
-%\footnote{$C_{n'n}^{-1}$ therefore corresponds to the covariance matrix of the Gaussian prior for fixed $\vec{\eta}$ values} 
+%\footnote{$C_{n'n}^{-1}$ therefore corresponds to the covariance matrix of the Gaussian prior for fixed $\vec{\eta}$ values}
 and the $\mathbf{A}$ matrix and $\mathbf{B}$ vector are given by:
 \be
 	\mathbf{A}_{nn'}=\mathbf{R}_{y'n}^{\mathrm{T}}C^{-1}_{y'y} \mathbf{R}_{yn'}+C_{nn'}^{-1}\, ,\qquad \qquad
@@ -208,7 +208,7 @@ There is another way to think about this problem. Let us build up the resolution
 The nesting of these contours defines a specific topology which suffices to describe all the equipotentials. It is convenient to represent it using a ``tree'' containing ``forks'' (corresponding to separatrices and labeled K or S ), and branches terminating on ``leaves'' (corresponding to extrema and labeled H or L)~\cite{west2001introduction}. There is only one ``path'' connecting any two leaves. Although our investigation has only begun, it is already clear that the statistics and structure of the tree, satisfy many rules if the underlying fluctuations are truly drawn from a random distribution, for example $N_K\sim N_X$ as $\ell\rightarrow\infty$. We propose to explore this novel approach to testing Gaussianity. We can actually extend this 2D approach on the photosphere to a 3D approach\footnote{Another generalization that we plan to explore is describe the topological arrangement of the polarization patterns~\cite{Scheuer:1977}.} exploring the nesting of the equipotential surfaces within the photosphere. This leads to similar type of tree. We propose to explore this as well with similar goals in mind.
 \begin{figure}[t]
 \centering
-\includegraphics[width=2in]{nsffig.pdf}
+\includegraphics[width=2in]{figures/nsffig.pdf}
 \caption{{\small a) Nesting of separatrices for Planck data, with $\ell_{\rm max}=???$, on the CMB photosphere punctured at the absolute minimum potential. The extrema, H, L and saddles, K, X are identified. Also shown are the L (yellow), S (green) and H (blue) zones. b) Equivalent tree describing the same data. The ordinates of the forks and leaves corresponds to the actual potential values.}}
 \end{figure}
 
@@ -343,7 +343,7 @@ Blandford, Barnabe and Marshall~\cite{Strigari:2012} have collaborated with form
 
 \begin{figure}[t]
    \centering
-   \includegraphics{lk.eps}
+   \includegraphics{figures/lk.eps}
    \caption{Schematic illustration of the complementarity of LSST and SNAP for gravitational lensing studies. The ordinate represents the accuracy with which the density power spectrum can be measured; the abscissa the spherical harmonic quantum number $\ell$}
    \label{fig:ls}
 \end{figure}
@@ -351,8 +351,8 @@ Blandford, Barnabe and Marshall~\cite{Strigari:2012} have collaborated with form
 \begin{figure}[htb]
 \begin{center}$
 \begin{array}{cc}
-\includegraphics[width=3in]{lk.eps}&
-\includegraphics[width=3in]{lk.eps}
+\includegraphics[width=3in]{figures/lk.eps}&
+\includegraphics[width=3in]{figures/lk.eps}
 \end{array}$
 \caption{}
 \end{center}

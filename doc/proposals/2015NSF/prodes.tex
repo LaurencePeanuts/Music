@@ -37,6 +37,7 @@ The earliest examples of astronomy included following the nearby planets and cha
 Skrutskie2006, Faber2007, Scoville2007, Kaiser2010, Blake2011, Alam2015} and a splendid two dimensional map of the microwave background~\cite{Planck2015maps} and this has led to a standard model of the universe in which inflation-based, Gaussian, potential fluctuations, with a well-defined spectrum, grew according to deterministic laws to produce contemporary large scale structure in a flat universe endowed with a cosmological constant. However, the traditional goal of astronomy, to describe the complete disposition of this actual structure, has hitherto been subsumed into statistical investigations designed to elucidate the underlying physics.
 
 This is a staged proposal to combine recent observations with what we have learned about the physics to make the best map we can of the 3D structure of the universe within and slightly beyond our horizon. In addition to satisfying a natural desire to describe our universe, success in this program will naturally furnish ongoing and planned physics investigations with additional priors which should tighten up their accuracy.
+
 \ni{\bf Contents:}
 The last decade has seen remarkable advances in cosmology, spearheaded by increasingly detailed measurements of the cosmic microwave background (CMB) radiation~(see e.g.\ \cite{Planck2015maps,Planck2015cosmopara}).
 % SPT?, ACT?}.
@@ -113,14 +114,14 @@ The simple question that motivated this investigation, and which did not seem to
 
 We approximately characterize the posterior PDF (which under our assumptions is a multi-variate Gaussian distribution) for the coefficients $f_n$ by first finding its peak, minimizing the quantity
 \begin{equation}
--2\ln{\cal P}\left(f_n|a_n\right) \approx (a_y- \mathbf{R}_{yn}f_n)^{\mathrm{T}}C_{yy'}^{-1}(a_{y'}-\mathbf{R}_{y'n'}f_n')+\frac{f_n^2}{\sigma_{{\bf n}}^2} + \mathrm{const.}
+-2\ln{\cal P}\left(f_n|a_y\right) \approx (a_y- f_n\mathbf{R}_{ny})C_{yy'}^{-1}(a_{y'}-\mathbf{R}_{y'n'}f_{n'})+\frac{f_n^2}{\sigma_{{\bf n}}^2} + \mathrm{const.}
 \end{equation}
 with respect to variation of $f_n$. Note that $\sigma_{\bf n}$ contains the normalization $\alpha$.
 
 Here, $C_{yy'}^{-1}$ is the inverse
 of the covariance matrix. This leads to the linear equations:
 \begin{equation}
-f_n=\left(\mathbf{R}_{yn}^{\mathrm{T}}C_{yy'}^{-1}\mathbf{R}_{y'n'}+\frac{\delta_{nn'}}{\sigma_{\bf n}^2}\right)^{-1}\mathbf{R}^{\mathrm{T}}_{yn'}C_{yy'}^{-1}a_{y'}
+f_n=\left(\mathbf{R}_{ny}C_{yy'}^{-1}\mathbf{R}_{y'n'}+\frac{\delta_{nn'}}{\sigma_{\bf n}^2}\right)^{-1}\mathbf{R}_{n'y}C_{yy'}^{-1}a_{y'}
 \end{equation}
 
 %In Section~\ref{} below, we give a more rigorously-derived expression for the posterior PDF ${\cal P}$.
@@ -182,16 +183,15 @@ One on the main uncertainties pertaining to inflation remains the shape of the p
 \ee
 which defines uniquely a shape for the potential around $\varphi_*$. Here, the star quantities refer to their values when $\varphi=\varphi_*$. Using Bayes theorem, we then infer the probability of a given vector $\vec{\eta}$ given the data $a_y$, via the potential map $f_n$ (which we marginalize over), $\mathcal{P}(\vec{\eta}| a_{y})$,
 \be
-\mathcal{P}(\vec{\eta}| a_{y})=\frac{1}{(2\pi)^{p/2}} \left[\mathrm{Det}(C_{nn'})\mathrm{Det}(C_{yy'})\mathrm{Det}\,\mathbf{A}_{nn'}\right]^{-1/2}e^{\left\{\frac{1}{2}\mathbf{B}_{n}^{\mathrm{T}}\mathbf{A}_{nn'}^{-1}\mathbf{B}_{n'}-\frac{1}{2}a^{\mathrm{T}}_{y'}C_{y'y}^{-1}a_{y} \right\}}\frac{\mathcal{P}(\vec{\eta})}{\mathcal{P}(a_{y})}\, ,
+\mathcal{P}(\vec{\eta}| a_{y})=\frac{1}{(2\pi)^{p/2}} \left[\mathrm{Det}(C_{nn'})\mathrm{Det}(C_{yy'})\mathrm{Det}\,\mathbf{A}_{nn'}\right]^{-1/2}e^{\left\{\frac{1}{2}\mathbf{B}_{n}\mathbf{A}_{nn'}^{-1}\mathbf{B}_{n'}-\frac{1}{2}a^{\mathrm{T}}_{y'}C_{y'y}^{-1}a_{y} \right\}}\frac{\mathcal{P}(\vec{\eta})}{\mathcal{P}(a_{y})}\, ,
 \ee
 where $\mathcal{P}(\vec{\eta})$ is the prior on $\vec{\eta}$, ~$C_{n'n}^{-1}$ is a diagonal matrix with diagonal elements given by $1/|\zeta_{{\bf k}}|^2$, generalizing $1/{\sigma_{\bf n}^2}$ from our Gaussian prior
 %\footnote{$C_{n'n}^{-1}$ therefore corresponds to the covariance matrix of the Gaussian prior for fixed $\vec{\eta}$ values}
 and the $\mathbf{A}$ matrix and $\mathbf{B}$ vector are given by:
 \be
-	\mathbf{A}_{nn'}=\mathbf{R}_{y'n}^{\mathrm{T}}C^{-1}_{y'y} \mathbf{R}_{yn'}+C_{nn'}^{-1}\, ,\qquad \qquad
-	 \mathbf{B}_{n}^{\mathrm{T}}=a_{y'}^{\mathrm{T}}C_{y'y}^{-1}\mathbf{R}_{yn}\, .
+	\mathbf{A}_{nn'}=\mathbf{R}_{ny'}C^{-1}_{y'y} \mathbf{R}_{yn'}+C_{nn'}^{-1}\, ,\qquad \qquad
+	 \mathbf{B}_{n}=  \mathbf{R}_{ny'} C_{y'y}^{-1}  a_{y}\, .
 \ee
-CAN WE DISPENSE WITH THE TRANSPOSING? WE CAN USE THIS NOTATION ABOVE. DO SO IF YOU THINK IT HELPS
 
 \ni{\bf Detailed Approach Incorporating Planck Polarization Data:}
 Up to this point, we have only considered the CMB temperature data. We anticipate making significant gains in map fidelity when we incorporate the Planck polarization data as well after it is made public. While these will be more sensitive to systematic effects (such as galactic dust and synchrotron emission), the additional signal to noise alone should allow us to make maps of higher spatial resolution. The prediction of E and B mode CMB polarization at low $\ell$ from a 3D model potential is more involved compared to the temperature field. Initial simple Monte Carlo ray tracing experiments suggest that this may be an instructive way to capture the dependence of the polarized radiation field on the underlying potential -- a challenge will be to capture this in a form that preserves our ability to use only the fast linear inversions described above.

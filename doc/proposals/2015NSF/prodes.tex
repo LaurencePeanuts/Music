@@ -126,12 +126,32 @@ f_n=\left(\mathbf{R}_{ny}C_{yy'}^{-1}\mathbf{R}_{y'n'}+\frac{\delta_{nn'}}{\sigm
 
 %In Section~\ref{} below, we give a more rigorously-derived expression for the posterior PDF ${\cal P}$.
 The approximate form given here is sufficient for a feasibility check:
-using mock data, we have found that it is possible to solve for stable, low order maximum posterior Fourier coefficients, which can recover harmonic coefficients $a_y$ that are consistent with the original data. We have applied this approximate procedure to the actual Planck data, and our results are exhibited in Fig.~3. There are features of the data which we have yet to understand but this suffices to illustrate what we hope will be possible. It is proposed to refine and improve upon this basic approach to obtain the best map we can based upon the CMB data alone. In particular we intend to set clear, statistical criteria for assessing when it is significant to add additional Fourier components to the map.
+using mock data, we have found that {\it it is possible to solve for
+stable, low order maximum posterior Fourier coefficients, which can
+recover harmonic coefficients $a_y$ that are consistent with the
+original data.} We have applied this approximate procedure to the
+actual Planck data, and our results are exhibited in Fig.~3. There are
+features of the data which we have yet to understand but this suffices
+to illustrate what we hope will be possible. It is proposed to refine
+and improve upon this basic approach to obtain the best map we can
+based upon the CMB data alone. In particular we intend to set clear,
+statistical criteria for assessing when it is significant to add
+additional Fourier components to the map.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
 \centering
-\includegraphics[width=2in]{figures/nsffig.pdf}
-\caption{{\small Preliminary recovery of the potential $\Phi$ at the time of inflation from the CMB data alone. Fourier coefficients up to $n_{\rm max}=???$ are used, and the posterior mode located. A higher resolution map should be possible using a more sophisticated inversion process and including polarization data.}}
+\includegraphics[width=0.9\linewidth]{figures/nsffig3.jpg}
+\caption{{\small a) 3D gravitational potential at the time
+of recombination, recovered from 2D fluctuations on the CMB
+photosphere (represented by the circle), and displayed in the
+$x_3=0$ plane. In this pilot study, 81 spherical harmonics and a
+Gaussian prior were used to recover 122 Fourier components with
+$n_{\rm max}=3$. The monopole and dipole were not removed.   b) The
+predicted 2D potential fluctuations on the CMB photosphere
+were then recomputed,
+exhibiting encouraging consistency with the input data.}}
 \end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \ni{\bf Inflationary Origin of Perturbations and Hyperparameter Estimation:}
 As explained above, inflation provides a mechanism for seeding perturbations in the CMB from quantum fluctuations in the early Universe. It is standard, as we shall do here, for most models to assume that the main matter components during inflation are in the form of scalar fields.%, an assumption which shall be adopted in what follows
@@ -208,12 +228,14 @@ There is another way to think about this problem. Let us build up the resolution
 The nesting of these contours defines a specific topology which suffices to describe all the equipotentials. It is convenient to represent it using a ``tree'' containing ``forks'' (corresponding to separatrices and labeled K or S ), and branches terminating on ``leaves'' (corresponding to extrema and labeled H or L)~\cite{west2001introduction}. There is only one ``path'' connecting any two leaves. Although our investigation has only begun, it is already clear that the statistics and structure of the tree, satisfy many rules if the underlying fluctuations are truly drawn from a random distribution, for example $N_K\sim N_X$ as $\ell\rightarrow\infty$. We propose to explore this novel approach to testing Gaussianity. We can actually extend this 2D approach on the photosphere to a 3D approach\footnote{Another generalization that we plan to explore is describe the topological arrangement of the polarization patterns~\cite{Scheuer:1977}.} exploring the nesting of the equipotential surfaces within the photosphere. This leads to similar type of tree. We propose to explore this as well with similar goals in mind.
 \begin{figure}[t]
 \centering
-\includegraphics[width=2in]{figures/nsffig.pdf}
-\caption{{\small a) Nesting of separatrices for Planck data, with $\ell_{\rm max}=???$, on the CMB photosphere punctured at the absolute minimum potential. The extrema, H, L and saddles, K, X are identified. Also shown are the L (yellow), S (green) and H (blue) zones. b) Equivalent tree describing the same data. The ordinates of the forks and leaves corresponds to the actual potential values.}}
+\includegraphics[width=0.9\linewidth]{figures/nsffig5.jpg}
+\caption{{\small a) Nesting of separatrices for Planck data, with
+$\ell_{\rm max}=4.5$. The extrema, H, L and saddles, K, X are
+identified. b) Equivalent tree describing the same data.}}
 \end{figure}
 
-% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 \subsection{Stage 2. From 3D to 4D: Incorporating Existing Volumetric Data}
 \ni{\bf CMB Lensing and ISW Measurements:}
@@ -315,9 +337,10 @@ A new approach to demonstrating the stripping of dark matter from the halos arou
 
 \ni{\bf Chandra Observations of the Largest Quasar Lens:}
 Blandford and Schrabback have participated in a investigation led by former postdoc Oguri to analyze Chandra observations of the largest separation, triply-imaged quasar, SDSS J 1029+2623.~\cite{Ota:2012}~\cite{Oguri:2013} The X-ray observations from the associated z=0.58 rich cluster exhibit a subpeak suggestive of a merger and a mass consistent with that obtained from gravitational lensing. The consistency of the magnifications suggested that microlensing is not important in this system. However, their ratios point to the presence of dark matter substructure. A multi-telescope study of this massive X-ray cluster has been performed, finding additional multiple images, measuring a time delay and performing a weak lensing analysis. The lens model is able to account for the salient features of these observations, deriving a magnification of a background quasar of 30. There is a serious discrepancy with the X-ray cluster mass estimate which is attributed to shock heating in a merger.
+
 \subsection{Miscellaneous}
-\ni{\bf Cosmic Strings:}
-Morganson, Marshall, Schrabback and Blandford continue to explore ways to improve the lensing limit on the incidence of cosmic strings.~\cite{Morganson:2010}
+% \ni{\bf Cosmic Strings:}
+% Morganson, Marshall, Schrabback and Blandford continue to explore ways to improve the lensing limit on the incidence of cosmic strings.~\cite{Morganson:2010}
 
 \ni{\bf Hubble Workshop:}
 Suyu, Blandford, Freedman and Treu, organized a highly successful workshop on the measurement of the Hubble constant. Many competing approaches were contrasted and compared.\cite{Suyu:2012}

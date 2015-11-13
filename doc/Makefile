@@ -18,7 +18,7 @@ mapping: music-mapping.tex macros.tex references.bib
 
 # Paper 2:
 
-inflation: music-inflation.tex references.bib
+inflation: music-inflation.tex macros.tex references.bib
 	pdflatex music-inflation.tex
 	pdflatex music-inflation.tex
 	bibtex music-inflation
@@ -27,7 +27,7 @@ inflation: music-inflation.tex references.bib
 
 # Paper 3:
 
-trees: music-trees.tex references.bib
+trees: music-trees.tex macros.tex references.bib
 	pdflatex music-trees.tex
 	pdflatex music-trees.tex
 	bibtex music-trees

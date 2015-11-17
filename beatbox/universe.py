@@ -155,7 +155,7 @@ class Universe(object):
 
     # ----------------------------------------------------------------
 
-    def generate_a_random_potential_field(self, high_k_cutoff=6, low_k_cutoff=2, n_s=0.96, kstar=0.02, PSnorm=2.43e-9):
+    def generate_a_random_potential_field(self, high_k_cutoff=6, low_k_cutoff=2, n_s=0.96, kstar=0.02, PSnorm=2.43e-9, p=1, Pmax=np.pi, Pvar=0.0):
 
         #The nmax we need for the resolution we want in our Universe is:
         self.nmax = int(self.BOXSIZE/(2*self.PIXSCALE))
@@ -187,11 +187,15 @@ class Universe(object):
         self.Power_Spectrum = self.PSnorm*np.power((self.k/self.kstar) ,(-3+(self.n_s-1)))
         self.Power_Spectrum[np.isinf(self.Power_Spectrum)]=10**-9
 
-        fn_R = np.random.normal(0, np.sqrt(self.Power_Spectrum/2) )*np.power(self.filter,2)
-        fn_I = np.random.normal(0, np.sqrt(self.Power_Spectrum/2) )*np.power(self.filter,2)
+        fn_Norm = np.random.normal(0, np.sqrt(self.Power_Spectrum) )*np.power(self.filter,2)
+        if p==1:
+            fn_Phase = np.random.uniform(0, Pmax*np.ones(self.k.shape,dtype=np.float_) )*np.power(self.filter,2)
+        else:
+            fn_Phase = np.random.normal(Pmax, np.sqrt(Pvar)*np.ones(self.k.shape,dtype=np.float_) )*np.power(self.filter,2)
 
         # Need to ensure that f_-k = f^*_k
-        FT = fn_R + fn_I*1j
+        #FT = fn_R + fn_I*1j
+        FT=fn_Norm*np.cos(fn_Phase)+fn_Norm*np.sin(fn_Phase)*1j
 
         X=np.concatenate((np.append(FT[:self.nmax, self.nmax+1 ,self.nmax+1 ], 0), np.conjugate(np.flipud(FT[:self.nmax, self.nmax+1 ,self.nmax+1 ]))), axis=0)
         Z=np.concatenate( ( FT[:, :self.nmax ,self.nmax ], X.reshape(2*self.nmax+1,1), np.conjugate(np.fliplr(np.flipud(FT[:, :self.nmax ,self.nmax ])))), axis=1 )
@@ -199,6 +203,11 @@ class Universe(object):
 
         print "Generated ",self.fn[~(self.fn[:,:,:] == 0)].size," potential Fourier coefficients"
         #print "fn[:, 0,0]=", self.fn[:, self.nmax, self.nmax]
+        
+        if p==1:
+            print " with phases uniformly distributed between 0 and ", Pmax 
+        else:
+            print " with phases sampled from a Gaussian distribution with mean ", Pmax," and variance ", Pvar 
         
         # Evaluate it on our Phi grid:
         self.evaluate_potential_given_fourier_coefficients()
@@ -217,17 +226,16 @@ class Universe(object):
 
         #Now use iFFT to invert the Fourier coefficients f_n to a real space potential
         #print "fn[:, 0,0]=", self.fn[:, self.nmax, self.nmax]
-        ComplexPhi=np.fft.fftshift(np.fft.ifftn(np.fft.ifftshift(self.fn[:,self.nmax,self.nmax])))
+        ComplexPhi=np.fft.fftshift(np.fft.ifftn(np.fft.ifftshift(self.fn)))
         
         
 
-        # Throw out the residual imaginary part of the potential
-        # (LPL: From my tests I got it's O(10^-17) so I was confident it works)
+        # Throw out the residual imaginary part of the potential [< O(10^-16)]
         self.phi = ComplexPhi.real
 
-        print " Built potential grid, with dimensions ",self.phi.shape,\
-              " and mean value ", round(np.mean(self.phi),3),"+/-",round(np.std(self.phi),4)
-        #print "phi[:, 0,0]=", ComplexPhi[:]
+        print "Built potential grid, with dimensions ",self.phi.shape,\
+              " and mean value ", round(np.mean(self.phi),4),"+/-",round(np.std(self.phi),7)
+        #print "phi[:, :,0]=", ComplexPhi[:, :]
         
         return
 

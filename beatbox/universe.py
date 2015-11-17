@@ -21,7 +21,8 @@ class Universe(object):
         self.BOXSIZE = 4.0
         self.NPIX = int(self.BOXSIZE/self.PIXSCALE) + 1
         Nj = np.complex(0.0,self.NPIX)
-        self.x, self.y, self.z = np.mgrid[-self.BOXSIZE/2.0:self.BOXSIZE/2.0:Nj, -self.BOXSIZE/2.0:self.BOXSIZE/2.0:Nj, -self.BOXSIZE/2.0:self.BOXSIZE/2.0:Nj]
+        #define the grid in real space that the iFFT returns for f_n
+        self.x, self.y, self.z = np.mgrid[-self.BOXSIZE/2.0+self.BOXSIZE/(2*float(self.NPIX)):self.BOXSIZE/2.0-self.BOXSIZE/(2*float(self.NPIX)):Nj, -self.BOXSIZE/2.0+self.BOXSIZE/(2*float(self.NPIX)):self.BOXSIZE/2.0-self.BOXSIZE/(2*float(self.NPIX)):Nj, -self.BOXSIZE/2.0+self.BOXSIZE/(2*float(self.NPIX)):self.BOXSIZE/2.0-self.BOXSIZE/(2*float(self.NPIX)):Nj]
         # self.phi = np.zeros([3,self.NPIX])
         self.phi = self.x * 0.0
         self.Tmap = None
@@ -154,18 +155,18 @@ class Universe(object):
 
     # ----------------------------------------------------------------
 
-    def generate_a_random_potential_field(self, high_k_cutoff=6, low_k_cutoff=2, nmax=10, n_s=0.96, kstar=0.02, PSnorm=2.43e-9):
+    def generate_a_random_potential_field(self, high_k_cutoff=6, low_k_cutoff=2, n_s=0.96, kstar=0.02, PSnorm=2.43e-9):
 
-        self.nmax = nmax
+        #The nmax we need for the resolution we want in our Universe is:
+        self.nmax = int(self.BOXSIZE/(2*self.PIXSCALE))
 
         self.high_k_cutoff=high_k_cutoff
         self.low_k_cutoff=low_k_cutoff
 
         self.Deltak=2*np.pi/self.BOXSIZE;
         self.kmax=self.nmax*self.Deltak;
-        self.N=2*self.nmax;
 
-        self.kx, self.ky, self.kz = np.meshgrid(np.linspace(-self.kmax,self.kmax,self.N+1),np.linspace(-self.kmax,self.kmax,self.N+1),np.linspace(-self.kmax,self.kmax,self.N+1), indexing='ij');
+        self.kx, self.ky, self.kz = np.meshgrid(np.linspace(-self.kmax,self.kmax,self.NPIX),np.linspace(-self.kmax,self.kmax,self.NPIX),np.linspace(-self.kmax,self.kmax,self.NPIX), indexing='ij');
         self.k = np.sqrt(np.power(self.kx, 2)+np.power(self.ky,2)+np.power(self.kz,2));
 
         # Define filter in k-space
@@ -192,12 +193,13 @@ class Universe(object):
         # Need to ensure that f_-k = f^*_k
         FT = fn_R + fn_I*1j
 
-        X=np.concatenate((np.append(FT[:nmax, nmax+1 ,nmax+1 ], 0), np.conjugate(np.flipud(FT[:nmax, nmax+1 ,nmax+1 ]))), axis=0)
-        Z=np.concatenate( ( FT[:, :nmax ,nmax ], X.reshape(2*self.nmax+1,1), np.conjugate(np.fliplr(np.flipud(FT[:, :nmax ,nmax ])))), axis=1 )
-        self.fn= np.concatenate( (FT[:,:,:nmax], Z.reshape(2*self.nmax+1,2*self.nmax+1,1), np.conjugate( np.fliplr(np.flipud(FT[:,:,:nmax])))[:,:,::-1] ), axis=2  )
+        X=np.concatenate((np.append(FT[:self.nmax, self.nmax+1 ,self.nmax+1 ], 0), np.conjugate(np.flipud(FT[:self.nmax, self.nmax+1 ,self.nmax+1 ]))), axis=0)
+        Z=np.concatenate( ( FT[:, :self.nmax ,self.nmax ], X.reshape(2*self.nmax+1,1), np.conjugate(np.fliplr(np.flipud(FT[:, :self.nmax ,self.nmax ])))), axis=1 )
+        self.fn= np.concatenate( (FT[:,:,:self.nmax], Z.reshape(2*self.nmax+1,2*self.nmax+1,1), np.conjugate( np.fliplr(np.flipud(FT[:,:,:self.nmax])))[:,:,::-1] ), axis=2  )
 
         print "Generated ",self.fn[~(self.fn[:,:,:] == 0)].size," potential Fourier coefficients"
-
+        #print "fn[:, 0,0]=", self.fn[:, self.nmax, self.nmax]
+        
         # Evaluate it on our Phi grid:
         self.evaluate_potential_given_fourier_coefficients()
 
@@ -208,17 +210,25 @@ class Universe(object):
         self.phi=np.zeros(self.x.shape,dtype=np.float_)
         ComplexPhi=np.zeros(self.x.shape,dtype=np.complex128)
 
-        for i in range((2*self.nmax+1)**3):
-            phase = self.kx.reshape((2*self.nmax+1)**3,1)[i] * self.x + self.ky.reshape((2*self.nmax+1)**3,1)[i] * self.y + self.kz.reshape((2*self.nmax+1)**3,1)[i] * self.z
-            ComplexPhi += self.fn.reshape((2*self.nmax+1)**3,1)[i] * (np.cos(phase)+np.sin(phase)*1j)
+        #THIS PART DID THE iFFT MANUALLY
+        #for i in range((2*self.nmax+1)**3):
+        #    phase = self.kx.reshape((2*self.nmax+1)**3,1)[i] * self.x + self.ky.reshape((2*self.nmax+1)**3,1)[i] * self.y + self.kz.reshape((2*self.nmax+1)**3,1)[i] * self.z
+        #    ComplexPhi += self.fn.reshape((2*self.nmax+1)**3,1)[i] * (np.cos(phase)+np.sin(phase)*1j)
+
+        #Now use iFFT to invert the Fourier coefficients f_n to a real space potential
+        #print "fn[:, 0,0]=", self.fn[:, self.nmax, self.nmax]
+        ComplexPhi=np.fft.fftshift(np.fft.ifftn(np.fft.ifftshift(self.fn[:,self.nmax,self.nmax])))
+        
+        
 
         # Throw out the residual imaginary part of the potential
         # (LPL: From my tests I got it's O(10^-17) so I was confident it works)
         self.phi = ComplexPhi.real
 
         print " Built potential grid, with dimensions ",self.phi.shape,\
-              " and mean value ", round(np.mean(self.phi),3),"+/-",round(np.std(self.phi),3)
-
+              " and mean value ", round(np.mean(self.phi),3),"+/-",round(np.std(self.phi),4)
+        #print "phi[:, 0,0]=", ComplexPhi[:]
+        
         return
 
 

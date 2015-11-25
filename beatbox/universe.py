@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib
 import matplotlib.pylab as plt
 import healpy as hp
 import string
@@ -155,7 +156,7 @@ class Universe(object):
 
     # ----------------------------------------------------------------
 
-    def generate_a_random_potential_field(self, high_k_cutoff=6, low_k_cutoff=2, n_s=0.96, kstar=0.02, PSnorm=2.43e-9, p=1, Pmax=np.pi, Pvar=0.0):
+    def generate_a_random_potential_field(self, high_k_cutoff=6, low_k_cutoff=2, n_s=0.96, kstar=0.02, PSnorm=2.43e-9, Pdist=1, Pmax=np.pi, Pvar=0.0):
 
         #The nmax we need for the resolution we want in our Universe is:
         self.nmax = int(self.BOXSIZE/(2*self.PIXSCALE))
@@ -175,12 +176,12 @@ class Universe(object):
         self.filter = high_k_filter*low_k_filter
 
         # Define the constants that go in the power spectrum
-        # scalar spectral index
+        #    scalar spectral index
         self.n_s=n_s
-        # Power spectrum normalization
+        #   power spectrum normalization
         self.PSnorm=PSnorm
         # Change units of the pivot scale kstar from Mpc^-1 to normalize the smallest k
-        # mode to 1 (i.e. the radius of the CMB photosphere at 13.94Gpc)
+        #    mode to 1 (i.e. the radius of the CMB photosphere at 13.94Gpc)
         self.kstar=kstar*1.394e4
 
         # Draw Gaussian random Fourier coefficients with a k^{-3+(n_s-1)} power spectrum:
@@ -188,7 +189,13 @@ class Universe(object):
         self.Power_Spectrum[np.isinf(self.Power_Spectrum)]=10**-9
 
         fn_Norm = np.random.normal(0, np.sqrt(self.Power_Spectrum) )*np.power(self.filter,2)
-        if p==1:
+        # Draw the phases for the modes: use p=1 for a uniform distribution in [0,Pmax],
+        #    and p=0 for a Gaussian distribution with mean Pmax and variance Pvar
+        self.Pdist=Pdist
+        self.Pvar=Pvar
+        self.Pmax=Pmax
+        
+        if Pdist==1:
             fn_Phase = np.random.uniform(0, Pmax*np.ones(self.k.shape,dtype=np.float_) )*np.power(self.filter,2)
         else:
             fn_Phase = np.random.normal(Pmax, np.sqrt(Pvar)*np.ones(self.k.shape,dtype=np.float_) )*np.power(self.filter,2)
@@ -204,7 +211,7 @@ class Universe(object):
         print "Generated ",self.fn[~(self.fn[:,:,:] == 0)].size," potential Fourier coefficients"
         #print "fn[:, 0,0]=", self.fn[:, self.nmax, self.nmax]
         
-        if p==1:
+        if Pdist==1:
             print " with phases uniformly distributed between 0 and ", Pmax 
         else:
             print " with phases sampled from a Gaussian distribution with mean ", Pmax," and variance ", Pvar 
@@ -220,12 +227,12 @@ class Universe(object):
         ComplexPhi=np.zeros(self.x.shape,dtype=np.complex128)
 
         #THIS PART DID THE iFFT MANUALLY
-        #for i in range((2*self.nmax+1)**3):
+        # for i in range((2*self.nmax+1)**3):
         #    phase = self.kx.reshape((2*self.nmax+1)**3,1)[i] * self.x + self.ky.reshape((2*self.nmax+1)**3,1)[i] * self.y + self.kz.reshape((2*self.nmax+1)**3,1)[i] * self.z
         #    ComplexPhi += self.fn.reshape((2*self.nmax+1)**3,1)[i] * (np.cos(phase)+np.sin(phase)*1j)
 
         #Now use iFFT to invert the Fourier coefficients f_n to a real space potential
-        #print "fn[:, 0,0]=", self.fn[:, self.nmax, self.nmax]
+        #  print "fn[:, 0,0]=", self.fn[:, self.nmax, self.nmax]
         ComplexPhi=np.fft.fftshift(np.fft.ifftn(np.fft.ifftshift(self.fn)))
         
         
@@ -235,12 +242,12 @@ class Universe(object):
 
         print "Built potential grid, with dimensions ",self.phi.shape,\
               " and mean value ", round(np.mean(self.phi),4),"+/-",round(np.std(self.phi),7)
-        #print "phi[:, :,0]=", ComplexPhi[:, :]
+        #  print "phi[:, :,0]=", ComplexPhi[:, :]
         
         return
 
 
-    def show_potential_with_yt(self,output='phi.png',angle=np.pi/4.0):
+    def show_potential_with_yt(self,output='phi.png',angle=np.pi/4.0,N_layer=10,cmap='BrBG', Proj=0, Slice=0):
         """
         Visualize the gravitational potential using yt. We're after something
         like http://yt-project.org/doc/_images/vr_sample.jpg - described
@@ -260,9 +267,17 @@ class Universe(object):
         ma = 2.0*ma
         mi = 0.0
 
-        # Apply offset and store phi array in a yt data structure:
-        ds = yt.load_uniform_grid(dict(phi=self.phi+offset), self.phi.shape)
 
+        bbox = np.array([[np.min(self.x), np.max(self.x)], [np.min(self.y), np.max(self.y)], [np.min(self.z), np.max(self.z)]])
+
+        # Apply offset and store phi array in a yt data structure,
+        #    I'm putting some random density units here:
+        ds = yt.load_uniform_grid(dict(density=(self.phi+offset, 'g/cm**3')), self.phi.shape, bbox=bbox,  nprocs=1)
+        #Check that the loaded field is recognized by yt
+        #    print ds.field_list
+        field='density'
+
+        
         # Here's Sam's gist, from https://gist.github.com/samskillman/0e574d1a4f67d3a3b1b1
         #   im, sc = yt.volume_render(ds, field='phi')
         #   sc.annotate_domain(ds)
@@ -273,37 +288,59 @@ class Universe(object):
 
         # Following the example at http://yt-project.org/doc/visualizing/volume_rendering.html
 
-        # Set minimum and maximum of plotting range:
-        # mi, ma = ds.all_data().quantities.extrema('phi')
-        # print "Extrema of ds phi:",mi,ma
+        # Set minimum and maximum of plotting range (in proper yt units):
+        dd = ds.all_data()
+        mi2, ma2 = dd.quantities.extrema(field)
+        #print "Extrema of ds phi:",mi,ma, mi2, ma2
+
+        use_log = False
 
         # Instantiate the ColorTransferFunction.
-        tf = yt.ColorTransferFunction((mi, ma))
+        tf = yt.ColorTransferFunction((mi2, ma2))
+        
+        # Add some isopotential surface layers:
+        tf.add_layers(N_layer, 0.0000005*(ma2 - mi2) / N_layer, colormap = cmap)
 
         # Set up the camera parameters: center, looking direction, width, resolution
-        c = (ds.domain_right_edge + ds.domain_left_edge)/2.0
+        c = (np.max(self.x)+np.min(self.x))/2.0
 
         Lx = np.sqrt(2.0)*np.cos(angle)
         Ly = np.sqrt(2.0)*np.sin(angle)
         Lz = 1.0
         L = np.array([Lx, Ly, Lz])
         W = ds.quan(1.6, 'unitary')
-        N = 256
+        N = 512
 
         # Create a camera object
-        cam = ds.camera(c, L, W, N, tf, fields=['phi'])
-
-        # Now let's add some isopotential surface layers, and take a snapshot:
-        tf.add_layers(21, colormap='BrBG')
-        im = cam.snapshot(output)
-        # BUG: only one yellow layer is displayed...
+        cam = ds.camera(c, L, W, N, tf, fields=[field], log_fields = [use_log],  no_ghost = False)
+        cam.show(clip_ratio=7)
+        self.cam=cam
+        #Phil's old way of adding layers
+        #    Now let's add some isopotential surface layers, and take a snapshot:
+        #        tf.add_layers(21, colormap='BrBG')
+        #        im = cam.snapshot(output)
+        #    BUG: only one yellow layer is displayed...
 
 
         # Add the domain box to the image:
-        nim = cam.draw_domain(im)
+        #nim = cam.draw_domain(im)
 
         # Save the image to a file:
-        nim.write_png(output)
+        #nim.write_png(output)
+        if self.Pdist==1:
+        	im1 = cam.snapshot('phi3D_Uniform_phases_0-'+str(self.Pmax)+'.png')
+        else:
+            im1 = cam.snapshot('phi3D_Gauss_phases_mean'+str(self.Pmax)+'_var'+str(self.Pvar)+'.png')
+        
+        if Proj==1:
+            s = yt.ProjectionPlot(ds, "z", "density")
+            s.show()
+            s.save('phi')
+
+        if Slice==1:
+            w = yt.SlicePlot(ds, "x", "density", center="max")
+            w.show()
+            w.save('phi')
 
         return
 

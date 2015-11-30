@@ -1,34 +1,37 @@
 # ----------------------------------------------------------------------------
 
-all: music
+all: mapping inflation trees
 
 clean:
 	-rm -f *.aux *.log *.dvi *.blg *.out *.bbl
 
 # ----------------------------------------------------------------------------
 
-# Notes from CtU2015:
+# Paper 1:
 
-ctu2015: ctu2015.tex macros.tex references.bib
-	pdflatex ctu2015.tex
-	pdflatex ctu2015.tex
-	bibtex ctu2015
-	pdflatex ctu2015.tex
-	pdflatex ctu2015.tex
+mapping: music-mapping.tex macros.tex references.bib
+	pdflatex music-mapping.tex
+	pdflatex music-mapping.tex
+	bibtex music-mapping
+	pdflatex music-mapping.tex
+	pdflatex music-mapping.tex
 
-# Working report:
+# Paper 2:
 
-music: music.tex references.bib
-	pdflatex music.tex
-	pdflatex music.tex
-	bibtex music
-	pdflatex music.tex
-	pdflatex music.tex
+inflation: music-inflation.tex macros.tex references.bib
+	pdflatex music-inflation.tex
+	pdflatex music-inflation.tex
+	bibtex music-inflation
+	pdflatex music-inflation.tex
+	pdflatex music-inflation.tex
 
-# Notes on inflation inference:
+# Paper 3:
 
-inflation: Link_to_Inflation.tex
-	pdflatex Link_to_Inflation.tex
-	pdflatex Link_to_Inflation.tex
+trees: music-trees.tex macros.tex references.bib
+	pdflatex music-trees.tex
+	pdflatex music-trees.tex
+	bibtex music-trees
+	pdflatex music-trees.tex
+	pdflatex music-trees.tex
 
 # ----------------------------------------------------------------------------

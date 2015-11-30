@@ -8,6 +8,7 @@ import os
 import glob
 from PIL import Image as PIL_Image
 from images2gif import writeGif
+from scipy.special import sph_harm,sph_jn
 
 import beatbox
 
@@ -18,16 +19,33 @@ class Universe(object):
     A simple model universe in a box.
     """
     def __init__(self):
+
         self.PIXSCALE = 0.1
         self.BOXSIZE = 4.0
+
+        # Real space: define a coordinate grid:
         self.NPIX = int(self.BOXSIZE/self.PIXSCALE) + 1
         Nj = np.complex(0.0,self.NPIX)
-        #define the grid in real space that the iFFT returns for f_n
         self.x, self.y, self.z = np.mgrid[-self.BOXSIZE/2.0+self.BOXSIZE/(2*float(self.NPIX)):self.BOXSIZE/2.0-self.BOXSIZE/(2*float(self.NPIX)):Nj, -self.BOXSIZE/2.0+self.BOXSIZE/(2*float(self.NPIX)):self.BOXSIZE/2.0-self.BOXSIZE/(2*float(self.NPIX)):Nj, -self.BOXSIZE/2.0+self.BOXSIZE/(2*float(self.NPIX)):self.BOXSIZE/2.0-self.BOXSIZE/(2*float(self.NPIX)):Nj]
-        # self.phi = np.zeros([3,self.NPIX])
+
+        # The potential map (pure real):
         self.phi = self.x * 0.0
+        # The CMB temperature map:
         self.Tmap = None
         self.NSIDE = None
+
+        # Fourier space: define a coordinate grid:
+
+        # The nmax we need for the resolution we want in our Universe is:
+        self.nmax = int(self.BOXSIZE/(2*self.PIXSCALE))
+        self.Deltak = 2.0*np.pi/self.BOXSIZE;
+        self.kmax = self.nmax*self.Deltak;
+        self.kx, self.ky, self.kz = np.meshgrid(np.linspace(-self.kmax,self.kmax,self.NPIX),np.linspace(-self.kmax,self.kmax,self.NPIX),np.linspace(-self.kmax,self.kmax,self.NPIX), indexing='ij');
+        self.k = np.sqrt(np.power(self.kx, 2)+np.power(self.ky,2)+np.power(self.kz,2));
+
+        # Define filter in k-space, that contains the modes we want:
+        self.set_k_filter()
+
         return
 
     def __str__(self):
@@ -65,6 +83,7 @@ class Universe(object):
             hp.orthview(self.Tmap,rot=R,flip='geo',half_sky=True,title="CMB temperature fluctuations as seen from outside the LSS")
             # print "Ahem - we can't visualize maps on the surface of the sphere yet, sorry."
         return
+
 
     def decompose_T_map_into_spherical_harmonics(self,lmax=None):
         """
@@ -138,6 +157,38 @@ class Universe(object):
 
         return prefactor * value
 
+    def put_alm(self,value,l=None,m=None):
+        if l is None or m is None:
+            return None
+        index = hp.Alm.getidx(self.lmax, l, m)
+        self.alm[index] = value
+        return
+
+
+    def alm2ay(self,lmax):
+        '''
+        Read its own a_lm array, and return the corresponding
+        a_y array (in the correct order).
+        '''
+        ay = np.array([])
+        # Loop over l and m:
+        #    ay = np.append(ay,self.get_alm(l=l,m=m))
+
+        # Would be better to do this array-wise...
+        return # ay
+
+
+    def ay2alm(self,ay):
+        '''
+        Repackage the a_y array into healpy-readable a_lm's
+        '''
+        # Loop over y, working out l and m, and refilling self.alm
+        # array:
+        # self.put_alm(ay[y],l=l,m=m)
+
+        # Would be better to do this array-wise...
+        return
+
 
     def write_out_spherical_harmonic_coefficients(self,lmax=10):
         outfile = string.join(string.split(self.Tmapfile,'.')[0:-1],'.') + '_alm_lmax' + str(lmax) + '.txt'
@@ -156,37 +207,84 @@ class Universe(object):
 
     # ----------------------------------------------------------------
 
-    def generate_a_random_potential_field(self, high_k_cutoff=6, low_k_cutoff=2, n_s=0.96, kstar=0.02, PSnorm=2.43e-9, Pdist=1, Pmax=np.pi, Pvar=0.0):
+    def populate_response_matrix(self,tnmax=None,tlmax=None):
 
-        #The nmax we need for the resolution we want in our Universe is:
-        self.nmax = int(self.BOXSIZE/(2*self.PIXSCALE))
+        if tnmax is None:
+            self.tnmax = 6
+        else:
+            self.tnmax = tnmax
 
-        self.high_k_cutoff=high_k_cutoff
-        self.low_k_cutoff=low_k_cutoff
+        if tlmax is None:
+            self.tlmax = 8
+        else:
+            self.tlmax = tlmax
 
-        self.Deltak=2*np.pi/self.BOXSIZE;
-        self.kmax=self.nmax*self.Deltak;
 
-        self.kx, self.ky, self.kz = np.meshgrid(np.linspace(-self.kmax,self.kmax,self.NPIX),np.linspace(-self.kmax,self.kmax,self.NPIX),np.linspace(-self.kmax,self.kmax,self.NPIX), indexing='ij');
-        self.k = np.sqrt(np.power(self.kx, 2)+np.power(self.ky,2)+np.power(self.kz,2));
+        # Initialize matrix:
+        NY = (self.tlmax + 1)**2
+        NN = len(self.filter > 0)
+        self.R = np.zeros([NY,NN])
 
-        # Define filter in k-space
+        # Loop over n, and y, computing elements of R_yn
+
+        k,theta,phi = self.get_k_theta_phi_from(n)
+
+        l,m = self.get_lm_from(y)
+
+        if n < NN/2:
+            trigpart = np.cos(np.pi*l/2.0)
+        else:
+            trigpart = np.sin(np.pi*l/2.0)
+
+        self.R[y,n] = 4.0 * np.pi * sph_harm(m,l,theta,phi) * sph_jn(l,k) * trigpart
+
+        return
+
+
+    def get_lm_from(y):
+        l = 0
+        m = 0
+        return l,m
+
+    def get_k_theta_phi_from(n):
+
+        # First, get n1, n2 and n3
+
+        # Then compute k, theta and phi:
+        k = 0.0
+        theta = 0.0
+        phi = 0.0
+
+        return k,theta,phi
+
+    # ----------------------------------------------------------------
+
+    def set_k_filter(self, low_k_cutoff=1, high_k_cutoff=6):
+        self.high_k_cutoff = high_k_cutoff
+        self.low_k_cutoff = low_k_cutoff
         low_k_filter = (~(self.k <= self.low_k_cutoff)).astype(int)
         high_k_filter = (~(self.k >= self.high_k_cutoff)).astype(int)
         self.filter = high_k_filter*low_k_filter
+        return
+
+
+    def generate_a_random_potential_field(self, high_k_cutoff=6, low_k_cutoff=2, n_s=0.96, kstar=0.02, PSnorm=2.43e-9, Pdist=1, Pmax=np.pi, Pvar=0.0):
+
+        # Set the k filter:
+        self.set_k_filter(low_k_cutoff=low_k_cutoff,high_k_cutoff=high_k_cutoff)
 
         # Define the constants that go in the power spectrum
         #    scalar spectral index
-        self.n_s=n_s
+        self.n_s = n_s
         #   power spectrum normalization
-        self.PSnorm=PSnorm
+        self.PSnorm = PSnorm
         # Change units of the pivot scale kstar from Mpc^-1 to normalize the smallest k
         #    mode to 1 (i.e. the radius of the CMB photosphere at 13.94Gpc)
-        self.kstar=kstar*1.394e4
+        self.kstar = kstar*1.394e4
 
         # Draw Gaussian random Fourier coefficients with a k^{-3+(n_s-1)} power spectrum:
         self.Power_Spectrum = self.PSnorm*np.power((self.k/self.kstar) ,(-3+(self.n_s-1)))
-        self.Power_Spectrum[np.isinf(self.Power_Spectrum)]=10**-9
+        self.Power_Spectrum[np.isinf(self.Power_Spectrum)] = 10**-9
 
         fn_Norm = np.random.normal(0, np.sqrt(self.Power_Spectrum) )*np.power(self.filter,2)
         # Draw the phases for the modes: use p=1 for a uniform distribution in [0,Pmax],
@@ -194,37 +292,48 @@ class Universe(object):
         self.Pdist=Pdist
         self.Pvar=Pvar
         self.Pmax=Pmax
-        
+
         if Pdist==1:
             fn_Phase = np.random.uniform(0, Pmax*np.ones(self.k.shape,dtype=np.float_) )*np.power(self.filter,2)
         else:
             fn_Phase = np.random.normal(Pmax, np.sqrt(Pvar)*np.ones(self.k.shape,dtype=np.float_) )*np.power(self.filter,2)
 
         # Need to ensure that f_-k = f^*_k
-        #FT = fn_R + fn_I*1j
-        FT=fn_Norm*np.cos(fn_Phase)+fn_Norm*np.sin(fn_Phase)*1j
+        # FT = fn_R + fn_I*1j
+        FT = fn_Norm*np.cos(fn_Phase)+fn_Norm*np.sin(fn_Phase)*1j
 
-        X=np.concatenate((np.append(FT[:self.nmax, self.nmax+1 ,self.nmax+1 ], 0), np.conjugate(np.flipud(FT[:self.nmax, self.nmax+1 ,self.nmax+1 ]))), axis=0)
-        Z=np.concatenate( ( FT[:, :self.nmax ,self.nmax ], X.reshape(2*self.nmax+1,1), np.conjugate(np.fliplr(np.flipud(FT[:, :self.nmax ,self.nmax ])))), axis=1 )
-        self.fn= np.concatenate( (FT[:,:,:self.nmax], Z.reshape(2*self.nmax+1,2*self.nmax+1,1), np.conjugate( np.fliplr(np.flipud(FT[:,:,:self.nmax])))[:,:,::-1] ), axis=2  )
+        X = np.concatenate((np.append(FT[:self.nmax, self.nmax+1 ,self.nmax+1 ], 0), np.conjugate(np.flipud(FT[:self.nmax, self.nmax+1 ,self.nmax+1 ]))), axis=0)
+        Z = np.concatenate( ( FT[:, :self.nmax ,self.nmax ], X.reshape(2*self.nmax+1,1), np.conjugate(np.fliplr(np.flipud(FT[:, :self.nmax ,self.nmax ])))), axis=1 )
+        self.fngrid = np.concatenate( (FT[:,:,:self.nmax], Z.reshape(2*self.nmax+1,2*self.nmax+1,1), np.conjugate( np.fliplr(np.flipud(FT[:,:,:self.nmax])))[:,:,::-1] ), axis=2  )
 
-        print "Generated ",self.fn[~(self.fn[:,:,:] == 0)].size," potential Fourier coefficients"
-        #print "fn[:, 0,0]=", self.fn[:, self.nmax, self.nmax]
-        
+        print "Generated ",self.fngrid[~(self.fngrid[:,:,:] == 0)].size," potential Fourier coefficients"
+
         if Pdist==1:
-            print " with phases uniformly distributed between 0 and ", Pmax 
+            print " with phases uniformly distributed between 0 and ", Pmax
         else:
-            print " with phases sampled from a Gaussian distribution with mean ", Pmax," and variance ", Pvar 
-        
+            print " with phases sampled from a Gaussian distribution with mean ", Pmax," and variance ", Pvar
+
         # Evaluate it on our Phi grid:
         self.evaluate_potential_given_fourier_coefficients()
 
         return
 
+
+    def rearrange_fn_from_grid_to_vector(self):
+        '''
+        It's easiest to generate a potential from the prior on a 3D
+        grid, so we can use the iFFT. For the linear algebra in the
+        inference, we need the fourier coefficients arranged in a
+        vector.
+        '''
+        # self.fn = self.fngrid
+        return
+
+
     def evaluate_potential_given_fourier_coefficients(self):
 
-        self.phi=np.zeros(self.x.shape,dtype=np.float_)
-        ComplexPhi=np.zeros(self.x.shape,dtype=np.complex128)
+        self.phi = np.zeros(self.x.shape,dtype=np.float_)
+        ComplexPhi = np.zeros(self.x.shape,dtype=np.complex128)
 
         #THIS PART DID THE iFFT MANUALLY
         # for i in range((2*self.nmax+1)**3):
@@ -233,9 +342,7 @@ class Universe(object):
 
         #Now use iFFT to invert the Fourier coefficients f_n to a real space potential
         #  print "fn[:, 0,0]=", self.fn[:, self.nmax, self.nmax]
-        ComplexPhi=np.fft.fftshift(np.fft.ifftn(np.fft.ifftshift(self.fn)))
-        
-        
+        ComplexPhi = np.fft.fftshift(np.fft.ifftn(np.fft.ifftshift(self.fngrid)))
 
         # Throw out the residual imaginary part of the potential [< O(10^-16)]
         self.phi = ComplexPhi.real
@@ -243,7 +350,7 @@ class Universe(object):
         print "Built potential grid, with dimensions ",self.phi.shape,\
               " and mean value ", round(np.mean(self.phi),4),"+/-",round(np.std(self.phi),7)
         #  print "phi[:, :,0]=", ComplexPhi[:, :]
-        
+
         return
 
 
@@ -277,7 +384,7 @@ class Universe(object):
         #    print ds.field_list
         field='density'
 
-        
+
         # Here's Sam's gist, from https://gist.github.com/samskillman/0e574d1a4f67d3a3b1b1
         #   im, sc = yt.volume_render(ds, field='phi')
         #   sc.annotate_domain(ds)
@@ -311,9 +418,9 @@ class Universe(object):
         tfh.build_transfer_function()
         tfh.tf.grey_opacity=False
         tfh.tf.add_layers(N_layer,  w=0.0000001*(ma2 - mi2) /N_layer, mi=0.1*ma, ma=ma-0.3*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.1*ma,ma-0.3*ma] , colormap=cmap)
-        densityplot1=tfh.plot('densityplot1')
+        densityplot1 = tfh.plot('densityplot1')
         # densityplot1.savefig('densityplot1')
-        densityplot2=tfh.plot(profile_field='cell_mass', 'densityplot2')
+        densityplot2 = tfh.plot('densityplot2', profile_field='cell_mass')
         # densityplot2.savefig('densityplot2')
 
         # Set up the camera parameters: center, looking direction, width, resolution
@@ -337,20 +444,20 @@ class Universe(object):
         #    BUG: only one yellow layer is displayed...
 
 
-       
+
         if self.Pdist==1:
         	im1 = cam.snapshot('opac_phi3D_Uniform_phases_0-'+str(self.Pmax)+'.png', clip_ratio=5)
         else:
             im1 = cam.snapshot('opac_phi3D_Gauss_phases_mean'+str(self.Pmax)+'_var'+str(self.Pvar)+'.png', clip_ratio=7)
-        
+
         if gifmaking==1:
         	# Add the domain box to the image:
         	nim = cam.draw_grids(im1)
 
         	# Save the image to a file:
         	nim.write_png(output)
-        
-        
+
+
         if Proj==1:
             s = yt.ProjectionPlot(ds, "z", "density")
             s.show()

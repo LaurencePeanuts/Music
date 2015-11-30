@@ -247,7 +247,7 @@ class Universe(object):
         return
 
 
-    def show_potential_with_yt(self,output='phi.png',angle=np.pi/4.0,N_layer=10,cmap='BrBG', Proj=0, Slice=0):
+    def show_potential_with_yt(self,output='',angle=np.pi/4.0, N_layer=5, alpha_norm=1.0, cmap='BrBG', Proj=0, Slice=0, gifmaking=0):
         """
         Visualize the gravitational potential using yt. We're after something
         like http://yt-project.org/doc/_images/vr_sample.jpg - described
@@ -296,10 +296,25 @@ class Universe(object):
         use_log = False
 
         # Instantiate the ColorTransferFunction.
-        tf = yt.ColorTransferFunction((mi2, ma2))
-        
+        #    tf = yt.ColorTransferFunction((mi2, ma2))
+        #    tf.grey_opacity=True
         # Add some isopotential surface layers:
-        tf.add_layers(N_layer, 0.0000005*(ma2 - mi2) / N_layer, colormap = cmap)
+        #    tf.add_layers(N_layer, 0.0000005*(ma2 - mi2) / N_layer, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), colormap = cmap)
+
+        from IPython.core.display import Image
+        from yt.visualization.volume_rendering.transfer_function_helper import TransferFunctionHelper
+
+        tfh = yt.TransferFunctionHelper(ds)
+        tfh.set_field('density')
+        tfh.set_log(False)
+        tfh.set_bounds()
+        tfh.build_transfer_function()
+        tfh.tf.grey_opacity=False
+        tfh.tf.add_layers(N_layer,  w=0.0000001*(ma2 - mi2) /N_layer, mi=0.1*ma, ma=ma-0.3*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.1*ma,ma-0.3*ma] , colormap=cmap)
+        densityplot1=tfh.plot('densityplot1')
+        # densityplot1.savefig('densityplot1')
+        densityplot2=tfh.plot(profile_field='cell_mass', 'densityplot2')
+        # densityplot2.savefig('densityplot2')
 
         # Set up the camera parameters: center, looking direction, width, resolution
         c = (np.max(self.x)+np.min(self.x))/2.0
@@ -312,25 +327,29 @@ class Universe(object):
         N = 512
 
         # Create a camera object
-        cam = ds.camera(c, L, W, N, tf, fields=[field], log_fields = [use_log],  no_ghost = False)
-        cam.show(clip_ratio=7)
+        cam = ds.camera(c, L, W, N, tfh.tf, fields=[field], log_fields = [use_log],  no_ghost = False)
+        cam.show()
         self.cam=cam
-        #Phil's old way of adding layers
+        #Old way of adding layers
         #    Now let's add some isopotential surface layers, and take a snapshot:
         #        tf.add_layers(21, colormap='BrBG')
         #        im = cam.snapshot(output)
         #    BUG: only one yellow layer is displayed...
 
 
-        # Add the domain box to the image:
-        #nim = cam.draw_domain(im)
-
-        # Save the image to a file:
-        #nim.write_png(output)
+       
         if self.Pdist==1:
-        	im1 = cam.snapshot('phi3D_Uniform_phases_0-'+str(self.Pmax)+'.png')
+        	im1 = cam.snapshot('opac_phi3D_Uniform_phases_0-'+str(self.Pmax)+'.png', clip_ratio=5)
         else:
-            im1 = cam.snapshot('phi3D_Gauss_phases_mean'+str(self.Pmax)+'_var'+str(self.Pvar)+'.png')
+            im1 = cam.snapshot('opac_phi3D_Gauss_phases_mean'+str(self.Pmax)+'_var'+str(self.Pvar)+'.png', clip_ratio=7)
+        
+        if gifmaking==1:
+        	# Add the domain box to the image:
+        	nim = cam.draw_grids(im1)
+
+        	# Save the image to a file:
+        	nim.write_png(output)
+        
         
         if Proj==1:
             s = yt.ProjectionPlot(ds, "z", "density")
@@ -349,7 +368,7 @@ class Universe(object):
 
         # Create 36 frames for the animated gif, one for each angle:
         steps = 36
-        angles = np.arange(steps)*2.0*np.pi/np.float(steps)
+        angles = np.arange(steps)*np.pi/np.float(steps)/2.0+np.pi/4
 
         # book-keeping:
         folder = 'frames/'
@@ -358,9 +377,9 @@ class Universe(object):
 
         # Now create the individual frames:
         for k,angle in enumerate(angles):
-            framefile = folder+str(k).zfill(3)+'.png'
+            framefile = folder+str(k).zfill(3)
             print "Making frame",k,": ",framefile,"at viewing angle",angle
-            self.show_potential_with_yt(output=framefile,angle=angle)
+            self.show_potential_with_yt(output=framefile,angle=angle, N_layer=5, alpha_norm=1.0, cmap='BrBG', Proj=0, Slice=0, gifmaking=1)
 
         # Create an animated gif of all the frames:
         images = [PIL_Image.open(framefile) for framefile in glob.glob(folder+'*.png')]

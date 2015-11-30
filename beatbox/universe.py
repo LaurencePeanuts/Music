@@ -374,15 +374,16 @@ class Universe(object):
         ma = 2.0*ma
         mi = 0.0
 
-
+        # Size of the box containing the phi
         bbox = np.array([[np.min(self.x), np.max(self.x)], [np.min(self.y), np.max(self.y)], [np.min(self.z), np.max(self.z)]])
 
         # Apply offset and store phi array in a yt data structure,
-        #    I'm putting some random density units here:
+        #    I'm putting some random density units here 
+        #    (seems to be needed to display properly):
         ds = yt.load_uniform_grid(dict(density=(self.phi+offset, 'g/cm**3')), self.phi.shape, bbox=bbox,  nprocs=1)
+        field='density'
         #Check that the loaded field is recognized by yt
         #    print ds.field_list
-        field='density'
 
 
         # Here's Sam's gist, from https://gist.github.com/samskillman/0e574d1a4f67d3a3b1b1
@@ -403,11 +404,12 @@ class Universe(object):
         use_log = False
 
         # Instantiate the ColorTransferFunction.
-        #    tf = yt.ColorTransferFunction((mi2, ma2))
-        #    tf.grey_opacity=True
-        # Add some isopotential surface layers:
-        #    tf.add_layers(N_layer, 0.0000005*(ma2 - mi2) / N_layer, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), colormap = cmap)
+        #        tf = yt.ColorTransferFunction((mi2, ma2))
+        #        tf.grey_opacity=True
+        #    Add some isopotential surface layers:
+        #        tf.add_layers(N_layer, 0.0000005*(ma2 - mi2) / N_layer, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), colormap = cmap)
 
+        # Instantiate the ColorTransferFunction using the transfer function helper.
         from IPython.core.display import Image
         from yt.visualization.volume_rendering.transfer_function_helper import TransferFunctionHelper
 
@@ -417,15 +419,13 @@ class Universe(object):
         tfh.set_bounds()
         tfh.build_transfer_function()
         tfh.tf.grey_opacity=False
-        tfh.tf.add_layers(N_layer,  w=0.0000001*(ma2 - mi2) /N_layer, mi=0.2*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.1*ma,ma-0.3*ma] , colormap=cmap)
+        tfh.tf.add_layers(N_layer,  w=0.0000001*(ma2 - mi2) /N_layer, mi=0.2*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.3*ma] , colormap=cmap)
+        # Check if the transfer function captures the data properly:
         densityplot1 = tfh.plot('densityplot1')
-        # densityplot1.savefig('densityplot1')
         densityplot2 = tfh.plot('densityplot2', profile_field='cell_mass')
-        # densityplot2.savefig('densityplot2')
 
         # Set up the camera parameters: center, looking direction, width, resolution
         c = (np.max(self.x)+np.min(self.x))/2.0
-
         Lx = np.sqrt(2.0)*np.cos(angle)
         Ly = np.sqrt(2.0)*np.sin(angle)
         Lz = 1.0
@@ -437,14 +437,7 @@ class Universe(object):
         cam = ds.camera(c, L, W, N, tfh.tf, fields=[field], log_fields = [use_log],  no_ghost = False)
         if show3D==1:
             cam.show()
-        #self.cam=cam
-        #Old way of adding layers
-        #    Now let's add some isopotential surface layers, and take a snapshot:
-        #        tf.add_layers(21, colormap='BrBG')
-        #        im = cam.snapshot(output)
-        #    BUG: only one yellow layer is displayed...
-
-
+        # self.cam=cam
 
         if self.Pdist==1:
         	im1 = cam.snapshot('opac_phi3D_Uniform_phases_0-'+str(self.Pmax)+'.png', clip_ratio=5)
@@ -457,7 +450,6 @@ class Universe(object):
 
         	# Save the image to a file:
         	nim.write_png(output)
-
 
         if Proj==1:
             s = yt.ProjectionPlot(ds, "z", "density")
@@ -477,6 +469,7 @@ class Universe(object):
         # Create 36 frames for the animated gif, one for each angle:
         steps = 36
         angles = np.arange(steps)*np.pi/np.float(steps)/2.0+np.pi/4
+        # current bug: the frames jump at pi/4, 3pi/4 etc..
 
         # book-keeping:
         folder = 'frames/'

@@ -354,7 +354,7 @@ class Universe(object):
         return
 
 
-    def show_potential_with_yt(self,output='',angle=np.pi/4.0, N_layer=5, alpha_norm=1.0, cmap='BrBG', Proj=0, Slice=0, gifmaking=0):
+    def show_potential_with_yt(self,output='',angle=np.pi/4.0, N_layer=5, alpha_norm=1.0, cmap='BrBG', Proj=0, Slice=0, gifmaking=0, show3D=0):
         """
         Visualize the gravitational potential using yt. We're after something
         like http://yt-project.org/doc/_images/vr_sample.jpg - described
@@ -417,7 +417,7 @@ class Universe(object):
         tfh.set_bounds()
         tfh.build_transfer_function()
         tfh.tf.grey_opacity=False
-        tfh.tf.add_layers(N_layer,  w=0.0000001*(ma2 - mi2) /N_layer, mi=0.1*ma, ma=ma-0.3*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.1*ma,ma-0.3*ma] , colormap=cmap)
+        tfh.tf.add_layers(N_layer,  w=0.0000001*(ma2 - mi2) /N_layer, mi=0.2*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.1*ma,ma-0.3*ma] , colormap=cmap)
         densityplot1 = tfh.plot('densityplot1')
         # densityplot1.savefig('densityplot1')
         densityplot2 = tfh.plot('densityplot2', profile_field='cell_mass')
@@ -435,8 +435,9 @@ class Universe(object):
 
         # Create a camera object
         cam = ds.camera(c, L, W, N, tfh.tf, fields=[field], log_fields = [use_log],  no_ghost = False)
-        cam.show()
-        self.cam=cam
+        if show3D==1:
+            cam.show()
+        #self.cam=cam
         #Old way of adding layers
         #    Now let's add some isopotential surface layers, and take a snapshot:
         #        tf.add_layers(21, colormap='BrBG')
@@ -448,7 +449,7 @@ class Universe(object):
         if self.Pdist==1:
         	im1 = cam.snapshot('opac_phi3D_Uniform_phases_0-'+str(self.Pmax)+'.png', clip_ratio=5)
         else:
-            im1 = cam.snapshot('opac_phi3D_Gauss_phases_mean'+str(self.Pmax)+'_var'+str(self.Pvar)+'.png', clip_ratio=7)
+            im1 = cam.snapshot('opac_phi3D_Gauss_phases_mean'+str(self.Pmax)+'_var'+str(self.Pvar)+'.png', clip_ratio=5)
 
         if gifmaking==1:
         	# Add the domain box to the image:

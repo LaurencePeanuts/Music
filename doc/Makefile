@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
 
-all: mapping inflation trees
+all: allegro inflation trees
 
 clean:
 	-rm -f *.aux *.log *.dvi *.blg *.out *.bbl
@@ -9,12 +9,19 @@ clean:
 
 # Paper 1:
 
-mapping: music-mapping.tex macros.tex references.bib
-	pdflatex music-mapping.tex
-	pdflatex music-mapping.tex
-	bibtex music-mapping
-	pdflatex music-mapping.tex
-	pdflatex music-mapping.tex
+# mapping: music-mapping.tex macros.tex references.bib
+# 	pdflatex music-mapping.tex
+# 	pdflatex music-mapping.tex
+# 	bibtex music-mapping
+# 	pdflatex music-mapping.tex
+# 	pdflatex music-mapping.tex
+
+allegro: music-allegro.tex macros.tex references.bib
+	pdflatex music-allegro.tex
+	pdflatex music-allegro.tex
+	bibtex music-allegro
+	pdflatex music-allegro.tex
+	pdflatex music-allegro.tex
 
 # Paper 2:
 

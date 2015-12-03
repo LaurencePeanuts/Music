@@ -199,9 +199,9 @@ class Universe(object):
         #y=l**2+l+m is the index
         
         # Make a y_max-long tupple of l and m pairs
-        lms=[(l, m) for l in range(truncated_lmax+1) for m in range(-l, l+1)]
+        self.lms=[(l, m) for l in range(truncated_lmax+1) for m in range(-l, l+1)]
         
-        ay=self.get_alm(lms=lms)
+        ay=self.get_alm(lms=self.lms)
         #ay(l**2+1+m) = self.get_alm(l=l,m=m)
         
         #for l in range(0, truncated_lmax+1):
@@ -211,15 +211,16 @@ class Universe(object):
         return ay
 
 
-    def ay2alm(self,ay):
+    def ay2alm(self,ay,truncated_lmax=6):
         '''
         Repackage the a_y array into healpy-readable a_lm's
         '''
         # Loop over y, working out l and m, and refilling self.alm
         # array:
         # self.put_alm(ay[y],l=l,m=m)
-
-        # Would be better to do this array-wise...
+        #self.lms=[(l, m) for l in range(truncated_lmax+1) for m in range(-l, l+1)]
+        self.put_alm(self,ay,lms=self.lms)
+        
         return
 
 
@@ -255,29 +256,36 @@ class Universe(object):
 
         # Initialize matrix:
         NY = (self.truncated_lmax + 1)**2
-        NN = len(self.filter > 0)
+        NN = 2*len(self.filter > 0)
         self.R = np.zeros([NY,NN])
 
         # Loop over n, and y, computing elements of R_yn
-
-        k,theta,phi = self.get_k_theta_phi_from(n)
-
-        l,m = self.get_lm_from(y)
-
-        if n < NN/2:
+        ind=np.where(self.filter>0)
+        n1, n2, n3 = self.kx[ind]/self.Deltak , self.ky[ind]/self.Deltak, self.kz[ind]/self.Deltak
+        
+        k, theta, phi = self.k[ind], np.arctan(self.kx[ind]/self.ky[ind]), np.arccos(self.kz[ind]/self.k[ind])
+        # self.get_k_theta_phi_from(n)
+        y=0
+        for i in self.lms:        
+            l=self.i[0]
+            m=self.i[1]
+        # l,m = self.get_lm_from(y)
+            #for n in range(NN):
+                #if n < NN/2:
             trigpart = np.cos(np.pi*l/2.0)
-        else:
+            self.R[y,::NN/2] = 4.0 * np.pi * sph_harm(m,l,theta,phi) * sph_jn(l,k) * trigpart
+                #else:
             trigpart = np.sin(np.pi*l/2.0)
-
-        self.R[y,n] = 4.0 * np.pi * sph_harm(m,l,theta,phi) * sph_jn(l,k) * trigpart
-
+            self.R[y,NN/2:NN] = 4.0 * np.pi * sph_harm(m,l,theta,phi) * sph_jn(l,k) * trigpart
+                
+            y=y+1
         return
 
 
-    def get_lm_from(y):
-        l = 0
-        m = 0
-        return l,m
+   # def get_lm_from(y):
+   #     l = 0
+   #     m = 0
+   #     return l,m
 
     def get_k_theta_phi_from(n):
 

@@ -135,7 +135,7 @@ class Universe(object):
         return
 
 
-    def get_alm(self,l=None,m=None):
+    def get_alm(self,l=None,m=None,lms=None):
         """
         hp.map2alm only returns the positive m coefficients - we need
         to derive the negative ones ourselves if we are going to
@@ -143,8 +143,22 @@ class Universe(object):
         http://stackoverflow.com/questions/30888908/healpy-map2alm-function-does-not-return-expected-number-of-alm-values?lq=1
         for discussion.
         """
-        if l is None or m is None:
+        if (l is None or m is None) and lms is None:
             return None
+        
+        elif l is None and m is None:
+            ay=np.zeros(len(lms),dtype=np.complex128)
+            for i in lms:
+                if i[1] >= 0:
+                    index = hp.Alm.getidx(self.lmax, i[0], i[1])
+                    prefactor = 1.0
+                    value = self.alm[index]
+                else:
+                    index = hp.Alm.getidx(self.lmax, i[0], -i[1])
+                    prefactor = (-1.0)**i[1]
+                    value = np.conjugate(self.alm[index])
+                ay[i[0]**2+i[0]+i[1]]=prefactor * value
+            return ay
 
         elif m >= 0:
             index = hp.Alm.getidx(self.lmax, l, m)
@@ -157,25 +171,44 @@ class Universe(object):
 
         return prefactor * value
 
-    def put_alm(self,value,l=None,m=None):
-        if l is None or m is None:
+    def put_alm(self,value,l=None,m=None,lms=None):
+        if (l is None or m is None) and lms is none:
             return None
+        elif l is None and m is None:
+            index=np.zeros(len(lms), dtype=int)
+            count=0
+            for i in lms:
+                index[count] = hp.Alm.getidx(self.lmax, i[0], i[1])
+                count=count+1
+            self.alm[index] = value
+            return
         index = hp.Alm.getidx(self.lmax, l, m)
         self.alm[index] = value
         return
 
 
-    def alm2ay(self,lmax):
+    def alm2ay(self,truncated_lmax=6):
         '''
         Read its own a_lm array, and return the corresponding
         a_y array (in the correct order).
         '''
-        ay = np.array([])
-        # Loop over l and m:
-        #    ay = np.append(ay,self.get_alm(l=l,m=m))
-
+        ay = np.zeros((truncated_lmax+1)**2,dtype=np.complex128)
+       
+        #(l+1)**2-(2l+1)/2 +1/2 +m = l**2+2*l+1-l-1/2+1/2+m = l**2+l+1+m
+        # and the first element has index 0 so subtract 1, so 
+        #y=l**2+l+m is the index
+        
+        # Make a y_max-long tupple of l and m pairs
+        lms=[(l, m) for l in range(truncated_lmax+1) for m in range(-l, l+1)]
+        
+        ay=self.get_alm(lms=lms)
+        #ay(l**2+1+m) = self.get_alm(l=l,m=m)
+        
+        #for l in range(0, truncated_lmax+1):
+        #    for m in range(-l, l+1): 
+        #        ay(l**2+1+m) = self.get_alm(l=l,m=m)
         # Would be better to do this array-wise...
-        return # ay
+        return ay
 
 
     def ay2alm(self,ay):
@@ -207,21 +240,21 @@ class Universe(object):
 
     # ----------------------------------------------------------------
 
-    def populate_response_matrix(self,tnmax=None,tlmax=None):
+    def populate_response_matrix(self,truncated_nmax=None,truncated_lmax=None):
 
-        if tnmax is None:
-            self.tnmax = 6
+        if truncated_nmax is None:
+            self.truncated_nmax = 6
         else:
-            self.tnmax = tnmax
+            self.truncated_nmax = truncated_nmax
 
-        if tlmax is None:
-            self.tlmax = 8
+        if truncated_lmax is None:
+            self.truncated_lmax = 8
         else:
-            self.tlmax = tlmax
+            self.truncated_lmax = truncated_lmax
 
 
         # Initialize matrix:
-        NY = (self.tlmax + 1)**2
+        NY = (self.truncated_lmax + 1)**2
         NN = len(self.filter > 0)
         self.R = np.zeros([NY,NN])
 
@@ -259,7 +292,7 @@ class Universe(object):
 
     # ----------------------------------------------------------------
 
-    def set_k_filter(self, low_k_cutoff=1, high_k_cutoff=6):
+    def set_k_filter(self,low_k_cutoff=1,high_k_cutoff=6):
         self.high_k_cutoff = high_k_cutoff
         self.low_k_cutoff = low_k_cutoff
         low_k_filter = (~(self.k <= self.low_k_cutoff)).astype(int)
@@ -268,7 +301,7 @@ class Universe(object):
         return
 
 
-    def generate_a_random_potential_field(self, high_k_cutoff=6, low_k_cutoff=2, n_s=0.96, kstar=0.02, PSnorm=2.43e-9, Pdist=1, Pmax=np.pi, Pvar=0.0):
+    def generate_a_random_potential_field(self,high_k_cutoff=6,low_k_cutoff=2,n_s=0.96,kstar=0.02,PSnorm=2.43e-9,Pdist=1,Pmax=np.pi,Pvar=0.0):
 
         # Set the k filter:
         self.set_k_filter(low_k_cutoff=low_k_cutoff,high_k_cutoff=high_k_cutoff)

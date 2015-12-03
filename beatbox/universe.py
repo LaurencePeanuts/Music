@@ -187,19 +187,19 @@ class Universe(object):
         return
 
 
-    def alm2ay(self,truncated_lmax=6):
+    def alm2ay(self,truncated_lmax=6,truncated_lmin=1):
         '''
         Read its own a_lm array, and return the corresponding
         a_y array (in the correct order).
         '''
-        ay = np.zeros((truncated_lmax+1)**2,dtype=np.complex128)
+        ay = np.zeros((truncated_lmax+1)**2-(truncated_lmin)**2,dtype=np.complex128)
        
         #(l+1)**2-(2l+1)/2 +1/2 +m = l**2+2*l+1-l-1/2+1/2+m = l**2+l+1+m
         # and the first element has index 0 so subtract 1, so 
         #y=l**2+l+m is the index
         
         # Make a y_max-long tupple of l and m pairs
-        self.lms=[(l, m) for l in range(truncated_lmax+1) for m in range(-l, l+1)]
+        self.lms=[(l, m) for l in range(truncated_lmin,truncated_lmax+1) for m in range(-l, l+1)]
         
         ay=self.get_alm(lms=self.lms)
         #ay(l**2+1+m) = self.get_alm(l=l,m=m)
@@ -208,6 +208,7 @@ class Universe(object):
         #    for m in range(-l, l+1): 
         #        ay(l**2+1+m) = self.get_alm(l=l,m=m)
         # Would be better to do this array-wise...
+        self.ay=ay
         return ay
 
 
@@ -241,44 +242,71 @@ class Universe(object):
 
     # ----------------------------------------------------------------
 
-    def populate_response_matrix(self,truncated_nmax=None,truncated_lmax=None):
+    def populate_response_matrix(self,truncated_nmax=None, truncated_nmin=None,truncated_lmax=None, truncated_lmin=None):
 
         if truncated_nmax is None:
             self.truncated_nmax = 6
         else:
             self.truncated_nmax = truncated_nmax
+        if truncated_nmin is None:
+            self.truncated_nmin = 1
+        else:
+            self.truncated_nmin = truncated_nmin
 
         if truncated_lmax is None:
-            self.truncated_lmax = 8
+            self.truncated_lmax = 6
         else:
             self.truncated_lmax = truncated_lmax
+        if truncated_lmin is None:
+            self.truncated_lmin = 1
+        else:
+            self.truncated_lmin = truncated_lmin
 
-
-        # Initialize matrix:
-        NY = (self.truncated_lmax + 1)**2
-        NN = 2*len(self.filter > 0)
-        self.R = np.zeros([NY,NN])
-
-        # Loop over n, and y, computing elements of R_yn
-        ind=np.where(self.filter>0)
-        n1, n2, n3 = self.kx[ind]/self.Deltak , self.ky[ind]/self.Deltak, self.kz[ind]/self.Deltak
+        if self.filter is None:
+            self.set_k_filter(self,low_k_cutoff=self.truncated_nmin*self.Deltak,high_k_cutoff=self.truncated_nmax*self.Deltak)
+            
+        if self.lms is None:
+            self.lms=[(l, m) for l in range(self.truncated_lmin,self.truncated_lmax+1) for m in range(-l, l+1)]
         
-        k, theta, phi = self.k[ind], np.arctan(self.kx[ind]/self.ky[ind]), np.arccos(self.kz[ind]/self.k[ind])
-        # self.get_k_theta_phi_from(n)
+        
+        # Initialize R matrix:
+        NY = (self.truncated_lmax + 1)**2-(self.truncated_lmin)**2
+        # Find the indices of the non-zero elements of the filter
+        ind=np.where(self.filter>0)
+        # The n index spans 2x that length, 1st half for the cos coefficients, 2nd half
+        #    for the sin coefficients
+        NN = 2*len(ind[1])
+        self.R = np.zeros([NY,NN], dtype=np.complex128)
+
+        #n1, n2, n3 = self.kx[ind]/self.Deltak , self.ky[ind]/self.Deltak, self.kz[ind]/self.Deltak
+        k, theta, phi = self.k[ind], np.arctan(self.ky[ind]/self.kx[ind]), np.arccos(self.kz[ind]/self.k[ind])
+        # We need to fix the 'nan' theta element that came from having ky=0
+        theta[np.isnan(theta)] = np.pi/2.0
+        #print '|k|=',self.k[ind],'kx=', self.kx[ind],'theta=', theta, 'phi=', phi
+        #print 'theta=',theta, 'ind=',ind
+        
+        # Get ready to loop over y
         y=0
+        A=[sph_jn(self.truncated_lmax,ki)[0] for ki in k]        
+        # Loop over y, computing elements of R_yn 
         for i in self.lms:        
-            l=self.i[0]
-            m=self.i[1]
+            l=i[0]
+            m=i[1]
         # l,m = self.get_lm_from(y)
             #for n in range(NN):
                 #if n < NN/2:
             trigpart = np.cos(np.pi*l/2.0)
-            self.R[y,::NN/2] = 4.0 * np.pi * sph_harm(m,l,theta,phi) * sph_jn(l,k) * trigpart
+            B=np.asarray([A[ki][l] for ki in range(len(k))])
+            
+            #print  trigpart,NN, self.R.shape, sph_harm(m,l,theta,phi).reshape(250).shape, np.asarray(B).shape
+            #print [sph_jn(l,ki) for ki in k], A, np.asarray(A), k[0], l
+            self.R[y,:NN/2] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(250)*B.reshape(250) * trigpart
                 #else:
             trigpart = np.sin(np.pi*l/2.0)
-            self.R[y,NN/2:NN] = 4.0 * np.pi * sph_harm(m,l,theta,phi) * sph_jn(l,k) * trigpart
+            self.R[y,NN/2:] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(250)*B.reshape(250)* trigpart
                 
             y=y+1
+        print self.R[:,1]    
         return
 
 

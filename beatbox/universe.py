@@ -278,12 +278,13 @@ class Universe(object):
         NN = 2*len(ind[1])
         self.R = np.zeros([NY,NN], dtype=np.complex128)
 
-        #n1, n2, n3 = self.kx[ind]/self.Deltak , self.ky[ind]/self.Deltak, self.kz[ind]/self.Deltak
+        # In case we need n1, n2, n3 at some point...:
+        #    n1, n2, n3 = self.kx[ind]/self.Deltak , self.ky[ind]/self.Deltak, self.kz[ind]/self.Deltak
         k, theta, phi = self.k[ind], np.arctan(self.ky[ind]/self.kx[ind]), np.arccos(self.kz[ind]/self.k[ind])
         # We need to fix the 'nan' theta element that came from having ky=0
         theta[np.isnan(theta)] = np.pi/2.0
-        #print '|k|=',self.k[ind],'kx=', self.kx[ind],'theta=', theta, 'phi=', phi
-        #print 'theta=',theta, 'ind=',ind
+        #    print '|k|=',self.k[ind],'kx=', self.kx[ind],'theta=', theta, 'phi=', phi
+        #    print 'theta=',theta, 'ind=',ind
         
         # Get ready to loop over y
         y=0
@@ -315,16 +316,16 @@ class Universe(object):
    #     m = 0
    #     return l,m
 
-    def get_k_theta_phi_from(n):
+   # def get_k_theta_phi_from(n):
 
         # First, get n1, n2 and n3
 
         # Then compute k, theta and phi:
-        k = 0.0
-        theta = 0.0
-        phi = 0.0
+   #    k = 0.0
+   #     theta = 0.0
+   #     phi = 0.0
 
-        return k,theta,phi
+   #     return k,theta,phi
 
     # ----------------------------------------------------------------
 

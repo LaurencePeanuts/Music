@@ -184,7 +184,7 @@ class Universe(object):
                     index = hp.Alm.getidx(self.lmax, i[0], -i[1])
                     prefactor = (-1.0)**i[1]
                     value = np.conjugate(self.alm[index])
-                ay[i[0]**2+i[0]+i[1]-(alm[0][0])**2]=prefactor * value
+                ay[i[0]**2+i[0]+i[1]-(lms[0][0])**2]=prefactor * value
             return ay
 
         elif m >= 0:
@@ -204,13 +204,20 @@ class Universe(object):
             return None
         elif l is None and m is None:
             index=np.zeros(len(lms), dtype=int)
-            self.alm=np.zeros(len(index), dtype=np.complex128)
             count=0
             for i in lms:
-                index[count] = hp.Alm.getidx(self.truncated_lmax, i[0], i[1])
+                index[count] = hp.Alm.getidx(max(lms)[0], i[0], i[1])
                 count=count+1
-            print index
-            #self.alm[index] = value
+            #print 'the alm indices are', index
+            #self.alm=np.zeros(max(np.absolute(index)), dtype=np.complex128)
+            lmax=max(lms)[0]
+            mmax=max(lms)[1]
+            self.alm=np.zeros(mmax*(2*lmax+1-mmax)/2+lmax+1, dtype=np.complex128)
+            index_positive=index[~(index<0)]
+            self.alm[index_positive] = value
+            # Well... this throws out all the information in the 
+            #     negative m and I'm not sure this really works! The 
+            #     map it gives looks pretty weird...
             return
         index = hp.Alm.getidx(self.truncated_lmax, l, m)
         self.alm[index] = value

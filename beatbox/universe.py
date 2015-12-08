@@ -18,7 +18,7 @@ class Universe(object):
     """
     A simple model universe in a box.
     """
-    def __init__(self):
+    def __init__(self, truncated_nmax=None, truncated_nmin=1, truncated_lmax=None, truncated_lmin=1):
 
         self.PIXSCALE = 0.1
         self.BOXSIZE = 4.0
@@ -34,6 +34,29 @@ class Universe(object):
         self.Tmap = None
         self.NSIDE = None
 
+        # Define the truncatad range of modes (in n and l) we want in our Universe:
+        self.truncated_nmax=truncated_nmax
+        self.truncated_nmin=truncated_nmin
+        self.truncated_lmax=truncated_lmax
+        self.truncated_lmin=truncated_lmin
+
+        # If only truncated_lmax is provided, calculated the largest truncated_nmax we can reconstruct
+        if (self.truncated_lmax is not None) and (self.truncated_nmax is None):
+            self.truncated_nmax=int(np.floor((3.0*(self.truncated_lmax+1)**2.0/(4.0*np.pi))**(1.0/3.0)))
+        # Else define a default value for truncated_nmax if not already done
+        elif self.truncated_nmax is None:
+            self.truncated_nmax=6
+        # If only truncated_nmax is provided, calculated the truncated_lmax needed for no information
+        #    from the 3D map to be lost
+        if (self.truncated_nmax is not None) and (self.truncated_lmax is None):
+            self.truncated_lmax=int(np.ceil(-0.5+2.0*self.truncated_nmax**(3.0/2.0)*np.sqrt(np.pi/3.0)))
+        
+        # Make a y_max-long tupple of l and m pairs
+        #if self.truncated_lmin and self.truncated_lmax is not None:
+        if None not in (self.truncated_lmin, self.truncated_lmax):
+            self.lms=[(l, m) for l in range(self.truncated_lmin,self.truncated_lmax+1) for m in range(-l, l+1)]
+        
+        
         # Fourier space: define a coordinate grid:
 
         # The nmax we need for the resolution we want in our Universe is:
@@ -44,8 +67,12 @@ class Universe(object):
         self.k = np.sqrt(np.power(self.kx, 2)+np.power(self.ky,2)+np.power(self.kz,2));
 
         # Define filter in k-space, that contains the modes we want:
+        #low_k_cutoff=self.truncated_nmin*self.Deltak
+        #high_k_cutoff=self.truncated_nmax*self.Deltak
+        #self.set_k_filter(low_k_cutoff=low_k_cutoff,high_k_cutoff=high_k_cutoff)
         self.set_k_filter()
 
+        
         return
 
     def __str__(self):
@@ -157,7 +184,7 @@ class Universe(object):
                     index = hp.Alm.getidx(self.lmax, i[0], -i[1])
                     prefactor = (-1.0)**i[1]
                     value = np.conjugate(self.alm[index])
-                ay[i[0]**2+i[0]+i[1]]=prefactor * value
+                ay[i[0]**2+i[0]+i[1]-(alm[0][0])**2]=prefactor * value
             return ay
 
         elif m >= 0:
@@ -187,40 +214,45 @@ class Universe(object):
         return
 
 
-    def alm2ay(self,truncated_lmax=6,truncated_lmin=1):
-        '''
+    def alm2ay(self, truncated_lmax=None, truncated_lmin=None, usedefault=1):
+        """
         Read its own a_lm array, and return the corresponding
         a_y array (in the correct order).
-        '''
-        ay = np.zeros((truncated_lmax+1)**2-(truncated_lmin)**2,dtype=np.complex128)
-       
-        #(l+1)**2-(2l+1)/2 +1/2 +m = l**2+2*l+1-l-1/2+1/2+m = l**2+l+1+m
-        # and the first element has index 0 so subtract 1, so 
-        #y=l**2+l+m is the index
-        
+        The conversion between y index and l_max is:
+        (l+1)**2-(2l+1)/2 +1/2 +m = l**2+2*l+1-l-1/2+1/2+m = l**2+l+1+m
+        and the first element has index 0 so subtract 1, so 
+        y=l**2+l+m is the index, need to subtract the elements before lmin
+        so y=l**2+l+m-(lmin+1)**2
+        """
+        if usedefault==1:
+            truncated_lmax=self.truncated_lmax
+            truncated_lmin=self.truncated_lmin
+            lms=self.lms
         # Make a y_max-long tupple of l and m pairs
-        self.lms=[(l, m) for l in range(truncated_lmin,truncated_lmax+1) for m in range(-l, l+1)]
+        else:
+            lms=[(l, m) for l in range(truncated_lmin,truncated_lmax+1) for m in range(-l, l+1)]
         
-        ay=self.get_alm(lms=self.lms)
-        #ay(l**2+1+m) = self.get_alm(l=l,m=m)
+        ay = np.zeros((truncated_lmax+1)**2-(truncated_lmin)**2,dtype=np.complex128)
+        ay=self.get_alm(lms=lms)
         
-        #for l in range(0, truncated_lmax+1):
-        #    for m in range(-l, l+1): 
-        #        ay(l**2+1+m) = self.get_alm(l=l,m=m)
-        # Would be better to do this array-wise...
-        self.ay=ay
+        #self.ay=ay
         return ay
 
 
-    def ay2alm(self,ay,truncated_lmax=6):
-        '''
+    def ay2alm(self, ay,truncated_lmax=None, truncated_lmin=None, usedefault=1):
+        """
         Repackage the a_y array into healpy-readable a_lm's
-        '''
-        # Loop over y, working out l and m, and refilling self.alm
-        # array:
-        # self.put_alm(ay[y],l=l,m=m)
-        #self.lms=[(l, m) for l in range(truncated_lmax+1) for m in range(-l, l+1)]
-        self.put_alm(self,ay,lms=self.lms)
+        """
+        if usedefault==1:
+            truncated_lmax=self.truncated_lmin
+            truncated_lmin=self.truncated_lmax
+            lms=self.lms
+        
+        # Make a y_max-long tupple of l and m pairs
+        else:
+            lms=[(l, m) for l in range(truncated_lmin,truncated_lmax+1) for m in range(-l, l+1)]
+        
+        self.put_alm(self,ay,lms=lms)
         
         return
 
@@ -242,37 +274,30 @@ class Universe(object):
 
     # ----------------------------------------------------------------
 
-    def populate_response_matrix(self,truncated_nmax=None, truncated_nmin=None,truncated_lmax=None, truncated_lmin=None):
+    def populate_response_matrix(self,truncated_nmax=None, truncated_nmin=None,truncated_lmax=None, truncated_lmin=None, usedefault=1):
+        """
+        Populate the R matrix for the default range of l and n, or
+        or over the range specified above
+        """
 
-        if truncated_nmax is None:
-            self.truncated_nmax = 6
+        if usedefault==1:
+            truncated_nmax=self.truncated_nmax
+            truncated_nmin=self.truncated_nmin
+            truncated_lmax=self.truncated_lmax
+            truncated_lmin=self.truncated_lmin
+            alms=self.alms
+            kfilter=self.kfilter    
         else:
-            self.truncated_nmax = truncated_nmax
-        if truncated_nmin is None:
-            self.truncated_nmin = 1
-        else:
-            self.truncated_nmin = truncated_nmin
-
-        if truncated_lmax is None:
-            self.truncated_lmax = 6
-        else:
-            self.truncated_lmax = truncated_lmax
-        if truncated_lmin is None:
-            self.truncated_lmin = 1
-        else:
-            self.truncated_lmin = truncated_lmin
-
-        if self.filter is None:
-            self.set_k_filter(self,low_k_cutoff=self.truncated_nmin*self.Deltak,high_k_cutoff=self.truncated_nmax*self.Deltak)
-            
-        if self.lms is None:
-            self.lms=[(l, m) for l in range(self.truncated_lmin,self.truncated_lmax+1) for m in range(-l, l+1)]
+            low_k_cutoff=truncated_nmin*self.Deltak
+            high_k_cutoff=truncated_nmax*self.Deltak
+            self.set_k_filter(self,low_k_cutoff=low_k_cutoff,high_k_cutoff=high_k_cutoff)    
+            lms=[(l, m) for l in range(self.truncated_lmin,self.truncated_lmax+1) for m in range(-l, l+1)]
         
         
         # Initialize R matrix:
-        NY = (self.truncated_lmax + 1)**2-(self.truncated_lmin)**2
+        NY = (truncated_lmax + 1)**2-(truncated_lmin)**2
         # Find the indices of the non-zero elements of the filter
-        ind=np.where(self.filter>0)
+        ind=np.where(self.kfilter>0)
         # The n index spans 2x that length, 1st half for the cos coefficients, 2nd half
         #    for the sin coefficients
         NN = 2*len(ind[1])
@@ -288,7 +313,7 @@ class Universe(object):
         
         # Get ready to loop over y
         y=0
-        A=[sph_jn(self.truncated_lmax,ki)[0] for ki in k]        
+        A=[sph_jn(truncated_lmax,ki)[0] for ki in k]        
         # Loop over y, computing elements of R_yn 
         for i in self.lms:        
             l=i[0]
@@ -311,35 +336,34 @@ class Universe(object):
         return
 
 
-   # def get_lm_from(y):
-   #     l = 0
-   #     m = 0
-   #     return l,m
 
-   # def get_k_theta_phi_from(n):
-
-        # First, get n1, n2 and n3
-
-        # Then compute k, theta and phi:
-   #    k = 0.0
-   #     theta = 0.0
-   #     phi = 0.0
-
-   #     return k,theta,phi
 
     # ----------------------------------------------------------------
 
-    def set_k_filter(self,low_k_cutoff=1,high_k_cutoff=6):
-        self.high_k_cutoff = high_k_cutoff
-        self.low_k_cutoff = low_k_cutoff
+    def set_k_filter(self,low_k_cutoff=None,high_k_cutoff=None):
+        """
+        Define a filter over the k space for the modes between kmin and kmax 
+        """
+        #Make sure we have lower & upper bounds for the filter
+        if high_k_cutoff is None:
+            self.high_k_cutoff=self.truncated_nmax*self.Deltak
+        else:
+            self.high_k_cutoff = high_k_cutoff
+        if low_k_cutoff is None:
+            low_k_cuttoff=self.truncated_nmin*self.Deltak
+        else:
+            self.low_k_cutoff = low_k_cutoff
+        
+        # Define the filter
         low_k_filter = (~(self.k <= self.low_k_cutoff)).astype(int)
         high_k_filter = (~(self.k >= self.high_k_cutoff)).astype(int)
-        self.filter = high_k_filter*low_k_filter
+        self.kfilter = high_k_filter*low_k_filter
         return
 
 
     def generate_a_random_potential_field(self,high_k_cutoff=6,low_k_cutoff=2,n_s=0.96,kstar=0.02,PSnorm=2.43e-9,Pdist=1,Pmax=np.pi,Pvar=0.0):
 
+        #is this realy necessary since filter def moved up in __init__ function??
         # Set the k filter:
         self.set_k_filter(low_k_cutoff=low_k_cutoff,high_k_cutoff=high_k_cutoff)
 
@@ -356,7 +380,7 @@ class Universe(object):
         self.Power_Spectrum = self.PSnorm*np.power((self.k/self.kstar) ,(-3+(self.n_s-1)))
         self.Power_Spectrum[np.isinf(self.Power_Spectrum)] = 10**-9
 
-        fn_Norm = np.random.normal(0, np.sqrt(self.Power_Spectrum) )*np.power(self.filter,2)
+        fn_Norm = np.random.normal(0, np.sqrt(self.Power_Spectrum) )*np.power(self.kfilter,2)
         # Draw the phases for the modes: use p=1 for a uniform distribution in [0,Pmax],
         #    and p=0 for a Gaussian distribution with mean Pmax and variance Pvar
         self.Pdist=Pdist
@@ -364,9 +388,9 @@ class Universe(object):
         self.Pmax=Pmax
 
         if Pdist==1:
-            fn_Phase = np.random.uniform(0, Pmax*np.ones(self.k.shape,dtype=np.float_) )*np.power(self.filter,2)
+            fn_Phase = np.random.uniform(0, Pmax*np.ones(self.k.shape,dtype=np.float_) )*np.power(self.kfilter,2)
         else:
-            fn_Phase = np.random.normal(Pmax, np.sqrt(Pvar)*np.ones(self.k.shape,dtype=np.float_) )*np.power(self.filter,2)
+            fn_Phase = np.random.normal(Pmax, np.sqrt(Pvar)*np.ones(self.k.shape,dtype=np.float_) )*np.power(self.kfilter,2)
 
         # Need to ensure that f_-k = f^*_k
         # FT = fn_R + fn_I*1j

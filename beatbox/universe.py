@@ -199,18 +199,22 @@ class Universe(object):
         return prefactor * value
 
     def put_alm(self,value,l=None,m=None,lms=None):
-        if (l is None or m is None) and lms is none:
+        print 'made it to put_alm!!'
+        if (l is None or m is None) and lms is None:
             return None
         elif l is None and m is None:
             index=np.zeros(len(lms), dtype=int)
+            self.alm=np.zeros(len(index), dtype=np.complex128)
             count=0
             for i in lms:
-                index[count] = hp.Alm.getidx(self.lmax, i[0], i[1])
+                index[count] = hp.Alm.getidx(self.truncated_lmax, i[0], i[1])
                 count=count+1
-            self.alm[index] = value
+            print index
+            #self.alm[index] = value
             return
-        index = hp.Alm.getidx(self.lmax, l, m)
+        index = hp.Alm.getidx(self.truncated_lmax, l, m)
         self.alm[index] = value
+        
         return
 
 
@@ -252,7 +256,7 @@ class Universe(object):
         else:
             lms=[(l, m) for l in range(truncated_lmin,truncated_lmax+1) for m in range(-l, l+1)]
         
-        self.put_alm(self,ay,lms=lms)
+        self.put_alm(ay, lms=lms)
         
         return
 
@@ -285,7 +289,7 @@ class Universe(object):
             truncated_nmin=self.truncated_nmin
             truncated_lmax=self.truncated_lmax
             truncated_lmin=self.truncated_lmin
-            alms=self.alms
+            lms=self.lms
             kfilter=self.kfilter    
         else:
             low_k_cutoff=truncated_nmin*self.Deltak
@@ -326,13 +330,13 @@ class Universe(object):
             
             #print  trigpart,NN, self.R.shape, sph_harm(m,l,theta,phi).reshape(250).shape, np.asarray(B).shape
             #print [sph_jn(l,ki) for ki in k], A, np.asarray(A), k[0], l
-            self.R[y,:NN/2] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(250)*B.reshape(250) * trigpart
+            self.R[y,:NN/2] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(NN/2)*B.reshape(NN/2) * trigpart
                 #else:
             trigpart = np.sin(np.pi*l/2.0)
-            self.R[y,NN/2:] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(250)*B.reshape(250)* trigpart
+            self.R[y,NN/2:] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(NN/2)*B.reshape(NN/2)* trigpart
                 
             y=y+1
-        print self.R[:,1]    
+        # print self.R[:,1]    
         return
 
 
@@ -350,7 +354,7 @@ class Universe(object):
         else:
             self.high_k_cutoff = high_k_cutoff
         if low_k_cutoff is None:
-            low_k_cuttoff=self.truncated_nmin*self.Deltak
+            self.low_k_cutoff=self.truncated_nmin*self.Deltak
         else:
             self.low_k_cutoff = low_k_cutoff
         
@@ -412,18 +416,7 @@ class Universe(object):
 
         return
 
-
-    def rearrange_fn_from_grid_to_vector(self):
-        '''
-        It's easiest to generate a potential from the prior on a 3D
-        grid, so we can use the iFFT. For the linear algebra in the
-        inference, we need the fourier coefficients arranged in a
-        vector.
-        '''
-        # self.fn = self.fngrid
-        return
-
-
+    
     def evaluate_potential_given_fourier_coefficients(self):
 
         self.phi = np.zeros(self.x.shape,dtype=np.float_)
@@ -444,6 +437,57 @@ class Universe(object):
         print "Built potential grid, with dimensions ",self.phi.shape,\
               " and mean value ", round(np.mean(self.phi),4),"+/-",round(np.std(self.phi),7)
         #  print "phi[:, :,0]=", ComplexPhi[:, :]
+
+        return
+
+    
+    def rearrange_fn_from_grid_to_vector(self):
+        '''
+        It's easiest to generate a potential from the prior on a 3D
+        grid, so we can use the iFFT. For the linear algebra in the
+        inference, we need the fourier coefficients arranged in a
+        vector.
+        '''
+        ind=np.where(self.kfilter>0)
+        self.fn=np.zeros(2*len(ind[1]))
+        self.fn[:len(ind[1])] = (self.fngrid[ind]).real
+        self.fn[len(ind[1]):] = (self.fngrid[ind]).imag
+        return
+
+    def transform_3D_potential_into_alm(self, truncated_nmax=None, truncated_nmin=None,truncated_lmax=None, truncated_lmin=None, usedefault=1):
+        
+        # Make a vector out of the fn grid of Fourier coefficients
+        self.rearrange_fn_from_grid_to_vector()
+        if usedefault==1:
+            # Populate the R matrix
+            self.populate_response_matrix(usedefault=usedefault)
+            # Calculate the a_y matrix
+            ay=self.R*self.fn
+            # Reorganize a_y into a_lm
+            self.ay2alm(ay, usedefault=usedefault)
+        else:
+            # Populate the R matrix
+            self.populate_response_matrix(truncated_nmax=truncated_nmax, truncated_nmin=truncated_nmin,truncated_lmax=truncated_lmax, truncated_lmin=truncated_lmin, usedefault=0)        
+            # Calculate the a_y matrix
+            ay=self.R*self.fn
+            # Reorganize a_y into a_lm
+            self.ay2alm(self,ay,truncated_lmax=truncated_lmax, truncated_lmin=truncated_lmin, usedefault=0)
+        
+        
+        #self.lmax = lmax
+        #Nalm = 0
+        #for l in range(self.lmax+1):
+        #    for m in range(-l,l+1):
+        #        Nalm += 1
+
+        # Dummy code until I figure out Roger's matrix:
+        #self.R = np.zeros([Nalm,len(self.fn)])
+
+        #Re = np.multiply(self.R,self.fn)
+        #Im = Re.copy()
+        #self.alm = np.flatten(Re + 1.0j*Im)
+        # This does not work - healpy book-keeping is wrong:
+        #   TypeError: The a_lm must be a 1D array.
 
         return
 
@@ -582,25 +626,6 @@ class Universe(object):
 
         return
 
-
-    def transform_3D_potential_fourier_series_into_T_spherical_harmonics(self,lmax=3):
-
-        self.lmax = lmax
-        Nalm = 0
-        for l in range(self.lmax+1):
-            for m in range(-l,l+1):
-                Nalm += 1
-
-        # Dummy code until I figure out Roger's matrix:
-        self.R = np.zeros([Nalm,len(self.fn)])
-
-        Re = np.multiply(self.R,self.fn)
-        Im = Re.copy()
-        self.alm = np.flatten(Re + 1.0j*Im)
-        # This does not work - healpy book-keeping is wrong:
-        #   TypeError: The a_lm must be a 1D array.
-
-        return
 
 # ====================================================================
 

@@ -92,9 +92,8 @@ class Universe(object):
 
 
     def show_CMB_T_map(self,from_perspective_of="observer"):
-
         if self.Tmap is None:
-            self.NSIDE = 16
+            self.NSIDE = 256
             self.Tmap = hp.alm2map(self.alm,self.NSIDE)
 
         if from_perspective_of == "observer":
@@ -435,7 +434,6 @@ class Universe(object):
         #    ComplexPhi += self.fn.reshape((2*self.nmax+1)**3,1)[i] * (np.cos(phase)+np.sin(phase)*1j)
 
         #Now use iFFT to invert the Fourier coefficients f_n to a real space potential
-        #  print "fn[:, 0,0]=", self.fn[:, self.nmax, self.nmax]
         ComplexPhi = np.fft.fftshift(np.fft.ifftn(np.fft.ifftshift(self.fngrid)))
 
         # Throw out the residual imaginary part of the potential [< O(10^-16)]
@@ -443,7 +441,6 @@ class Universe(object):
 
         print "Built potential grid, with dimensions ",self.phi.shape,\
               " and mean value ", round(np.mean(self.phi),4),"+/-",round(np.std(self.phi),7)
-        #  print "phi[:, :,0]=", ComplexPhi[:, :]
 
         return
 
@@ -469,7 +466,8 @@ class Universe(object):
             # Populate the R matrix
             self.populate_response_matrix(usedefault=usedefault)
             # Calculate the a_y matrix
-            ay=self.R*self.fn
+            ay=np.dot(self.R,self.fn)
+            self.ay=ay
             # Reorganize a_y into a_lm
             self.ay2alm(ay, usedefault=usedefault)
         else:
@@ -477,6 +475,7 @@ class Universe(object):
             self.populate_response_matrix(truncated_nmax=truncated_nmax, truncated_nmin=truncated_nmin,truncated_lmax=truncated_lmax, truncated_lmin=truncated_lmin, usedefault=0)        
             # Calculate the a_y matrix
             ay=self.R*self.fn
+            self.ay=ay
             # Reorganize a_y into a_lm
             self.ay2alm(self,ay,truncated_lmax=truncated_lmax, truncated_lmin=truncated_lmin, usedefault=0)
         

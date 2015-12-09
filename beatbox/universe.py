@@ -52,7 +52,6 @@ class Universe(object):
             self.truncated_lmax=int(np.ceil(-0.5+2.0*self.truncated_nmax**(3.0/2.0)*np.sqrt(np.pi/3.0)))
         
         # Make a y_max-long tupple of l and m pairs
-        #if self.truncated_lmin and self.truncated_lmax is not None:
         if None not in (self.truncated_lmin, self.truncated_lmax):
             self.lms=[(l, m) for l in range(self.truncated_lmin,self.truncated_lmax+1) for m in range(-l, l+1)]
         
@@ -67,9 +66,6 @@ class Universe(object):
         self.k = np.sqrt(np.power(self.kx, 2)+np.power(self.ky,2)+np.power(self.kz,2));
 
         # Define filter in k-space, that contains the modes we want:
-        #low_k_cutoff=self.truncated_nmin*self.Deltak
-        #high_k_cutoff=self.truncated_nmax*self.Deltak
-        #self.set_k_filter(low_k_cutoff=low_k_cutoff,high_k_cutoff=high_k_cutoff)
         self.set_k_filter()
 
         
@@ -198,25 +194,32 @@ class Universe(object):
         return prefactor * value
 
     def put_alm(self,value,l=None,m=None,lms=None):
+        '''
+        Re-arranges the value or vector of a_y values into the
+        correct order to be used by healpy as a_lm.
+        If lms is given, len(lms) must equal len(value), while
+        if l and m are specified, value must be a scalar.
+        '''
         print 'made it to put_alm!!'
         if (l is None or m is None) and lms is None:
             return None
         elif l is None and m is None:
+            if len(lms) is not len(value):
+                print 'a_y and (l, m) are of unequal lenghts, cannot proceed'
+                return
             index=np.zeros(len(lms), dtype=int)
             count=0
             for i in lms:
                 index[count] = hp.Alm.getidx(max(lms)[0], i[0], i[1])
                 count=count+1
-            #print 'the alm indices are', index
-            #self.alm=np.zeros(max(np.absolute(index)), dtype=np.complex128)
             lmax=max(lms)[0]
             mmax=max(lms)[1]
             self.alm=np.zeros(mmax*(2*lmax+1-mmax)/2+lmax+1, dtype=np.complex128)
+            # Throw away the negative indices (which correspond to the negative m's)
+            #     since the maps are real, negative m coefficients can be deduced
+            #     from the positive ones.
             index_positive=index[~(index<0)]
             self.alm[index_positive] = value
-            # Well... this throws out all the information in the 
-            #     negative m and I'm not sure this really works! The 
-            #     map it gives looks pretty weird...
             return
         index = hp.Alm.getidx(self.truncated_lmax, l, m)
         self.alm[index] = value
@@ -459,7 +462,16 @@ class Universe(object):
         return
 
     def transform_3D_potential_into_alm(self, truncated_nmax=None, truncated_nmin=None,truncated_lmax=None, truncated_lmin=None, usedefault=1):
-        
+        '''
+        From the f_n on a 3D grid, rearrange the Fourier coefficients 
+        in a vector and generate the R matrix. From these, calculate the a_y 
+        and finally rearrange them in a a_lm vector useable by healpy to 
+        make a T map.
+        The method can do this either for the harmonics correcponding to the
+        full range of n values of the 3D potential (if usedefault=1), or else 
+        for the specified values. If truncated_nmax is too large for the
+        specified truncated_lmax, some information will be lost.        
+        '''
         # Make a vector out of the fn grid of Fourier coefficients
         self.rearrange_fn_from_grid_to_vector()
         if usedefault==1:
@@ -478,22 +490,6 @@ class Universe(object):
             self.ay=ay
             # Reorganize a_y into a_lm
             self.ay2alm(self,ay,truncated_lmax=truncated_lmax, truncated_lmin=truncated_lmin, usedefault=0)
-        
-        
-        #self.lmax = lmax
-        #Nalm = 0
-        #for l in range(self.lmax+1):
-        #    for m in range(-l,l+1):
-        #        Nalm += 1
-
-        # Dummy code until I figure out Roger's matrix:
-        #self.R = np.zeros([Nalm,len(self.fn)])
-
-        #Re = np.multiply(self.R,self.fn)
-        #Im = Re.copy()
-        #self.alm = np.flatten(Re + 1.0j*Im)
-        # This does not work - healpy book-keeping is wrong:
-        #   TypeError: The a_lm must be a 1D array.
 
         return
 

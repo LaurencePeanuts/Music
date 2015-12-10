@@ -87,11 +87,13 @@ class Universe(object):
         return
 
 
-    def show_CMB_T_map(self,from_perspective_of="observer"):
-        if self.Tmap is None:
+    def show_CMB_T_map(self,Tmap=None,from_perspective_of="observer"):
+        if Tmap is None:
             self.NSIDE = 256
             self.Tmap = hp.alm2map(self.alm,self.NSIDE)
-
+        else:
+            self.Tmap=Tmap
+            
         if from_perspective_of == "observer":
             # Sky map:
             hp.mollview(self.Tmap,title="CMB temperature fluctuations as seen from inside the LSS")
@@ -135,7 +137,7 @@ class Universe(object):
         i = hp.Alm.getidx(self.lmax, l, np.abs(m)) # Note |m| here
         projected_alm[i] = self.alm[i]
         projected_map = hp.alm2map(projected_alm,self.NSIDE)
-        hp.mollview(projected_map,min=-max,max=max)
+        hp.mollview(projected_map)
         return
 
 
@@ -204,7 +206,7 @@ class Universe(object):
         if (l is None or m is None) and lms is None:
             return None
         elif l is None and m is None:
-            if len(lms) is not len(value):
+            if len(lms) != len(value):
                 print 'a_y and (l, m) are of unequal lenghts, cannot proceed'
                 return
             index=np.zeros(len(lms), dtype=int)
@@ -219,7 +221,8 @@ class Universe(object):
             #     since the maps are real, negative m coefficients can be deduced
             #     from the positive ones.
             index_positive=index[~(index<0)]
-            self.alm[index_positive] = value
+            ind1=np.arange(len(value))
+            self.alm[index_positive] = value[ind1[~(index<0)]]
             return
         index = hp.Alm.getidx(self.truncated_lmax, l, m)
         self.alm[index] = value

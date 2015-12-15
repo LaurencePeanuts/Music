@@ -112,7 +112,7 @@ class Universe(object):
     def decompose_T_map_into_spherical_harmonics(self,lmax=None):
         """
         See healpy documentation at https://healpy.readthedocs.org/en/latest/generated/healpy.sphtfunc.map2alm.html
-        self.alm is a 1D numpy array of type=complex128.
+        self.alm is a 1D numpy array of type=complexx128.
         Indexing is described at https://healpy.readthedocs.org/en/latest/generated/healpy.sphtfunc.Alm.html
         """
         if lmax is None:
@@ -271,7 +271,36 @@ class Universe(object):
         self.put_alm(ay, lms=lms)
         
         return
-
+    
+    def ay2ayreal_for_inference(self,value):
+        '''
+        Reorganize the ays so that only independent measurements are kept,
+        and split the real and imaginary values into different elements.
+        The negative m values ara dependent on the positive m, so they must 
+        be discarted, and all but m=0 values are complex.
+        Therefore, we replace the positive m values by their respective real
+        part, and the negative m values by the imaginary part of the
+        corresponding positive m. This way, each l retains 2l+1 independent
+        real degrees of freedom.
+        '''
+        
+        #Select the m values out the the lms tupples
+        m=np.array([m[1] for m in self.lms])
+        #Find the indices of the positive ms
+        pos_ind=(m>0)
+        #Find the indices of the m=0
+        zero_ind=(m==0)
+        #Find the indices of the negative ms
+        neg_ind=(m<0)
+        
+        ay_real=np.zeros(len(self.lms), dtype=np.float)
+        
+        ay_real[pos_ind]=value[pos_ind].real
+        ay_real[neg_ind]=value[pos_ind].imag
+        ay_real[zero_ind]=value[zero_ind].astype(np.float)
+        
+        
+        return ay_real
 
     def write_out_spherical_harmonic_coefficients(self,lmax=10):
         outfile = string.join(string.split(self.Tmapfile,'.')[0:-1],'.') + '_alm_lmax' + str(lmax) + '.txt'
@@ -307,7 +336,7 @@ class Universe(object):
             low_k_cutoff=truncated_nmin*self.Deltak
             high_k_cutoff=truncated_nmax*self.Deltak
             self.set_k_filter(self,low_k_cutoff=low_k_cutoff,high_k_cutoff=high_k_cutoff)    
-            lms=[(l, m) for l in range(self.truncated_lmin,self.truncated_lmax+1) for m in range(-l, l+1)]
+            lms=[(l, m) for l in range(truncated_lmin,truncated_lmax+1) for m in range(-l, l+1)]
         
         
         # Initialize R matrix:
@@ -331,7 +360,7 @@ class Universe(object):
         y=0
         A=[sph_jn(truncated_lmax,ki)[0] for ki in k]        
         # Loop over y, computing elements of R_yn 
-        for i in self.lms:        
+        for i in lms:        
             l=i[0]
             m=i[1]
         # l,m = self.get_lm_from(y)
@@ -351,9 +380,32 @@ class Universe(object):
         # print self.R[:,1]    
         return
 
+    # ----------------------------------------------------------------
+    
+    def load_mathematica_data(self):
+        
+        f= open("data/f_ns.txt", 'r')
+        data = f.read()
+        f.close()
+        columns = data.split()
+        f_n=np.zeros(len(columns))
+        for count in range(int(len(columns))):
+            f_n[count] = float(columns[count])
+        
+        g= open("data/test2.txt", 'r')
+        data2 = g.read()
+        g.close()
+        columns2 = data2.split()
+        k_vec=np.zeros(len(columns2))
+        for count2 in range(int(len(columns2))):
+            k_vec[count2] = float(columns2[count2])
+        
+        k_x=k_vec[0::3]
+        k_y=k_vec[1::3]
+        k_z=k_vec[2::3]
 
-
-
+        return f_n, k_x, k_y, k_z
+        
     # ----------------------------------------------------------------
 
     def set_k_filter(self,low_k_cutoff=None,high_k_cutoff=None):

@@ -9,9 +9,76 @@ import glob
 from PIL import Image as PIL_Image
 from images2gif import writeGif
 from scipy.special import sph_harm,sph_jn
-import os.path
+
 
 import beatbox
+
+# ===================================================================
+
+def set_k_filter(self):
+    """
+    Define a filter over the k space for the modes between kmin and kmax 
+    """
+    #Define lower & upper bounds for the filter
+    Universe.high_k_cutoff=Universe.truncated_nmax*Universe.Deltak
+    Universe.low_k_cutoff=Universe.truncated_nmin*Universe.Deltak
+    
+    
+    # Define the filter
+    #low_k_filter = (~(Universe.n < Universe.low_k_cutoff)).astype(int)
+    #high_k_filter = (~(Universe.n > Universe.high_k_cutoff)).astype(int)
+    #Universe.kfilter = high_k_filter*low_k_filter
+    
+    # Define the filter
+    low_k_filter = (~(Universe.n < Universe.truncated_nmin)).astype(int)
+    high_k_filter = (~(Universe.n > Universe.truncated_nmax)).astype(int)
+    Universe.kfilter = high_k_filter*low_k_filter
+    return
+
+def populate_response_matrix(self):
+    """
+    Populate the R matrix for the default range of l and n, or
+    or over the range specified above
+    """
+
+
+    truncated_nmax=Universe.truncated_nmax
+    truncated_nmin=Universe.truncated_nmin
+    truncated_lmax=Universe.truncated_lmax
+    truncated_lmin=Universe.truncated_lmin
+    lms=Universe.lms
+    kfilter=Universe.kfilter
+    
+    # Initialize R matrix:
+    NY = (truncated_lmax + 1)**2-(truncated_lmin)**2
+    # Find the indices of the non-zero elements of the filter
+    ind=np.where(Universe.kfilter>0)
+    # The n index spans 2x that length, 1st half for the cos coefficients, 2nd half
+    #    for the sin coefficients
+    NN = 2*len(ind[1])
+    Universe.R = np.zeros([NY,NN], dtype=np.complex128)
+
+    k, theta, phi = Universe.k[ind], np.arctan2(Universe.ky[ind],Universe.kx[ind]), np.arccos(Universe.kz[ind]/Universe.k[ind])
+    # We need to fix the 'nan' theta element that came from having ky=0
+    theta[np.isnan(theta)] = np.pi/2.0
+    
+    # Get ready to loop over y
+    y=0
+    A=[sph_jn(truncated_lmax,ki)[0] for ki in k]        
+    # Loop over y, computing elements of R_yn 
+    for i in lms:        
+        l=i[0]
+        m=i[1]
+        
+        trigpart = np.cos(np.pi*l/2.0)
+        B=np.asarray([A[ki][l] for ki in range(len(k))])
+        Universe.R[y,:NN/2] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(NN/2)*B.reshape(NN/2) * trigpart
+        trigpart = np.sin(np.pi*l/2.0)
+        Universe.R[y,NN/2:] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(NN/2)*B.reshape(NN/2)* trigpart
+                
+        y=y+1    
+        return
+
 
 # ====================================================================
 
@@ -19,65 +86,82 @@ class Universe(object):
     """
     A simple model universe in a box.
     """
-    def __init__(self, truncated_nmax=None, truncated_nmin=1, truncated_lmax=None, truncated_lmin=1):
+    
+    # ====================================================================
 
-        self.PIXSCALE = 0.1
-        self.BOXSIZE = 4.0
+    #Initialize the class variables
+    PIXSCALE = 0.1
+    BOXSIZE = 4.0
 
-        # Real space: define a coordinate grid:
-        self.NPIX = int(self.BOXSIZE/self.PIXSCALE) + 1
-        Nj = np.complex(0.0,self.NPIX)
-        self.x, self.y, self.z = np.mgrid[-self.BOXSIZE/2.0+self.BOXSIZE/(2*float(self.NPIX)):self.BOXSIZE/2.0-self.BOXSIZE/(2*float(self.NPIX)):Nj, -self.BOXSIZE/2.0+self.BOXSIZE/(2*float(self.NPIX)):self.BOXSIZE/2.0-self.BOXSIZE/(2*float(self.NPIX)):Nj, -self.BOXSIZE/2.0+self.BOXSIZE/(2*float(self.NPIX)):self.BOXSIZE/2.0-self.BOXSIZE/(2*float(self.NPIX)):Nj]
+    # Real space: define a coordinate grid:
+    NPIX = int(BOXSIZE/PIXSCALE) + 1
+    Nj = np.complex(0.0,NPIX)
+    x, y, z = np.mgrid[-BOXSIZE/2.0+BOXSIZE/(2*float(NPIX)):BOXSIZE/2.0-BOXSIZE/(2*float(NPIX)):Nj, -BOXSIZE/2.0+BOXSIZE/(2*float(NPIX)):BOXSIZE/2.0-BOXSIZE/(2*float(NPIX)):Nj, -BOXSIZE/2.0+BOXSIZE/(2*float(NPIX)):BOXSIZE/2.0-BOXSIZE/(2*float(NPIX)):Nj]
+    
+    # Define the truncatad range of modes (in n and l) we want in our Universe:
+    try:
+        truncated_nmax=Multiverse.truncated_nmax
+        truncated_nmin=Multiverse.truncated_nmin
+        truncated_lmax=Multiverse.truncated_lmax
+        truncated_lmin=Multiverse.truncated_lmin
+    except NameError:
+        truncated_nmax=2
+        truncated_nmin=1
+        truncated_lmax=8
+        truncated_lmin=0
+    
+
+    # If only truncated_lmax is provided, calculated the largest truncated_nmax we can reconstruct
+    if (truncated_lmax is not None) and (truncated_nmax is None):
+        truncated_nmax=int(np.floor((3.0*(truncated_lmax+1)**2.0/(4.0*np.pi))**(1.0/3.0)))
+    # Else define a default value for truncated_nmax if not already done
+    elif truncated_nmax is None:
+        truncated_nmax=6
+    # If only truncated_nmax is provided, calculated the truncated_lmax needed for no information
+    #    from the 3D map to be lost
+    if (truncated_nmax is not None) and (truncated_lmax is None):
+        truncated_lmax=int(np.ceil(-0.5+2.0*truncated_nmax**(3.0/2.0)*np.sqrt(np.pi/3.0)))
+    
+    # Make a y_max-long tupple of l and m pairs
+    if None not in (truncated_lmin, truncated_lmax):
+        lms=[(l, m) for l in range(truncated_lmin,truncated_lmax+1) for m in range(-l, l+1)]
+    
+    
+    # Fourier space: define a coordinate grid:
+
+    # The nmax we need for the resolution we want in our Universe is:
+    nmax = int(BOXSIZE/(2*PIXSCALE))
+    Deltak = 2.0*np.pi/BOXSIZE
+    kmax = nmax*Deltak
+    kx, ky, kz = np.meshgrid(np.linspace(-kmax,kmax,NPIX),np.linspace(-kmax,kmax,NPIX),np.linspace(-kmax,kmax,NPIX), indexing='ij')
+    k = np.sqrt(np.power(kx, 2)+np.power(ky,2)+np.power(kz,2))
+    nx, ny, nz = np.meshgrid(np.linspace(-nmax,nmax,NPIX),np.linspace(-nmax,nmax,NPIX),np.linspace(-nmax,nmax,NPIX), indexing='ij');
+    n = np.sqrt(np.power(nx, 2)+np.power(ny,2)+np.power(nz,2));
+    
+    # Define filter in k-space, that contains the modes we want:
+    kfilter = None
+    set_Universe_k_filter = set_k_filter
+    
+    #Define and populate the R matrix:
+    R = None
+    populate_Universe_R = populate_response_matrix
+
+    #==========================================================
+    
+    def __init__(self):
 
         # The potential map (pure real):
         self.phi = self.x * 0.0
         # The CMB temperature map:
         self.Tmap = None
         self.NSIDE = None
-
-        # Define the truncatad range of modes (in n and l) we want in our Universe:
-        self.truncated_nmax=truncated_nmax
-        self.truncated_nmin=truncated_nmin
-        self.truncated_lmax=truncated_lmax
-        self.truncated_lmin=truncated_lmin
-
-        # If only truncated_lmax is provided, calculated the largest truncated_nmax we can reconstruct
-        if (self.truncated_lmax is not None) and (self.truncated_nmax is None):
-            self.truncated_nmax=int(np.floor((3.0*(self.truncated_lmax+1)**2.0/(4.0*np.pi))**(1.0/3.0)))
-        # Else define a default value for truncated_nmax if not already done
-        elif self.truncated_nmax is None:
-            self.truncated_nmax=6
-        # If only truncated_nmax is provided, calculated the truncated_lmax needed for no information
-        #    from the 3D map to be lost
-        if (self.truncated_nmax is not None) and (self.truncated_lmax is None):
-            self.truncated_lmax=int(np.ceil(-0.5+2.0*self.truncated_nmax**(3.0/2.0)*np.sqrt(np.pi/3.0)))
-        
-        # Make a y_max-long tupple of l and m pairs
-        if None not in (self.truncated_lmin, self.truncated_lmax):
-            self.lms=[(l, m) for l in range(self.truncated_lmin,self.truncated_lmax+1) for m in range(-l, l+1)]
-        
-        
-        # Fourier space: define a coordinate grid:
-
-        # The nmax we need for the resolution we want in our Universe is:
-        self.nmax = int(self.BOXSIZE/(2*self.PIXSCALE))
-        self.Deltak = 2.0*np.pi/self.BOXSIZE;
-        self.kmax = self.nmax*self.Deltak;
-        self.kx, self.ky, self.kz = np.meshgrid(np.linspace(-self.kmax,self.kmax,self.NPIX),np.linspace(-self.kmax,self.kmax,self.NPIX),np.linspace(-self.kmax,self.kmax,self.NPIX), indexing='ij');
-        self.k = np.sqrt(np.power(self.kx, 2)+np.power(self.ky,2)+np.power(self.kz,2));
-
-        # Define filter in k-space, that contains the modes we want:
-        self.set_k_filter()
-
-        
+ 
         return
 
     def __str__(self):
         return "a model universe, containing potential map phi"
 
     # ----------------------------------------------------------------
-
-
     def read_in_CMB_T_map(self,from_this=None):
         if from_this is None:
             print "No CMB T map file supplied."
@@ -321,7 +405,7 @@ class Universe(object):
 
     # ----------------------------------------------------------------
 
-    def populate_response_matrix(self,truncated_nmax=None, truncated_nmin=None,truncated_lmax=None, truncated_lmin=None, usedefault=1):
+    def populate_instance_response_matrix(self,truncated_nmax=None, truncated_nmin=None,truncated_lmax=None, truncated_lmin=None, usedefault=1):
         """
         Populate the R matrix for the default range of l and n, or
         or over the range specified above
@@ -337,7 +421,7 @@ class Universe(object):
         else:
             low_k_cutoff=truncated_nmin*self.Deltak
             high_k_cutoff=truncated_nmax*self.Deltak
-            self.set_k_filter(self,low_k_cutoff=low_k_cutoff,high_k_cutoff=high_k_cutoff)    
+            self.set_instance_k_filter(low_k_cutoff=low_k_cutoff,high_k_cutoff=high_k_cutoff)    
             lms=[(l, m) for l in range(truncated_lmin,truncated_lmax+1) for m in range(-l, l+1)]
         
         
@@ -410,7 +494,7 @@ class Universe(object):
         
     # ----------------------------------------------------------------
 
-    def set_k_filter(self,low_k_cutoff=None,high_k_cutoff=None):
+    def set_instance_k_filter(self,low_k_cutoff=None,high_k_cutoff=None):
         """
         Define a filter over the k space for the modes between kmin and kmax 
         """
@@ -425,8 +509,8 @@ class Universe(object):
             self.low_k_cutoff = low_k_cutoff
         
         # Define the filter
-        low_k_filter = (~(self.k <= self.low_k_cutoff)).astype(int)
-        high_k_filter = (~(self.k >= self.high_k_cutoff)).astype(int)
+        low_k_filter = (~(self.n < self.truncated_nmin)).astype(int)
+        high_k_filter = (~(self.n > self.truncated_nmax)).astype(int)
         self.kfilter = high_k_filter*low_k_filter
         return
 
@@ -435,7 +519,8 @@ class Universe(object):
 
         #is this realy necessary since filter def moved up in __init__ function??
         # Set the k filter:
-        self.set_k_filter(low_k_cutoff=low_k_cutoff,high_k_cutoff=high_k_cutoff)
+        if (beatbox.Universe.kfilter is None) or (high_k_cutoff != self.high_k_cutoff) or (low_k_cutoff != self.low_k_cutoff):
+            self.set_instance_k_filter(low_k_cutoff=low_k_cutoff,high_k_cutoff=high_k_cutoff)
 
         # Define the constants that go in the power spectrum
         #    scalar spectral index
@@ -466,7 +551,7 @@ class Universe(object):
         # FT = fn_R + fn_I*1j
         FT = fn_Norm*np.cos(fn_Phase)+fn_Norm*np.sin(fn_Phase)*1j
 
-        X = np.concatenate((np.append(FT[:self.nmax, self.nmax+1 ,self.nmax+1 ], 0), np.conjugate(np.flipud(FT[:self.nmax, self.nmax+1 ,self.nmax+1 ]))), axis=0)
+        X = np.concatenate((np.append(FT[:self.nmax, self.nmax ,self.nmax ], 0), np.conjugate(np.flipud(FT[:self.nmax, self.nmax ,self.nmax ]))), axis=0)
         Z = np.concatenate( ( FT[:, :self.nmax ,self.nmax ], X.reshape(2*self.nmax+1,1), np.conjugate(np.fliplr(np.flipud(FT[:, :self.nmax ,self.nmax ])))), axis=1 )
         self.fngrid = np.concatenate( (FT[:,:,:self.nmax], Z.reshape(2*self.nmax+1,2*self.nmax+1,1), np.conjugate( np.fliplr(np.flipud(FT[:,:,:self.nmax])))[:,:,::-1] ), axis=2  )
 
@@ -533,7 +618,8 @@ class Universe(object):
         self.rearrange_fn_from_grid_to_vector()
         if usedefault==1:
             # Populate the R matrix
-            self.populate_response_matrix(usedefault=usedefault)
+            if beatbox.Universe.R is None:
+                self.populate_instance_response_matrix(usedefault=usedefault)
             # Calculate the a_y matrix
             ay=np.dot(self.R,self.fn)
             self.ay=ay
@@ -541,12 +627,12 @@ class Universe(object):
             self.ay2alm(ay, usedefault=usedefault)
         else:
             # Populate the R matrix
-            self.populate_response_matrix(truncated_nmax=truncated_nmax, truncated_nmin=truncated_nmin,truncated_lmax=truncated_lmax, truncated_lmin=truncated_lmin, usedefault=0)        
+            self.populate_instance_response_matrix(truncated_nmax=truncated_nmax, truncated_nmin=truncated_nmin,truncated_lmax=truncated_lmax, truncated_lmin=truncated_lmin, usedefault=0)        
             # Calculate the a_y matrix
             ay=self.R*self.fn
             self.ay=ay
             # Reorganize a_y into a_lm
-            self.ay2alm(self,ay,truncated_lmax=truncated_lmax, truncated_lmin=truncated_lmin, usedefault=0)
+            self.ay2alm(ay,truncated_lmax=truncated_lmax, truncated_lmin=truncated_lmin, usedefault=0)
 
         return
 
@@ -572,10 +658,10 @@ class Universe(object):
         mi = 0.0
 
         # Size of the box containing the phi
-        # physical -2 to 2 box
-        bbox = np.array([[-2, 2], [-2, 2], [-2, 2]])
+        # Physical -2 to 2 box
+        # bbox = np.array([[-2, 2], [-2, 2], [-2, 2]])
         # Physical box from the iFFT 
-        #bbox = np.array([[np.min(self.x), np.max(self.x)], [np.min(self.y), np.max(self.y)], [np.min(self.z), np.max(self.z)]])
+        bbox = np.array([[np.min(self.x), np.max(self.x)], [np.min(self.y), np.max(self.y)], [np.min(self.z), np.max(self.z)]])
 
         # Apply offset and store phi array in a yt data structure,
         #    I'm putting some random density units here 
@@ -620,9 +706,9 @@ class Universe(object):
         tfh.build_transfer_function()
         tfh.tf.grey_opacity=False
         #For small units, wide Gaussians:
-        tfh.tf.add_layers(N_layer,  w=10*(ma2 - mi2) /N_layer, mi=0.2*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.3*ma] , colormap=cmap)
+        #tfh.tf.add_layers(N_layer,  w=10*(ma2 - mi2) /N_layer, mi=0.2*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.3*ma] , colormap=cmap)
         #For big units, small Gaussians
-        #tfh.tf.add_layers(N_layer,  w=0.0000001*(ma2 - mi2) /N_layer, mi=0.2*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.3*ma] , colormap=cmap)
+        tfh.tf.add_layers(N_layer,  w=0.0000001*(ma2 - mi2) /N_layer, mi=0.2*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.3*ma] , colormap=cmap)
         # Check if the transfer function captures the data properly:
         densityplot1 = tfh.plot('densityplot1')
         densityplot2 = tfh.plot('densityplot2', profile_field='cell_mass')
@@ -642,22 +728,22 @@ class Universe(object):
             cam.show()
         self.cam=cam
 
-#        if self.Pdist==1:
-#        	im1 = cam.snapshot('opac_phi3D_Uniform_phases_0-'+str(self.Pmax)+'.png', clip_ratio=5)
-#        else:
-#            im1 = cam.snapshot('opac_phi3D_Gauss_phases_mean'+str(self.Pmax)+'_var'+str(self.Pvar)+'.png', clip_ratio=5)
-#
-#        if gifmaking==1:
-#        	# Add the domain box to the image:
-#        	nim = cam.draw_grids(im1)
-#
-#        	# Save the image to a file:
-#        	nim.write_png(output)
-#
-#        if Proj==1:
-#            s = yt.ProjectionPlot(ds, "z", "density")
-#            s.show()
-#            s.save('phi')
+        if self.Pdist==1:
+        	im1 = cam.snapshot('opac_phi3D_Uniform_phases_0-'+str(self.Pmax)+'.png', clip_ratio=5)
+        else:
+            im1 = cam.snapshot('opac_phi3D_Gauss_phases_mean'+str(self.Pmax)+'_var'+str(self.Pvar)+'.png', clip_ratio=5)
+
+        if gifmaking==1:
+        	# Add the domain box to the image:
+        	nim = cam.draw_grids(im1)
+
+        	# Save the image to a file:
+        	nim.write_png(output)
+
+        if Proj==1:
+            s = yt.ProjectionPlot(ds, "z", "density")
+            s.show()
+            s.save('phi')
 
         if Slice==1:
             w = yt.SlicePlot(ds, "z", "density", center="c")

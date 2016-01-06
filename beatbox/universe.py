@@ -739,7 +739,7 @@ class Universe(object):
             s.save('phi')
 
         if Slice==1:
-            w = yt.SlicePlot(ds, "x", "density", center="c")
+            w = yt.SlicePlot(ds, "z", "density", center="c")
             w.show()
             w.save('phi')
 

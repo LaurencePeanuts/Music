@@ -421,7 +421,7 @@ class Universe(object):
         else:
             low_k_cutoff=truncated_nmin*self.Deltak
             high_k_cutoff=truncated_nmax*self.Deltak
-            self.set_instance_k_filter(low_k_cutoff=low_k_cutoff,high_k_cutoff=high_k_cutoff)    
+            self.set_instance_k_filter(truncated_nmax=truncated_nmax,truncated_nmin=truncated_nmin)    
             lms=[(l, m) for l in range(truncated_lmin,truncated_lmax+1) for m in range(-l, l+1)]
         
         
@@ -439,8 +439,6 @@ class Universe(object):
         k, theta, phi = self.k[ind], np.arctan2(self.ky[ind],self.kx[ind]), np.arccos(self.kz[ind]/self.k[ind])
         # We need to fix the 'nan' theta element that came from having ky=0
         theta[np.isnan(theta)] = np.pi/2.0
-        #    print '|k|=',self.k[ind],'kx=', self.kx[ind],'theta=', theta, 'phi=', phi
-        #    print 'theta=',theta, 'ind=',ind
         
         # Get ready to loop over y
         y=0
@@ -449,21 +447,14 @@ class Universe(object):
         for i in lms:        
             l=i[0]
             m=i[1]
-        # l,m = self.get_lm_from(y)
-            #for n in range(NN):
-                #if n < NN/2:
             trigpart = np.cos(np.pi*l/2.0)
             B=np.asarray([A[ki][l] for ki in range(len(k))])
-            
-            #print  trigpart,NN, self.R.shape, sph_harm(m,l,theta,phi).reshape(250).shape, np.asarray(B).shape
-            #print [sph_jn(l,ki) for ki in k], A, np.asarray(A), k[0], l
             self.R[y,:NN/2] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(NN/2)*B.reshape(NN/2) * trigpart
-                #else:
+
             trigpart = np.sin(np.pi*l/2.0)
             self.R[y,NN/2:] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(NN/2)*B.reshape(NN/2)* trigpart
                 
-            y=y+1
-        # print self.R[:,1]    
+            y=y+1   
         return
 
     # ----------------------------------------------------------------
@@ -494,19 +485,21 @@ class Universe(object):
         
     # ----------------------------------------------------------------
 
-    def set_instance_k_filter(self,low_k_cutoff=None,high_k_cutoff=None):
+    def set_instance_k_filter(self,truncated_nmax=None,truncated_nmin=None):
         """
         Define a filter over the k space for the modes between kmin and kmax 
         """
         #Make sure we have lower & upper bounds for the filter
-        if high_k_cutoff is None:
+        if truncated_nmax is None:
             self.high_k_cutoff=self.truncated_nmax*self.Deltak
         else:
-            self.high_k_cutoff = high_k_cutoff
-        if low_k_cutoff is None:
+            self.truncated_nmax = truncated_nmax
+            self.high_k_cutoff=truncated_nmax*self.Deltak
+        if truncated_nmin is None:
             self.low_k_cutoff=self.truncated_nmin*self.Deltak
         else:
-            self.low_k_cutoff = low_k_cutoff
+            self.truncated_nmin = truncated_nmin
+            self.low_k_cutoff = truncated_nmin*self.Deltak
         
         # Define the filter
         low_k_filter = (~(self.n < self.truncated_nmin)).astype(int)
@@ -515,12 +508,12 @@ class Universe(object):
         return
 
 
-    def generate_a_random_potential_field(self,high_k_cutoff=6,low_k_cutoff=2,n_s=0.96,kstar=0.02,PSnorm=2.43e-9,Pdist=1,Pmax=np.pi,Pvar=0.0):
+    def generate_a_random_potential_field(self,truncated_nmax=6,truncated_nmin=2,n_s=0.97,kstar=0.02,PSnorm=2.43e-9,Pdist=1,Pmax=np.pi,Pvar=0.0):
 
         #is this realy necessary since filter def moved up in __init__ function??
         # Set the k filter:
-        if (beatbox.Universe.kfilter is None) or (high_k_cutoff != self.high_k_cutoff) or (low_k_cutoff != self.low_k_cutoff):
-            self.set_instance_k_filter(low_k_cutoff=low_k_cutoff,high_k_cutoff=high_k_cutoff)
+        if (beatbox.Universe.kfilter is None) or (truncated_nmax != self.truncated_nmax) or (truncated_nmin != self.truncated_nmin):
+            self.set_instance_k_filter(truncated_nmax=truncated_nmax,truncated_nmin=truncated_nmin)
 
         # Define the constants that go in the power spectrum
         #    scalar spectral index
@@ -551,9 +544,9 @@ class Universe(object):
         # FT = fn_R + fn_I*1j
         FT = fn_Norm*np.cos(fn_Phase)+fn_Norm*np.sin(fn_Phase)*1j
 
-        X = np.concatenate((np.append(FT[:self.nmax, self.nmax ,self.nmax ], 0), np.conjugate(np.flipud(FT[:self.nmax, self.nmax ,self.nmax ]))), axis=0)
-        Z = np.concatenate( ( FT[:, :self.nmax ,self.nmax ], X.reshape(2*self.nmax+1,1), np.conjugate(np.fliplr(np.flipud(FT[:, :self.nmax ,self.nmax ])))), axis=1 )
-        self.fngrid = np.concatenate( (FT[:,:,:self.nmax], Z.reshape(2*self.nmax+1,2*self.nmax+1,1), np.conjugate( np.fliplr(np.flipud(FT[:,:,:self.nmax])))[:,:,::-1] ), axis=2  )
+        X = np.concatenate((np.append(FT[:self.nmax, self.nmax ,self.nmax ], 0), np.conjugate(FT[:self.nmax, self.nmax ,self.nmax ])[::-1]), axis=0)
+        Z = np.concatenate( ( FT[:, :self.nmax ,self.nmax ], X.reshape(2*self.nmax+1,1), np.conjugate(FT[:, :self.nmax ,self.nmax ])[::-1,::-1]), axis=1 )
+        self.fngrid = np.concatenate( (FT[:,:,:self.nmax], Z.reshape(2*self.nmax+1,2*self.nmax+1,1), np.conjugate( FT[:,:,:self.nmax])[::-1,::-1,::-1] ), axis=2  )
 
         print "Generated ",self.fngrid[~(self.fngrid[:,:,:] == 0)].size," potential Fourier coefficients"
 
@@ -629,7 +622,7 @@ class Universe(object):
             # Populate the R matrix
             self.populate_instance_response_matrix(truncated_nmax=truncated_nmax, truncated_nmin=truncated_nmin,truncated_lmax=truncated_lmax, truncated_lmin=truncated_lmin, usedefault=0)        
             # Calculate the a_y matrix
-            ay=self.R*self.fn
+            ay=np.dot(self.R,self.fn)
             self.ay=ay
             # Reorganize a_y into a_lm
             self.ay2alm(ay,truncated_lmax=truncated_lmax, truncated_lmin=truncated_lmin, usedefault=0)
@@ -722,16 +715,16 @@ class Universe(object):
         W = ds.quan(1.6, 'unitary')
         N = 512
 
-        # Create a camera object
-        cam = ds.camera(c, L, W, N, tfh.tf, fields=[field], log_fields = [use_log],  no_ghost = False)
-        if show3D==1:
-            cam.show()
-        self.cam=cam
-
-        if self.Pdist==1:
-        	im1 = cam.snapshot('opac_phi3D_Uniform_phases_0-'+str(self.Pmax)+'.png', clip_ratio=5)
-        else:
-            im1 = cam.snapshot('opac_phi3D_Gauss_phases_mean'+str(self.Pmax)+'_var'+str(self.Pvar)+'.png', clip_ratio=5)
+#        # Create a camera object
+#        cam = ds.camera(c, L, W, N, tfh.tf, fields=[field], log_fields = [use_log],  no_ghost = False)
+#        if show3D==1:
+#            cam.show()
+#        self.cam=cam
+#
+#        if self.Pdist==1:
+#        	im1 = cam.snapshot('opac_phi3D_Uniform_phases_0-'+str(self.Pmax)+'.png', clip_ratio=5)
+#        else:
+#            im1 = cam.snapshot('opac_phi3D_Gauss_phases_mean'+str(self.Pmax)+'_var'+str(self.Pvar)+'.png', clip_ratio=5)
 
         if gifmaking==1:
         	# Add the domain box to the image:
@@ -746,9 +739,9 @@ class Universe(object):
             s.save('phi')
 
         if Slice==1:
-            w = yt.SlicePlot(ds, "z", "density", center="c")
+            w = yt.SlicePlot(ds, "x", "density", center="c")
             w.show()
-            w.save('phi')
+            w.save('phitest')
 
         return
 

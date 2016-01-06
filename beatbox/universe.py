@@ -715,16 +715,16 @@ class Universe(object):
         W = ds.quan(1.6, 'unitary')
         N = 512
 
-#        # Create a camera object
-#        cam = ds.camera(c, L, W, N, tfh.tf, fields=[field], log_fields = [use_log],  no_ghost = False)
-#        if show3D==1:
-#            cam.show()
-#        self.cam=cam
-#
-#        if self.Pdist==1:
-#        	im1 = cam.snapshot('opac_phi3D_Uniform_phases_0-'+str(self.Pmax)+'.png', clip_ratio=5)
-#        else:
-#            im1 = cam.snapshot('opac_phi3D_Gauss_phases_mean'+str(self.Pmax)+'_var'+str(self.Pvar)+'.png', clip_ratio=5)
+        # Create a camera object
+        cam = ds.camera(c, L, W, N, tfh.tf, fields=[field], log_fields = [use_log],  no_ghost = False)
+        if show3D==1:
+            cam.show()
+        self.cam=cam
+
+        if self.Pdist==1:
+        	im1 = cam.snapshot('opac_phi3D_Uniform_phases_0-'+str(self.Pmax)+'.png', clip_ratio=5)
+        else:
+            im1 = cam.snapshot('opac_phi3D_Gauss_phases_mean'+str(self.Pmax)+'_var'+str(self.Pvar)+'.png', clip_ratio=5)
 
         if gifmaking==1:
         	# Add the domain box to the image:
@@ -741,7 +741,7 @@ class Universe(object):
         if Slice==1:
             w = yt.SlicePlot(ds, "x", "density", center="c")
             w.show()
-            w.save('phitest')
+            w.save('phi')
 
         return
 

@@ -12,6 +12,7 @@ from scipy.special import sph_harm,sph_jn
 
 
 import beatbox
+from beatbox.multiverse import Multiverse
 
 # ===================================================================
 
@@ -98,12 +99,14 @@ class Universe(object):
     Nj = np.complex(0.0,NPIX)
     x, y, z = np.mgrid[-BOXSIZE/2.0+BOXSIZE/(2*float(NPIX)):BOXSIZE/2.0-BOXSIZE/(2*float(NPIX)):Nj, -BOXSIZE/2.0+BOXSIZE/(2*float(NPIX)):BOXSIZE/2.0-BOXSIZE/(2*float(NPIX)):Nj, -BOXSIZE/2.0+BOXSIZE/(2*float(NPIX)):BOXSIZE/2.0-BOXSIZE/(2*float(NPIX)):Nj]
     
+    
+    print beatbox.Multiverse.truncated_nmin
     # Define the truncatad range of modes (in n and l) we want in our Universe:
     try:
-        truncated_nmax=Multiverse.truncated_nmax
-        truncated_nmin=Multiverse.truncated_nmin
-        truncated_lmax=Multiverse.truncated_lmax
-        truncated_lmin=Multiverse.truncated_lmin
+        truncated_nmax=beatbox.Multiverse.truncated_nmax
+        truncated_nmin=beatbox.Multiverse.truncated_nmin
+        truncated_lmax=beatbox.Multiverse.truncated_lmax
+        truncated_lmin=beatbox.Multiverse.truncated_lmin
     except NameError:
         truncated_nmax=2
         truncated_nmin=1

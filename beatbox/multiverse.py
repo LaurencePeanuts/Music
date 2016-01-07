@@ -95,23 +95,76 @@ class Multiverse(object):
     
     
     def read_Planck_samples(self):
+        '''
+        Read the 100 Planck samples into 100 instances of Universe 
+        '''
         
+        # download the tarball containing 100 posterior sample "COMMANDER-Ruler"
+        #    low resolution maps, if not there already
+        # tarball = "commander_32band_Clsamples100.tar.gz"
         datadir = "data/commander_32band_Clsamples100/"
+
+        # if not os.path.isfile(tarball):
+        #    URL = "http://folk.uio.no/ingunnkw/planck/32band/"+tarball
+        #    !wget -O "$tarball" "$URL"
+        #    !tar xvfz "$tarball"
+        #    !mkdir -p "$datadir"
+        #    !mv cmb_Cl_c000*.fits "$datadir"
+        
+        
         Tmapfiles = glob.glob(datadir+"cmb_Cl_c000*.fits")
-        Nmaps = len(Tmapfiles)
+        Nmaps = len(Tmapfiles) 
         
-        self.all_data_universes.Tmap = np.array([],ndim=Nmaps) 
-        
-        self.all_data_universes = np.append(self.all_data_universes, [beatbox.Universe() for i in range(NMaps)])
+        self.all_data_universes = np.append(self.all_data_universes, [beatbox.Universe() for i in range(Nmaps)])
         
         
         for k in range(Nmaps):
-            self.initiate_data_universe()
-            self.all_data_universes[k].Tmap=self.read_in_CMB_T_map(from_this=Tmapfiles[k])
+            self.all_data_universes[-1-k].read_in_CMB_T_map(from_this=Tmapfiles[k])
+            self.all_data_universes[-1-k].decompose_T_map_into_spherical_harmonics()
+        print "Read in",Nmaps,"maps into",len(We),"beatbox universe objects."
         
-            self.Tmapfile = from_this
-            self.Tmap = hp.read_map(from_this)
-            self.NSIDE = hp.npix2nside(len(self.Tmap))
         return
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     

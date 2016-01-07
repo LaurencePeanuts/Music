@@ -71,7 +71,7 @@ def populate_response_matrix(self):
         Universe.R[y,NN/2:] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(NN/2)*B.reshape(NN/2)* trigpart
                 
         y = y+1    
-        return
+    return
 
 
 # ====================================================================
@@ -178,7 +178,7 @@ class Universe(object):
             
         if from_perspective_of == "observer":
             # Sky map:
-            hp.mollview(self.Tmap, coord='G', rot=(-90,0,0),title="CMB graviational potential fluctuations as seen from inside the LSS, l_max=%d" % self.truncated_lmax)
+            hp.mollview(self.Tmap, rot=(-90,0,0),title="CMB graviational potential fluctuations as seen from inside the LSS, l_max=%d" % self.truncated_lmax)
         else:
             # Interactive "external" view ([like this](http://zonca.github.io/2013/03/interactive-3d-plot-of-sky-map.html))            pass
             #   beatbox.zoncaview(self.Tmap)
@@ -439,7 +439,7 @@ class Universe(object):
         
         # Get ready to loop over y
         y = 0
-        A=[sph_jn(truncated_lmax,ki)[0] for ki in k]        
+        A = [sph_jn(truncated_lmax,ki)[0] for ki in k]        
         # Loop over y, computing elements of R_yn 
         for i in lms:        
             l = i[0]
@@ -451,7 +451,7 @@ class Universe(object):
             trigpart = np.sin(np.pi*l/2.0)
             self.R[y,NN/2:] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(NN/2)*B.reshape(NN/2)* trigpart
                 
-            y=y+1   
+            y = y+1   
         return
 
     # ----------------------------------------------------------------

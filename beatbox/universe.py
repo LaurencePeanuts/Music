@@ -181,7 +181,7 @@ class Universe(object):
             self.NSIDE = 256
             self.Tmap = hp.alm2map(self.alm,self.NSIDE)
         else:
-            self.Tmap=Tmap
+            self.Tmap = Tmap
             
         if from_perspective_of == "observer":
             # Sky map:
@@ -291,7 +291,7 @@ class Universe(object):
         If lms is given, len(lms) must equal len(value), while
         if l and m are specified, value must be a scalar.
         '''
-        print 'made it to put_alm!!'
+        
         if (l is None or m is None) and lms is None:
             return None
         elif l is None and m is None:
@@ -302,15 +302,15 @@ class Universe(object):
             count=0
             for i in lms:
                 index[count] = hp.Alm.getidx(max(lms)[0], i[0], i[1])
-                count=count+1
-            lmax=max(lms)[0]
-            mmax=max(lms)[1]
+                count = count+1
+            lmax = max(lms)[0]
+            mmax = max(lms)[1]
             self.alm=np.zeros(mmax*(2*lmax+1-mmax)/2+lmax+1, dtype=np.complex128)
             # Throw away the negative indices (which correspond to the negative m's)
             #     since the maps are real, negative m coefficients can be deduced
             #     from the positive ones.
-            index_positive=index[~(index<0)]
-            ind1=np.arange(len(value))
+            index_positive = index[~(index<0)]
+            ind1 = np.arange(len(value))
             self.alm[index_positive] = value[ind1[~(index<0)]]
             return
         index = hp.Alm.getidx(self.truncated_lmax, l, m)
@@ -329,16 +329,17 @@ class Universe(object):
         y=l**2+l+m is the index, need to subtract the elements before lmin
         so y=l**2+l+m-(lmin+1)**2
         """
-        if usedefault==1:
-            truncated_lmax=self.truncated_lmax
-            truncated_lmin=self.truncated_lmin
-            lms=self.lms
+        
+        if usedefault == 1:
+            truncated_lmax = self.truncated_lmax
+            truncated_lmin = self.truncated_lmin
+            lms = self.lms
         # Make a y_max-long tupple of l and m pairs
         else:
-            lms=[(l, m) for l in range(truncated_lmin,truncated_lmax+1) for m in range(-l, l+1)]
+            lms = [(l, m) for l in range(truncated_lmin,truncated_lmax+1) for m in range(-l, l+1)]
         
         ay = np.zeros((truncated_lmax+1)**2-(truncated_lmin)**2,dtype=np.complex128)
-        ay=self.get_alm(lms=lms)
+        ay = self.get_alm(lms=lms)
         
         #self.ay=ay
         return ay
@@ -355,7 +356,7 @@ class Universe(object):
         
         # Make a y_max-long tupple of l and m pairs
         else:
-            lms=[(l, m) for l in range(truncated_lmin,truncated_lmax+1) for m in range(-l, l+1)]
+            lms = [(l, m) for l in range(truncated_lmin,truncated_lmax+1) for m in range(-l, l+1)]
         
         self.put_alm(ay, lms=lms)
         
@@ -374,19 +375,19 @@ class Universe(object):
         '''
         
         #Select the m values out the the lms tupples
-        m=np.array([m[1] for m in self.lms])
+        m = np.array([m[1] for m in self.lms])
         #Find the indices of the positive ms
-        pos_ind=(m>0)
+        pos_ind = (m>0)
         #Find the indices of the m=0
-        zero_ind=(m==0)
+        zero_ind = (m==0)
         #Find the indices of the negative ms
-        neg_ind=(m<0)
+        neg_ind = (m<0)
         
-        ay_real=np.zeros(len(self.lms), dtype=np.float)
+        ay_real = np.zeros(len(self.lms), dtype=np.float)
         
-        ay_real[pos_ind]=value[pos_ind].real
-        ay_real[neg_ind]=value[pos_ind].imag
-        ay_real[zero_ind]=value[zero_ind].astype(np.float)
+        ay_real[pos_ind] = value[pos_ind].real
+        ay_real[neg_ind] = value[pos_ind].imag
+        ay_real[zero_ind] = value[zero_ind].astype(np.float)
         
         
         return ay_real
@@ -414,24 +415,24 @@ class Universe(object):
         or over the range specified above
         """
 
-        if usedefault==1:
-            truncated_nmax=self.truncated_nmax
-            truncated_nmin=self.truncated_nmin
-            truncated_lmax=self.truncated_lmax
-            truncated_lmin=self.truncated_lmin
-            lms=self.lms
-            kfilter=self.kfilter    
+        if usedefault == 1:
+            truncated_nmax = self.truncated_nmax
+            truncated_nmin = self.truncated_nmin
+            truncated_lmax = self.truncated_lmax
+            truncated_lmin = self.truncated_lmin
+            lms = self.lms
+            kfilter = self.kfilter    
         else:
-            low_k_cutoff=truncated_nmin*self.Deltak
-            high_k_cutoff=truncated_nmax*self.Deltak
+            low_k_cutoff = truncated_nmin*self.Deltak
+            high_k_cutoff = truncated_nmax*self.Deltak
             self.set_instance_k_filter(truncated_nmax=truncated_nmax,truncated_nmin=truncated_nmin)    
-            lms=[(l, m) for l in range(truncated_lmin,truncated_lmax+1) for m in range(-l, l+1)]
+            lms = [(l, m) for l in range(truncated_lmin,truncated_lmax+1) for m in range(-l, l+1)]
         
         
         # Initialize R matrix:
         NY = (truncated_lmax + 1)**2-(truncated_lmin)**2
         # Find the indices of the non-zero elements of the filter
-        ind=np.where(self.kfilter>0)
+        ind = np.where(self.kfilter>0)
         # The n index spans 2x that length, 1st half for the cos coefficients, 2nd half
         #    for the sin coefficients
         NN = 2*len(ind[1])
@@ -444,14 +445,14 @@ class Universe(object):
         theta[np.isnan(theta)] = np.pi/2.0
         
         # Get ready to loop over y
-        y=0
+        y = 0
         A=[sph_jn(truncated_lmax,ki)[0] for ki in k]        
         # Loop over y, computing elements of R_yn 
         for i in lms:        
-            l=i[0]
-            m=i[1]
+            l = i[0]
+            m = i[1]
             trigpart = np.cos(np.pi*l/2.0)
-            B=np.asarray([A[ki][l] for ki in range(len(k))])
+            B = np.asarray([A[ki][l] for ki in range(len(k))])
             self.R[y,:NN/2] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(NN/2)*B.reshape(NN/2) * trigpart
 
             trigpart = np.sin(np.pi*l/2.0)
@@ -494,10 +495,10 @@ class Universe(object):
         """
         #Make sure we have lower & upper bounds for the filter
         if truncated_nmax is None:
-            self.high_k_cutoff=self.truncated_nmax*self.Deltak
+            self.high_k_cutoff = self.truncated_nmax*self.Deltak
         else:
             self.truncated_nmax = truncated_nmax
-            self.high_k_cutoff=truncated_nmax*self.Deltak
+            self.high_k_cutoff = truncated_nmax*self.Deltak
         if truncated_nmin is None:
             self.low_k_cutoff=self.truncated_nmin*self.Deltak
         else:
@@ -534,11 +535,11 @@ class Universe(object):
         fn_Norm = np.random.normal(0, np.sqrt(self.Power_Spectrum) )*np.power(self.kfilter,2)
         # Draw the phases for the modes: use p=1 for a uniform distribution in [0,Pmax],
         #    and p=0 for a Gaussian distribution with mean Pmax and variance Pvar
-        self.Pdist=Pdist
-        self.Pvar=Pvar
-        self.Pmax=Pmax
+        self.Pdist = Pdist
+        self.Pvar = Pvar
+        self.Pmax = Pmax
 
-        if Pdist==1:
+        if Pdist == 1:
             fn_Phase = np.random.uniform(0, Pmax*np.ones(self.k.shape,dtype=np.float_) )*np.power(self.kfilter,2)
         else:
             fn_Phase = np.random.normal(Pmax, np.sqrt(Pvar)*np.ones(self.k.shape,dtype=np.float_) )*np.power(self.kfilter,2)
@@ -553,7 +554,7 @@ class Universe(object):
 
         print "Generated ",self.fngrid[~(self.fngrid[:,:,:] == 0)].size," potential Fourier coefficients"
 
-        if Pdist==1:
+        if Pdist == 1:
             print " with phases uniformly distributed between 0 and ", Pmax
         else:
             print " with phases sampled from a Gaussian distribution with mean ", Pmax," and variance ", Pvar
@@ -593,8 +594,8 @@ class Universe(object):
         inference, we need the fourier coefficients arranged in a
         vector.
         '''
-        ind=np.where(self.kfilter>0)
-        self.fn=np.zeros(2*len(ind[1]))
+        ind = np.where(self.kfilter>0)
+        self.fn = np.zeros(2*len(ind[1]))
         self.fn[:len(ind[1])] = (self.fngrid[ind]).real
         self.fn[len(ind[1]):] = (self.fngrid[ind]).imag
         return
@@ -612,21 +613,21 @@ class Universe(object):
         '''
         # Make a vector out of the fn grid of Fourier coefficients
         self.rearrange_fn_from_grid_to_vector()
-        if usedefault==1:
+        if usedefault == 1:
             # Populate the R matrix
             if beatbox.Universe.R is None:
                 self.populate_instance_response_matrix(usedefault=usedefault)
             # Calculate the a_y matrix
-            ay=np.dot(self.R,self.fn)
-            self.ay=ay
+            ay = np.dot(self.R,self.fn)
+            self.ay = ay
             # Reorganize a_y into a_lm
             self.ay2alm(ay, usedefault=usedefault)
         else:
             # Populate the R matrix
             self.populate_instance_response_matrix(truncated_nmax=truncated_nmax, truncated_nmin=truncated_nmin,truncated_lmax=truncated_lmax, truncated_lmin=truncated_lmin, usedefault=0)        
             # Calculate the a_y matrix
-            ay=np.dot(self.R,self.fn)
-            self.ay=ay
+            ay = np.dot(self.R,self.fn)
+            self.ay = ay
             # Reorganize a_y into a_lm
             self.ay2alm(ay,truncated_lmax=truncated_lmax, truncated_lmin=truncated_lmin, usedefault=0)
 
@@ -663,7 +664,7 @@ class Universe(object):
         #    I'm putting some random density units here 
         #    (seems to be needed to display properly):
         ds = yt.load_uniform_grid(dict(density=(self.phi+offset, 'g/cm**3')), self.phi.shape, bbox=bbox,  nprocs=1)
-        field='density'
+        field = 'density'
         #Check that the loaded field is recognized by yt
         #    print ds.field_list
 
@@ -720,28 +721,28 @@ class Universe(object):
 
         # Create a camera object
         cam = ds.camera(c, L, W, N, tfh.tf, fields=[field], log_fields = [use_log],  no_ghost = False)
-        if show3D==1:
+        if show3D == 1:
             cam.show()
-        self.cam=cam
+        self.cam = cam
 
-        if self.Pdist==1:
+        if self.Pdist == 1:
         	im1 = cam.snapshot('opac_phi3D_Uniform_phases_0-'+str(self.Pmax)+'.png', clip_ratio=5)
         else:
             im1 = cam.snapshot('opac_phi3D_Gauss_phases_mean'+str(self.Pmax)+'_var'+str(self.Pvar)+'.png', clip_ratio=5)
 
-        if gifmaking==1:
+        if gifmaking == 1:
         	# Add the domain box to the image:
         	nim = cam.draw_grids(im1)
 
         	# Save the image to a file:
         	nim.write_png(output)
 
-        if Proj==1:
+        if Proj == 1:
             s = yt.ProjectionPlot(ds, "z", "density")
             s.show()
             s.save('phi')
 
-        if Slice==1:
+        if Slice == 1:
             w = yt.SlicePlot(ds, "z", "density", center="c")
             w.show()
             w.save('phi')

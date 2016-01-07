@@ -68,8 +68,8 @@ class Multiverse(object):
 
     def initiate_simulated_universe(self, truncated_nmax=None, truncated_nmin=None, truncated_lmax=None, truncated_lmin=None, n_s=0.97,kstar=0.02,PSnorm=2.43e-9,Pdist=1,Pmax=np.pi,Pvar=0.0):
         '''
-        Makes an instance of the universe, which is made of one Planck
-        data realization.
+        Makes an instance of the universe with containing a random
+        realization of the gravitational field phi.
         '''
         We=beatbox.Universe()
         usedefault=1

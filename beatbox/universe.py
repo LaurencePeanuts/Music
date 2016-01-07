@@ -21,14 +21,8 @@ def set_k_filter(self):
     Define a filter over the k space for the modes between kmin and kmax 
     """
     #Define lower & upper bounds for the filter
-    Universe.high_k_cutoff=Universe.truncated_nmax*Universe.Deltak
-    Universe.low_k_cutoff=Universe.truncated_nmin*Universe.Deltak
-    
-    
-    # Define the filter
-    #low_k_filter = (~(Universe.n < Universe.low_k_cutoff)).astype(int)
-    #high_k_filter = (~(Universe.n > Universe.high_k_cutoff)).astype(int)
-    #Universe.kfilter = high_k_filter*low_k_filter
+    Universe.high_k_cutoff = Universe.truncated_nmax*Universe.Deltak
+    Universe.low_k_cutoff = Universe.truncated_nmin*Universe.Deltak
     
     # Define the filter
     low_k_filter = (~(Universe.n < Universe.truncated_nmin)).astype(int)
@@ -42,18 +36,17 @@ def populate_response_matrix(self):
     or over the range specified above
     """
 
-
-    truncated_nmax=Universe.truncated_nmax
-    truncated_nmin=Universe.truncated_nmin
-    truncated_lmax=Universe.truncated_lmax
-    truncated_lmin=Universe.truncated_lmin
-    lms=Universe.lms
-    kfilter=Universe.kfilter
+    truncated_nmax = Universe.truncated_nmax
+    truncated_nmin = Universe.truncated_nmin
+    truncated_lmax = Universe.truncated_lmax
+    truncated_lmin = Universe.truncated_lmin
+    lms = Universe.lms
+    kfilter = Universe.kfilter
     
     # Initialize R matrix:
-    NY = (truncated_lmax + 1)**2-(truncated_lmin)**2
+    NY = (truncated_lmax + 1)**2 - (truncated_lmin)**2
     # Find the indices of the non-zero elements of the filter
-    ind=np.where(Universe.kfilter>0)
+    ind = np.where(Universe.kfilter>0)
     # The n index spans 2x that length, 1st half for the cos coefficients, 2nd half
     #    for the sin coefficients
     NN = 2*len(ind[1])
@@ -64,20 +57,20 @@ def populate_response_matrix(self):
     theta[np.isnan(theta)] = np.pi/2.0
     
     # Get ready to loop over y
-    y=0
-    A=[sph_jn(truncated_lmax,ki)[0] for ki in k]        
+    y = 0
+    A = [sph_jn(truncated_lmax,ki)[0] for ki in k]        
     # Loop over y, computing elements of R_yn 
     for i in lms:        
-        l=i[0]
-        m=i[1]
+        l = i[0]
+        m = i[1]
         
         trigpart = np.cos(np.pi*l/2.0)
-        B=np.asarray([A[ki][l] for ki in range(len(k))])
+        B = np.asarray([A[ki][l] for ki in range(len(k))])
         Universe.R[y,:NN/2] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(NN/2)*B.reshape(NN/2) * trigpart
         trigpart = np.sin(np.pi*l/2.0)
         Universe.R[y,NN/2:] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(NN/2)*B.reshape(NN/2)* trigpart
                 
-        y=y+1    
+        y = y+1    
         return
 
 
@@ -103,31 +96,31 @@ class Universe(object):
     print beatbox.Multiverse.truncated_nmin
     # Define the truncatad range of modes (in n and l) we want in our Universe:
     try:
-        truncated_nmax=beatbox.Multiverse.truncated_nmax
-        truncated_nmin=beatbox.Multiverse.truncated_nmin
-        truncated_lmax=beatbox.Multiverse.truncated_lmax
-        truncated_lmin=beatbox.Multiverse.truncated_lmin
+        truncated_nmax = beatbox.Multiverse.truncated_nmax
+        truncated_nmin = beatbox.Multiverse.truncated_nmin
+        truncated_lmax = beatbox.Multiverse.truncated_lmax
+        truncated_lmin = beatbox.Multiverse.truncated_lmin
     except NameError:
-        truncated_nmax=2
-        truncated_nmin=1
-        truncated_lmax=8
-        truncated_lmin=0
+        truncated_nmax = 2
+        truncated_nmin = 1
+        truncated_lmax = 8
+        truncated_lmin = 0
     
 
     # If only truncated_lmax is provided, calculated the largest truncated_nmax we can reconstruct
     if (truncated_lmax is not None) and (truncated_nmax is None):
-        truncated_nmax=int(np.floor((3.0*(truncated_lmax+1)**2.0/(4.0*np.pi))**(1.0/3.0)))
+        truncated_nmax = int(np.floor((3.0*(truncated_lmax+1)**2.0/(4.0*np.pi))**(1.0/3.0)))
     # Else define a default value for truncated_nmax if not already done
     elif truncated_nmax is None:
-        truncated_nmax=6
+        truncated_nmax = 6
     # If only truncated_nmax is provided, calculated the truncated_lmax needed for no information
     #    from the 3D map to be lost
     if (truncated_nmax is not None) and (truncated_lmax is None):
-        truncated_lmax=int(np.ceil(-0.5+2.0*truncated_nmax**(3.0/2.0)*np.sqrt(np.pi/3.0)))
+        truncated_lmax = int(np.ceil(-0.5+2.0*truncated_nmax**(3.0/2.0)*np.sqrt(np.pi/3.0)))
     
     # Make a y_max-long tupple of l and m pairs
     if None not in (truncated_lmin, truncated_lmax):
-        lms=[(l, m) for l in range(truncated_lmin,truncated_lmax+1) for m in range(-l, l+1)]
+        lms = [(l, m) for l in range(truncated_lmin,truncated_lmax+1) for m in range(-l, l+1)]
     
     
     # Fourier space: define a coordinate grid:
@@ -185,7 +178,7 @@ class Universe(object):
             
         if from_perspective_of == "observer":
             # Sky map:
-            hp.mollview(self.Tmap, coord='G', rot=(-90,0,0),title="CMB temperature fluctuations as seen from inside the LSS")
+            hp.mollview(self.Tmap, coord='G', rot=(-90,0,0),title="CMB graviational potential fluctuations as seen from inside the LSS, l_max=%d" % self.truncated_lmax)
         else:
             # Interactive "external" view ([like this](http://zonca.github.io/2013/03/interactive-3d-plot-of-sky-map.html))            pass
             #   beatbox.zoncaview(self.Tmap)
@@ -193,7 +186,7 @@ class Universe(object):
             # spherical surface plot routine using matplotlib? For
             # now, just use the healpix vis.
             R = (0.0,0.0,0.0) # (lon,lat,psi) to specify center of map and rotation to apply
-            hp.orthview(self.Tmap,rot=R,flip='geo',half_sky=True,title="CMB temperature fluctuations as seen from outside the LSS")
+            hp.orthview(self.Tmap,rot=R,flip='geo',half_sky=True,title="CMB graviational potential fluctuations as seen from outside the LSS, l_max=%d" % self.truncated_lmax)
             # print "Ahem - we can't visualize maps on the surface of the sphere yet, sorry."
         return
 
@@ -260,7 +253,7 @@ class Universe(object):
             return None
         
         elif l is None and m is None:
-            ay=np.zeros(len(lms),dtype=np.complex128)
+            ay = np.zeros(len(lms),dtype=np.complex128)
             for i in lms:
                 if i[1] >= 0:
                     index = hp.Alm.getidx(self.lmax, i[0], i[1])
@@ -270,7 +263,7 @@ class Universe(object):
                     index = hp.Alm.getidx(self.lmax, i[0], -i[1])
                     prefactor = (-1.0)**i[1]
                     value = np.conjugate(self.alm[index])
-                ay[i[0]**2+i[0]+i[1]-(lms[0][0])**2]=prefactor * value
+                ay[i[0]**2+i[0]+i[1]-(lms[0][0])**2] = prefactor * value
             return ay
 
         elif m >= 0:
@@ -298,14 +291,14 @@ class Universe(object):
             if len(lms) != len(value):
                 print 'a_y and (l, m) are of unequal lenghts, cannot proceed'
                 return
-            index=np.zeros(len(lms), dtype=int)
-            count=0
+            index = np.zeros(len(lms), dtype=int)
+            count = 0
             for i in lms:
                 index[count] = hp.Alm.getidx(max(lms)[0], i[0], i[1])
                 count = count+1
             lmax = max(lms)[0]
             mmax = max(lms)[1]
-            self.alm=np.zeros(mmax*(2*lmax+1-mmax)/2+lmax+1, dtype=np.complex128)
+            self.alm = np.zeros(mmax*(2*lmax+1-mmax)/2+lmax+1, dtype=np.complex128)
             # Throw away the negative indices (which correspond to the negative m's)
             #     since the maps are real, negative m coefficients can be deduced
             #     from the positive ones.
@@ -349,9 +342,9 @@ class Universe(object):
         """
         Repackage the a_y array into healpy-readable a_lm's
         """
-        if usedefault==1:
-            truncated_lmax=self.truncated_lmin
-            truncated_lmin=self.truncated_lmax
+        if usedefault == 1:
+            truncated_lmax = self.truncated_lmin
+            truncated_lmin = self.truncated_lmax
             lms=self.lms
         
         # Make a y_max-long tupple of l and m pairs

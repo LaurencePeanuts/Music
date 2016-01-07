@@ -162,7 +162,7 @@ class Universe(object):
         return
 
     def __str__(self):
-        return "a model universe, containing potential map phi"
+        return "an empty model universe, containing a grid 41x41x41 pixels (and corresponding k grid in Fourrier space), a k filter and the corresponding R matrix mapping between those k values and a range of l (given by the Multiverse)"
 
     # ----------------------------------------------------------------
     def read_in_CMB_T_map(self,from_this=None):

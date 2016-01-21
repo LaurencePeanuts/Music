@@ -697,9 +697,9 @@ class Universe(object):
         tfh.build_transfer_function()
         tfh.tf.grey_opacity=False
         #For small units, wide Gaussians:
-        #tfh.tf.add_layers(N_layer,  w=10*(ma2 - mi2) /N_layer, mi=0.2*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.3*ma] , colormap=cmap)
+        tfh.tf.add_layers(N_layer,  w=0.005*(ma2 - mi2) /N_layer, mi=0.3*ma, ma=ma-0.3*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.3*ma] , colormap=cmap)
         #For big units, small Gaussians
-        tfh.tf.add_layers(N_layer,  w=0.0000001*(ma2 - mi2) /N_layer, mi=0.2*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.3*ma] , colormap=cmap)
+        #tfh.tf.add_layers(N_layer,  w=0.0000001*(ma2 - mi2) /N_layer, mi=0.2*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.3*ma] , colormap=cmap)
         # Check if the transfer function captures the data properly:
         densityplot1 = tfh.plot('densityplot1')
         densityplot2 = tfh.plot('densityplot2', profile_field='cell_mass')

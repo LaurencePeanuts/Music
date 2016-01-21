@@ -291,8 +291,16 @@ class Multiverse(object):
         self.reconstrunct_fn = np.dot( inv_A , np.dot(R_real.T , np.dot (inv_Cyy , datamap) ) )
         
         return
-        #inv_Cf=np.diag(1./(PS))
-       
+    
+    def generate_one_realization_of_noise(self):
+        '''
+        Generate one realization of the noise given by C_yy
+        '''
+        
+        mean=np.zeros(self.C_yy.shape[0])
+        noise = np.random.multivariate_normal(mean, self.C_yy, 1)
+        
+        return noise
     
     
     

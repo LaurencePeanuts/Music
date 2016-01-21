@@ -140,10 +140,11 @@ class Multiverse(object):
         return
     
     
-    def calculate_covariance_matrix(self):
+    def calculate_covariance_matrix(self, filename = 'covCyy.txt'):
         '''
         Calculate the a_y covariance matric from the
-        100 Planck posterior samples 
+        100 Planck posterior samples, and save it to 
+        disk
         '''
         Nmaps=100
         Planck_a_y=np.zeros((Nmaps, len(beatbox.Universe.lms)), dtype=np.float)
@@ -159,9 +160,17 @@ class Multiverse(object):
             C_yy=C_yy+np.outer(Planck_a_y[r,:]- meanPlanck, Planck_a_y[r,:]- meanPlanck)
         self.C_yy=C_yy/Nmaps
         
+        np.savetxt( filename, self.C_yy)
         
         return
     
+    def load_covariance_matrix(self, filename = 'covCyy.txt'):
+        '''
+        Load the previously calculated a_y covariance matrix
+        '''
+        
+        self.C_yy = np.loadtxt(filename)
+        
     
     def calculate_sdv_Cyy_inverse(self):
         '''
@@ -178,7 +187,7 @@ class Multiverse(object):
         
         V = V_star.conj().T
         U_star=U.conj().T
-        self.inv_Cyy=np.dot(V, np.dot(S_coss,U_star))
+        self.inv_Cyy=np.dot(V, np.dot(S_cross,U_star))
         
         return
     
@@ -194,36 +203,44 @@ class Multiverse(object):
         
         import scipy.stats as st
         
+        naccept = 0
         niters = 10000
-        samples = np.zeros(niters+1)
+        self.samples = np.zeros(niters+1)
+        self.samples = self.samples.tolist()
+        self.logpost = np.zeros(niters+1)
         
+        #self.initiate_simulated_universe()
+        ay = self.all_simulated_universes[0].ay2ayreal_for_inference(self.all_simulated_universes[0].ay)
+        fngrid = self.all_simulated_universes[0].fngrid
         
-        self.initiate_simulated_universe()
-        ay = self.all_simulated_universes[-1].ay2ayreal_for_inference(self.all_simulated_universes[-1].ay)
-        fngrid = self.all_simulated_universes[-1].fngrid
-        samples[0] = self.all_simulated_universes[-1].fngrid
-        sigma = self.all_simulated_universes[-1].Power_Spectrum
+        self.samples[0] = self.all_simulated_universes[0].fngrid
+        sigma = self.all_simulated_universes[0].Power_Spectrum
         
         self.inv_Cf=1./(self.all_simulated_universes[-1].Power_Spectrum)
+        
+        self.logpost[0] = self.get_logpost(datamap, fngrid, inv_Cyy)
         
         for i in range(niters):
             fngrid_p = fngrid + np.random.normal(0, np.sqrt(sigma) )
             
-            rho = min( 1, np.exp(self.get_logpost(datamap, fngrid_p)) / np.exp(self.get_logpost(datamap, fngrid)) )
+            logpost_p = self.get_logpost(datamap, fngrid_p, inv_Cyy)
+            rho = min( 1, np.exp(logpost_p) / np.exp(self.logpost[-1]) )
             u = np.random.uniform()
             if u < rho:
                 naccept += 1
                 fngrid = fngrid_p
         
-            samples[i+1] = theta
-        nmcmc = len(samples)//2
+            self.samples[i+1] = fngrid
+            self.logpost[i+1] = logpost_p
+            
+        nmcmc = len(self.samples)//2
         print "Efficiency = ", naccept/niters
          
         
         return
         
         
-    def get_logpost(self, datamap, fngrid_p):
+    def get_logpost(self, datamap, fngrid_p, inv_Cyy):
         
         self.initiate_simulated_universe(fngrid=fngrid_p)
         values = self.all_simulated_universes[-1].ay

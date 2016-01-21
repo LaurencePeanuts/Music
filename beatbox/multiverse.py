@@ -160,7 +160,7 @@ class Multiverse(object):
             C_yy=C_yy+np.outer(Planck_a_y[r,:]- meanPlanck, Planck_a_y[r,:]- meanPlanck)
         self.C_yy=C_yy/Nmaps
         
-        np.savetxt( filename, self.C_yy)
+        np.savetxt( "data/"+filename, self.C_yy)
         
         return
     
@@ -169,7 +169,7 @@ class Multiverse(object):
         Load the previously calculated a_y covariance matrix
         '''
         
-        self.C_yy = np.loadtxt(filename)
+        self.C_yy = np.loadtxt("data/"+filename)
         
     
     def calculate_sdv_Cyy_inverse(self):
@@ -252,11 +252,47 @@ class Multiverse(object):
         return log_likelihood+log_prior
     
     
-    
-    
-    
-    
-    
+    def solve_for_3D_potential(self, datamap, inv_Cyy=None):
+        
+        #Initiate the inverse of the a_y covariance matrix
+        if inv_Cyy is None:
+            inv_Cyy = self.inv_Cyy
+        
+        #Initiate the inverse covariance matrix of the prior
+        ind = np.where(beatbox.Universe.kfilter>0)
+        PS = np.zeros(2*len(ind[1]))
+        PS[:len(ind[1])] = (self.all_simulated_universes[-1].Power_Spectrum[ind]/2)
+        PS[len(ind[1]):] = (self.all_simulated_universes[-1].Power_Spectrum[ind]/2)
+        
+        inv_Cf=np.diag(1./PS)
+        
+        #Deal with the R matrix to make it real
+        # Select the m values out the the lms tupples
+        m = np.array([m[1] for m in beatbox.Universe.lms])
+        # Find the indices of the positive ms
+        pos_ind = (m>0)
+        # Find the indices of the m=0
+        zero_ind = (m==0)
+        # Find the indices of the negative ms
+        neg_ind = (m<0)
+        
+        R_real = np.zeros((len(beatbox.Universe.lms), len(beatbox.You.all_simulated_universes[0].fn)), dtype=np.float)
+        
+        R_real[pos_ind,:] = beatbox.Universe.R[pos_ind,:].real
+        R_real[neg_ind,:] = beatbox.Universe.R[pos_ind,:].imag
+        R_real[zero_ind,:] = beatbox.Universe.R[zero_ind,:].astype(np.float)
+        
+        A = np.dot(R_real.T , np.dot( inv_Cyy , R_real)) + inv_Cf
+        
+        U, s, V_star = np.linalg.svd(A)
+        inv_A = np.dot(V_star.T, np.dot(np.diag(1./s),U.T))
+        
+        from numpy.linalg import inv
+        self.reconstrunct_fn = np.dot( inv_A , np.dot(R_real.T , np.dot (inv_Cyy , datamap) ) )
+        
+        return
+        #inv_Cf=np.diag(1./(PS))
+       
     
     
     

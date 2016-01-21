@@ -505,7 +505,7 @@ class Universe(object):
         return
 
 
-    def generate_a_random_potential_field(self,truncated_nmax=6,truncated_nmin=2,n_s=0.97,kstar=0.02,PSnorm=2.43e-9,Pdist=1,Pmax=np.pi,Pvar=0.0):
+    def generate_a_random_potential_field(self,truncated_nmax=6,truncated_nmin=2,n_s=0.97,kstar=0.02,PSnorm=2.43e-9,Pdist=1,Pmax=2*np.pi,Pvar=0.0):
 
         #is this realy necessary since filter def moved up in __init__ function??
         # Set the k filter:
@@ -593,7 +593,7 @@ class Universe(object):
         self.fn[len(ind[1]):] = (self.fngrid[ind]).imag
         return
 
-    def transform_3D_potential_into_alm(self, truncated_nmax=None, truncated_nmin=None,truncated_lmax=None, truncated_lmin=None, usedefault=1):
+    def transform_3D_potential_into_alm(self, truncated_nmax=None, truncated_nmin=None,truncated_lmax=None, truncated_lmin=None, usedefault=1, fn=None):
         '''
         From the f_n on a 3D grid, rearrange the Fourier coefficients 
         in a vector and generate the R matrix. From these, calculate the a_y 
@@ -605,7 +605,8 @@ class Universe(object):
         specified truncated_lmax, some information will be lost.        
         '''
         # Make a vector out of the fn grid of Fourier coefficients
-        self.rearrange_fn_from_grid_to_vector()
+        if fn is None:
+            self.rearrange_fn_from_grid_to_vector()
         if usedefault == 1:
             # Populate the R matrix
             if beatbox.Universe.R is None:

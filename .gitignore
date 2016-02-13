@@ -128,3 +128,10 @@ Planck
 
 # Ignore Roger's mathematica stuff:
 classicalmusic
+
+# Scratch areas are not to be checked in
+scratch
+
+# Movies are not to be checked in!
+*gif
+frames

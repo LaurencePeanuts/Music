@@ -37,7 +37,8 @@ class Multiverse(object):
         Multiverse.truncated_lmin=truncated_lmin
     
         self.all_data_universes=np.array([])
-        self.all_simulated_universes=np.array([]) 
+        self.all_simulated_universes=np.array([])
+        self.all_reconstructed_universes=np.array([])
         
         return
 
@@ -140,7 +141,7 @@ class Multiverse(object):
         return
     
     
-    def calculate_covariance_matrix(self, filename = 'covCyy.txt'):
+    def calculate_covariance_matrix(self, filename = 'lmax8'):
         '''
         Calculate the a_y covariance matric from the
         100 Planck posterior samples, and save it to 
@@ -160,7 +161,7 @@ class Multiverse(object):
             C_yy=C_yy+np.outer(Planck_a_y[r,:]- meanPlanck, Planck_a_y[r,:]- meanPlanck)
         self.C_yy=C_yy/Nmaps
         
-        np.savetxt( "data/"+filename, self.C_yy)
+        np.savetxt( "data/covCyy_"+filename+".txt", self.C_yy)
         
         return
     
@@ -261,10 +262,12 @@ class Multiverse(object):
         #Initiate the inverse covariance matrix of the prior
         ind = np.where(beatbox.Universe.kfilter>0)
         PS = np.zeros(2*len(ind[1]))
-        PS[:len(ind[1])] = (self.all_simulated_universes[-1].Power_Spectrum[ind]/2)
-        PS[len(ind[1]):] = (self.all_simulated_universes[-1].Power_Spectrum[ind]/2)
+        PS[:len(ind[1])] = (self.all_simulated_universes[-1].Power_Spectrum[ind])
+        PS[len(ind[1]):] = (self.all_simulated_universes[-1].Power_Spectrum[ind])
         
         inv_Cf=np.diag(1./PS)
+        
+        
         
         #Deal with the R matrix to make it real
         # Select the m values out the the lms tupples
@@ -282,15 +285,42 @@ class Multiverse(object):
         R_real[neg_ind,:] = beatbox.Universe.R[pos_ind,:].imag
         R_real[zero_ind,:] = beatbox.Universe.R[zero_ind,:].astype(np.float)
         
+        self.R_real = R_real
+        
+        # Define the A matrix and its inverse 
         A = np.dot(R_real.T , np.dot( inv_Cyy , R_real)) + inv_Cf
         
         U, s, V_star = np.linalg.svd(A)
         inv_A = np.dot(V_star.T, np.dot(np.diag(1./s),U.T))
         
-        from numpy.linalg import inv
-        self.reconstrunct_fn = np.dot( inv_A , np.dot(R_real.T , np.dot (inv_Cyy , datamap) ) )
+        #Solve for the normalization of the prior
+        inv_Cf = self.solve_for_prior_normalization(inv_Cyy, inv_Cf, A, inv_A, R_real, datamap)
+        
+        # Redefine A with the properly normalized prior
+        A = np.dot(R_real.T , np.dot( inv_Cyy , R_real)) + inv_Cf
+        
+        # Find the inverse of A that has been the properly normalized Cf
+        U, s, V_star = np.linalg.svd(A)
+        inv_A = np.dot(V_star.T, np.dot(np.diag(1./s),U.T))
+        self.inv_A=inv_A
+        
+        # Use linear algebra to solve the A*f_n=b linear equation
+        b =  np.dot(R_real.T , np.dot (inv_Cyy , datamap) )
+        self.reconstrunct_fn = np.linalg.solve(A, b)
+    
+        #from numpy.linalg import inv
+        #self.reconstrunct_fn = np.dot( inv_A , np.dot(R_real.T , np.dot (inv_Cyy , datamap) ) )
         
         return
+    
+    def solve_for_prior_normalization(self, inv_Cyy, inv_Cf, A, inv_A, R_real, datamap):
+        
+        N = R_real.shape[1]
+        
+        from numpy.linalg import inv
+        alpha = N / ( np.trace( np.dot(inv_A, inv_Cf) ) + np.dot( datamap.T  , np.dot( inv_Cyy, np.dot(R_real, np.dot( inv_A , np.dot(inv_Cf , np.dot( inv_A , np.dot( R_real.T ,np.dot(inv_Cyy, datamap)))))))) )
+        
+        return alpha*inv_Cf
     
     def generate_one_realization_of_noise(self):
         '''
@@ -303,7 +333,23 @@ class Multiverse(object):
         return noise
     
     
-    
+    def generate_realizations_from_posterior(self, mean, number_of_realizations=100):
+        '''
+        Generate realizations of the posterior
+        '''
+        
+        samples = np.random.multivariate_normal(mean.reshape(len(mean)), self.inv_A, number_of_realizations)
+        
+        
+        self.all_simulated_universes = np.append(self.all_simulated_universes, [beatbox.Universe() for i in range(number_of_realizations)])
+        
+        
+        
+        for k in range(number_of_realizations):
+            self.all_simulated_universes[-1-k].fn = samples[k,:]
+            self.all_simulated_universes[-1-k].transform_3D_potential_into_alm(usedefault=1, fn=1)
+        
+        return 
     
     
     

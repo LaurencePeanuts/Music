@@ -237,7 +237,7 @@ class Universe(object):
         print "Displaying sky map of the l = ",l," and lower spherical harmonics only..."
         truncated_alm[i] = self.alm[i]
         truncated_map = hp.alm2map(truncated_alm,self.NSIDE)
-        hp.mollview(truncated_map,min=-max,max=max)
+        hp.mollview(truncated_map,rot=(-90,0,0),min=-max,max=max)
         return
 
 
@@ -334,7 +334,7 @@ class Universe(object):
         ay = np.zeros((truncated_lmax+1)**2-(truncated_lmin)**2,dtype=np.complex128)
         ay = self.get_alm(lms=lms)
         
-        #self.ay=ay
+        self.ay=ay
         return ay
 
 
@@ -384,7 +384,28 @@ class Universe(object):
         
         
         return ay_real
-
+    
+    def ayreal2ay_for_mapping(self,ay_real):
+        
+        #Select the m values out the the lms tupples
+        m = np.array([m[1] for m in self.lms])
+        #Find the indices of the positive ms
+        pos_ind = (m>0)
+        #Find the indices of the m=0
+        zero_ind = (m==0)
+        #Find the indices of the negative ms
+        neg_ind = (m<0)
+        
+        ay = np.zeros(len(self.lms), dtype=np.complex128)
+        
+        ay[pos_ind] = ay_real[pos_ind].real+1j*ay_real[neg_ind]
+        ay[neg_ind] = ((ay_real[pos_ind].T-1j*ay_real[neg_ind].T) * (-1)**m[neg_ind]).T
+        ay[zero_ind] = ay_real[zero_ind].astype(np.complex128)
+        
+        self.ay=ay
+        
+        return 
+    
     def write_out_spherical_harmonic_coefficients(self,lmax=10):
         outfile = string.join(string.split(self.Tmapfile,'.')[0:-1],'.') + '_alm_lmax' + str(lmax) + '.txt'
         f = open(outfile, 'w')
@@ -522,7 +543,7 @@ class Universe(object):
         self.kstar = kstar*1.394e4
 
         # Draw Gaussian random Fourier coefficients with a k^{-3+(n_s-1)} power spectrum:
-        self.Power_Spectrum = self.PSnorm*np.power((self.k/self.kstar) ,(-3+(self.n_s-1)))
+        self.Power_Spectrum = self.PSnorm*1000*np.power((self.k/self.kstar) ,(-3+(self.n_s-1)))
         self.Power_Spectrum[np.isinf(self.Power_Spectrum)] = 10**-9
 
         fn_Norm = np.random.normal(0, np.sqrt(self.Power_Spectrum) )*np.power(self.kfilter,2)
@@ -697,7 +718,7 @@ class Universe(object):
         tfh.build_transfer_function()
         tfh.tf.grey_opacity=False
         #For small units, wide Gaussians:
-        tfh.tf.add_layers(N_layer,  w=0.005*(ma2 - mi2) /N_layer, mi=0.3*ma, ma=ma-0.3*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.3*ma] , colormap=cmap)
+        tfh.tf.add_layers(N_layer,  w=0.05*(ma2 - mi2) /N_layer, mi=0.3*ma, ma=ma-0.3*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.3*ma] , colormap=cmap)
         #For big units, small Gaussians
         #tfh.tf.add_layers(N_layer,  w=0.0000001*(ma2 - mi2) /N_layer, mi=0.2*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.3*ma] , colormap=cmap)
         # Check if the transfer function captures the data properly:

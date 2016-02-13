@@ -374,7 +374,7 @@ We are also interested in inferring the potential maps from the $f_n$, given the
 The PGM for this inference is given in figure \ref{simplepng}. The numerator is given by (\ref{eq:aPDF}) and (\ref{eq:fnPDF}). Completing the square, we can rewrite this expression as:
 \bea
 	&\mathcal{P}&(f_n | a_{lm}, \vec{\eta}, C_f^{-1})\propto \nonumber\\
-	&&\exp\left[-\frac{1}{2} \left( f_n^T-a^T_{lm}C_a^{-1}\mathbf{R}\mathbf{A}^{-1} \right) \mathbf{A}\left(f_n-\mathbf{A}^{-1}\mathbf{R}^TC_a^{-1} a_{lm} \right) \right]\exp\left[\frac{1}{2} a_{lm}^T\left(C_a^{-1}\mathrm{R} \mathrm{A}^{-1} \mathrm{R}^TC_a^{-1} -C_a^{-1} \right) a_{lm} \right]\, .
+	&&\exp\left[-\frac{1}{2} \left( f_n^T-a^T_{lm}C_a^{-1}\mathbf{R}\mathbf{A}^{-1} \right) \mathbf{A}\left(f_n-\mathbf{A}^{-1}\mathbf{R}^TC_a^{-1} a_{lm} \right) \right]\exp\left[\frac{1}{2} a_{lm}^T\left(C_a^{-1}\mathrm{R} \mathbf{A}^{-1} \mathrm{R}^TC_a^{-1} -C_a^{-1} \right) a_{lm} \right]\, .
 \label{eq:fnposterior}
 \eea
 From this, we can read the most probable values of the $f_n$s,

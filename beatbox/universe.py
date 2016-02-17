@@ -678,7 +678,26 @@ class Universe(object):
         # Apply offset and store phi array in a yt data structure,
         #    I'm putting some random density units here 
         #    (seems to be needed to display properly):
-        ds = yt.load_uniform_grid(dict(density=(self.phi+offset, 'g/cm**3')), self.phi.shape, bbox=bbox,  nprocs=1)
+        
+        xnorm=np.sqrt(self.x**2 + self.y**2 + self.z**2);
+        
+#        indsmlr = np.where(xnorm<1.00001)
+#        indgtr = np.where(xnorm>0.99999)
+#        ind = 
+        
+        if Slice is not 1:
+            indgtr = (~(xnorm < 0.94)).astype(int)
+            indsmlr = (~(xnorm > 1.05)).astype(int)
+            ind = indgtr*indsmlr
+        
+            sphere = np.ones(self.phi.shape)
+            sphere = 0.01*ind
+            negsphere = -self.phi*ind
+        else:
+            sphere = np.zeros(self.phi.shape)
+            negsphere = np.zeros(self.phi.shape)
+        
+        ds = yt.load_uniform_grid((dict(density=(self.phi+offset+negsphere+sphere, 'g/cm**3'), Xnorm=(xnorm, 'g/cm**3'))), self.phi.shape, bbox=bbox,  nprocs=1)
         field = 'density'
         #Check that the loaded field is recognized by yt
         #    print ds.field_list
@@ -718,42 +737,54 @@ class Universe(object):
         tfh.build_transfer_function()
         tfh.tf.grey_opacity=False
         #For small units, wide Gaussians:
-        tfh.tf.add_layers(N_layer,  w=0.05*(ma2 - mi2) /N_layer, mi=0.3*ma, ma=ma-0.3*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.3*ma] , colormap=cmap)
+        #tfh.tf.add_layers(N_layer,  w=0.05*(ma2 - mi2) /N_layer, mi=0.3*ma, ma=ma-0.3*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.3*ma] , colormap=cmap)
         #For big units, small Gaussians
-        #tfh.tf.add_layers(N_layer,  w=0.0000001*(ma2 - mi2) /N_layer, mi=0.2*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.3*ma] , colormap=cmap)
+        tfh.tf.add_layers(N_layer,  w=0.0000001*(ma2 - mi2) /N_layer, mi=0.3*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.3*ma,ma-0.3*ma] , colormap=cmap)
+        if Slice is not 1:
+            tfh.tf.map_to_colormap(0.006, 0.02, colormap='Reds', scale=0.5)
+        #tfh.tf.add_layers(1, w=0.001*ma2, mi=0.0108, ma=0.012, colormap='Pastel1', col_bounds=[0.01, 0.012])
         # Check if the transfer function captures the data properly:
         densityplot1 = tfh.plot('densityplot1')
         densityplot2 = tfh.plot('densityplot2', profile_field='cell_mass')
 
+        
         # Set up the camera parameters: center, looking direction, width, resolution
         c = (np.max(self.x)+np.min(self.x))/2.0
         Lx = np.sqrt(2.0)*np.cos(angle)
         Ly = np.sqrt(2.0)*np.sin(angle)
-        Lz = 1.0
+        Lz = 0.75
         L = np.array([Lx, Ly, Lz])
         W = ds.quan(1.6, 'unitary')
         N = 512
 
         # Create a camera object
         cam = ds.camera(c, L, W, N, tfh.tf, fields=[field], log_fields = [use_log],  no_ghost = False)
-        if show3D == 1:
-            cam.show()
-        self.cam = cam
+        
+        cam.transfer_function = tfh.tf
 
         if self.Pdist == 1:
-        	im1 = cam.snapshot('opac_phi3D_Uniform_phases_0-'+str(self.Pmax)+'.png', clip_ratio=5)
+        	im1 = cam.snapshot('scratch/opac_phi3D_Uniform_phases_0-'+str(self.Pmax)+'.png', clip_ratio=5)
         else:
-            im1 = cam.snapshot('opac_phi3D_Gauss_phases_mean'+str(self.Pmax)+'_var'+str(self.Pvar)+'.png', clip_ratio=5)
+            im1 = cam.snapshot('scratch/opac_phi3D_Gauss_phases_mean'+str(self.Pmax)+'_var'+str(self.Pvar)+'.png', clip_ratio=5)
 
+        nim = cam.draw_domain(im1)
+        #im=cam.snapshot
+        #nim = cam.draw_box(im, np.array([0.25,0.25,0.25]), np.array([0.75,0.75,0.75]))  
+        if show3D == 1:
+            nim.write_png('scratch/opac_phi3Ddomain.png')
+            cam.show()
+        self.cam = cam
+        
         if gifmaking == 1:
         	# Add the domain box to the image:
-        	nim = cam.draw_grids(im1)
+        	nim = cam.draw_domain(im1)
 
         	# Save the image to a file:
         	nim.write_png(output)
 
         if Proj == 1:
             s = yt.ProjectionPlot(ds, "z", "density")
+            s.annotate_contour("Xnorm", ncont=2, clim=(0.5,2.), plot_args={"colors": "red", "linewidths": 2})
             s.show()
             s.save('phi')
 

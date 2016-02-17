@@ -679,13 +679,9 @@ class Universe(object):
         #    I'm putting some random density units here 
         #    (seems to be needed to display properly):
         
-        xnorm=np.sqrt(self.x**2 + self.y**2 + self.z**2);
+        xnorm=np.sqrt(self.x**2 + self.y**2 + self.z**2); 
         
-#        indsmlr = np.where(xnorm<1.00001)
-#        indgtr = np.where(xnorm>0.99999)
-#        ind = 
-        
-        if Slice is not 1:
+        if (Slice is not 1) and (Proj is not 1):
             indgtr = (~(xnorm < 0.94)).astype(int)
             indsmlr = (~(xnorm > 1.05)).astype(int)
             ind = indgtr*indsmlr
@@ -740,7 +736,7 @@ class Universe(object):
         #tfh.tf.add_layers(N_layer,  w=0.05*(ma2 - mi2) /N_layer, mi=0.3*ma, ma=ma-0.3*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.3*ma] , colormap=cmap)
         #For big units, small Gaussians
         tfh.tf.add_layers(N_layer,  w=0.0000001*(ma2 - mi2) /N_layer, mi=0.3*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.3*ma,ma-0.3*ma] , colormap=cmap)
-        if Slice is not 1:
+        if (Slice is not 1) and (Proj is not 1):
             tfh.tf.map_to_colormap(0.006, 0.02, colormap='Reds', scale=0.5)
         #tfh.tf.add_layers(1, w=0.001*ma2, mi=0.0108, ma=0.012, colormap='Pastel1', col_bounds=[0.01, 0.012])
         # Check if the transfer function captures the data properly:
@@ -784,12 +780,16 @@ class Universe(object):
 
         if Proj == 1:
             s = yt.ProjectionPlot(ds, "z", "density")
-            s.annotate_contour("Xnorm", ncont=2, clim=(0.5,2.), plot_args={"colors": "red", "linewidths": 2})
+            #this still doesnt work :
+            s.annotate_sphere([0., 0., 0.], radius=(1, 'kpc'),
+                  circle_args={'color':'red', "linewidth": 3})
             s.show()
             s.save('phi')
 
         if Slice == 1:
             w = yt.SlicePlot(ds, "z", "density", center="c")
+            w.annotate_sphere([0., 0., 0.], radius=(1, 'cm'),
+                  circle_args={'color':'red',"linewidth": 3})
             w.show()
             w.save('phi')
 

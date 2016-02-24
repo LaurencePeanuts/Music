@@ -116,15 +116,15 @@ class Multiverse(object):
         
         # download the tarball containing 100 posterior sample "COMMANDER-Ruler"
         #    low resolution maps, if not there already
-        # tarball = "commander_32band_Clsamples100.tar.gz"
-        datadir = "data/commander_32band_Clsamples100/"
+        tarball = "commander_32band_Clsamples100.tar.gz"
+        datadir = "../data/commander_32band_Clsamples100/"
 
-        # if not os.path.isfile(tarball):
-        #    URL = "http://folk.uio.no/ingunnkw/planck/32band/"+tarball
-        #    !wget -O "$tarball" "$URL"
-        #    !tar xvfz "$tarball"
-        #    !mkdir -p "$datadir"
-        #    !mv cmb_Cl_c000*.fits "$datadir"
+        if not os.path.isfile(datadir+tarball):
+            URL = "http://folk.uio.no/ingunnkw/planck/32band/"+tarball
+#            !wget -O "$tarball" "$URL"
+#            !tar xvfz "$tarball"
+#            !mkdir -p "$datadir"
+#            !mv cmb_Cl_c000*.fits "$datadir"
         
         
         Tmapfiles = glob.glob(datadir+"cmb_Cl_c000*.fits")

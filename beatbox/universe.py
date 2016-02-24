@@ -236,8 +236,8 @@ class Universe(object):
                 i.append(hp.Alm.getidx(self.lmax, l, m))
         print "Displaying sky map of the l = ",l," and lower spherical harmonics only..."
         truncated_alm[i] = self.alm[i]
-        truncated_map = hp.alm2map(truncated_alm,self.NSIDE)
-        hp.mollview(truncated_map,rot=(-90,0,0),min=-max,max=max)
+        self.truncated_map = hp.alm2map(truncated_alm,self.NSIDE)
+        hp.mollview(self.truncated_map,rot=(-90,0,0),min=-max,max=max)
         return
 
 

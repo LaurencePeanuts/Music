@@ -18,11 +18,11 @@ beatbox.You.initiate_simulated_universe()
 
 # Calculate C_yy from the 100 posterior sample Commander Planck CMB temperature maps 
 #    or load the C_yy matrix if already calculated
-if not os.path.isfile('data/covCyy_lmax10.txt'):
+if not os.path.isfile('data/covCyy_lmax30.txt'):
     beatbox.You.read_Planck_samples()
-    beatbox.You.calculate_covariance_matrix(filename='lmax10')
+    beatbox.You.calculate_covariance_matrix(filename='lmax30')
 else:
-    beatbox.You.load_covariance_matrix(filename='covCyy_lmax10.txt')
+    beatbox.You.load_covariance_matrix(filename='covCyy_lmax30.txt')
     
 # Calculate the inverse of the a_y covariance matrix
 beatbox.You.calculate_sdv_Cyy_inverse()

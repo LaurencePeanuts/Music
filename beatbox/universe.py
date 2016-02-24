@@ -169,7 +169,7 @@ class Universe(object):
         return
 
 
-    def show_CMB_T_map(self,Tmap=None,from_perspective_of="observer"):
+    def show_CMB_T_map(self,Tmap=None, title = "CMB graviational potential fluctuations as seen from inside the LSS", from_perspective_of = "observer"):
         if Tmap is None:
             self.NSIDE = 256
             self.Tmap = hp.alm2map(self.alm,self.NSIDE)
@@ -178,7 +178,7 @@ class Universe(object):
             
         if from_perspective_of == "observer":
             # Sky map:
-            hp.mollview(self.Tmap, rot=(-90,0,0),title="CMB graviational potential fluctuations as seen from inside the LSS, l_max=%d" % self.truncated_lmax)
+            hp.mollview(self.Tmap, rot=(-90,0,0),title=title + ", l_max=%d" % self.truncated_lmax)
         else:
             # Interactive "external" view ([like this](http://zonca.github.io/2013/03/interactive-3d-plot-of-sky-map.html))            pass
             #   beatbox.zoncaview(self.Tmap)

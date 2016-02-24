@@ -161,7 +161,7 @@ class Multiverse(object):
             C_yy=C_yy+np.outer(Planck_a_y[r,:]- meanPlanck, Planck_a_y[r,:]- meanPlanck)
         self.C_yy=C_yy/Nmaps
         
-        np.savetxt( "data/covCyy_"+filename+".txt", self.C_yy)
+        np.savetxt( "../data/covCyy_"+filename+".txt", self.C_yy)
         
         return
     
@@ -170,7 +170,7 @@ class Multiverse(object):
         Load the previously calculated a_y covariance matrix
         '''
         
-        self.C_yy = np.loadtxt("data/"+filename)
+        self.C_yy = np.loadtxt("../data/"+filename)
         
     
     def calculate_sdv_Cyy_inverse(self):
@@ -319,7 +319,7 @@ class Multiverse(object):
         
         from numpy.linalg import inv
         alpha = N / ( np.trace( np.dot(inv_A, inv_Cf) ) + np.dot( datamap.T  , np.dot( inv_Cyy, np.dot(R_real, np.dot( inv_A , np.dot(inv_Cf , np.dot( inv_A , np.dot( R_real.T ,np.dot(inv_Cyy, datamap)))))))) )
-        print alpha
+#        print alpha
         return alpha*inv_Cf
     
     def generate_one_realization_of_noise(self):

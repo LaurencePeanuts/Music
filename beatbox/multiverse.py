@@ -319,13 +319,15 @@ class Multiverse(object):
         
         from numpy.linalg import inv
         alpha = N / ( np.trace( np.dot(inv_A, inv_Cf) ) + np.dot( datamap.T  , np.dot( inv_Cyy, np.dot(R_real, np.dot( inv_A , np.dot(inv_Cf , np.dot( inv_A , np.dot( R_real.T ,np.dot(inv_Cyy, datamap)))))))) )
-        
+        print alpha
         return alpha*inv_Cf
     
     def generate_one_realization_of_noise(self):
         '''
         Generate one realization of the noise given by C_yy
         '''
+        
+        np.random.seed(3)
         
         mean=np.zeros(self.C_yy.shape[0])
         noise = np.random.multivariate_normal(mean, self.C_yy, 1)

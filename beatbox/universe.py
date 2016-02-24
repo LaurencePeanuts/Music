@@ -649,7 +649,7 @@ class Universe(object):
         return
 
 
-    def show_potential_with_yt(self,output='',angle=np.pi/4.0, N_layer=5, alpha_norm=1.0, cmap='BrBG', Proj=0, Slice=0, gifmaking=0, show3D=0):
+    def show_potential_with_yt(self,output='',angle=np.pi/4.0, N_layer=5, alpha_norm=5.0, cmap='BrBG', Proj=0, Slice=0, gifmaking=0, show3D=0):
         """
         Visualize the gravitational potential using yt. We're after something
         like http://yt-project.org/doc/_images/vr_sample.jpg - described
@@ -687,7 +687,7 @@ class Universe(object):
             ind = indgtr*indsmlr
         
             sphere = np.ones(self.phi.shape)
-            sphere = 0.01*ind
+            sphere = 1000*ind
             negsphere = -self.phi*ind
         else:
             sphere = np.zeros(self.phi.shape)
@@ -733,11 +733,11 @@ class Universe(object):
         tfh.build_transfer_function()
         tfh.tf.grey_opacity=False
         #For small units, wide Gaussians:
-        #tfh.tf.add_layers(N_layer,  w=0.05*(ma2 - mi2) /N_layer, mi=0.3*ma, ma=ma-0.3*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.3*ma] , colormap=cmap)
+        tfh.tf.add_layers(N_layer,  w=0.05*(ma2 - mi2) /N_layer, mi=0.3*ma, ma=ma-0.3*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.3*ma] , colormap=cmap)
         #For big units, small Gaussians
-        tfh.tf.add_layers(N_layer,  w=0.0000001*(ma2 - mi2) /N_layer, mi=0.3*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.3*ma,ma-0.3*ma] , colormap=cmap)
+        #tfh.tf.add_layers(N_layer,  w=0.0000001*(ma2 - mi2) /N_layer, mi=0.3*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.3*ma,ma-0.3*ma] , colormap=cmap)
         if (Slice is not 1) and (Proj is not 1):
-            tfh.tf.map_to_colormap(0.006, 0.02, colormap='Reds', scale=0.5)
+            tfh.tf.map_to_colormap(600, 2000, colormap='Reds', scale=1.)
         #tfh.tf.add_layers(1, w=0.001*ma2, mi=0.0108, ma=0.012, colormap='Pastel1', col_bounds=[0.01, 0.012])
         # Check if the transfer function captures the data properly:
         densityplot1 = tfh.plot('densityplot1')
@@ -769,6 +769,8 @@ class Universe(object):
         if show3D == 1:
             nim.write_png('scratch/opac_phi3Ddomain.png')
             cam.show()
+            # Make a color bar with the colormap.
+            # cam.save_annotated("vol_annotated.png", nim, dpi=145, clear_fig=False)
         self.cam = cam
         
         if gifmaking == 1:
@@ -788,6 +790,7 @@ class Universe(object):
 
         if Slice == 1:
             w = yt.SlicePlot(ds, "z", "density", center="c")
+            w.set_cmap(field="density", cmap=cmap)
             w.annotate_sphere([0., 0., 0.], radius=(1, 'cm'),
                   circle_args={'color':'red',"linewidth": 3})
             w.show()
@@ -812,7 +815,7 @@ class Universe(object):
         for k,angle in enumerate(angles):
             framefile = folder+str(k).zfill(3)
             print "Making frame",k,": ",framefile,"at viewing angle",angle
-            self.show_potential_with_yt(output=framefile,angle=angle, N_layer=5, alpha_norm=1.0, cmap='BrBG', Proj=0, Slice=0, gifmaking=1)
+            self.show_potential_with_yt(output=framefile,angle=angle, N_layer=6, alpha_norm=5.0, cmap='BrBG', Proj=0, Slice=0, gifmaking=1)
 
         # Create an animated gif of all the frames:
         images = [PIL_Image.open(framefile) for framefile in glob.glob(folder+'*.png')]

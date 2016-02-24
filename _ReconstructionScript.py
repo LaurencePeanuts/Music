@@ -10,7 +10,7 @@ import healpy as hp
 np.random.seed(1)
 
 # declaring initial objects
-You=beatbox.Multiverse(truncated_nmax=3, truncated_nmin=1, truncated_lmax=10, truncated_lmin=1)
+#You=beatbox.Multiverse(truncated_nmax=3, truncated_nmin=1, truncated_lmax=10, truncated_lmin=1)
 beatbox.You.create_original_Universe()
 
 #make a realization of the sky to be used as a mock:

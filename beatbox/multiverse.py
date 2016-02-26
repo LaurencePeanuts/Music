@@ -109,26 +109,63 @@ class Multiverse(object):
     
         return
     
-    def read_Planck_samples(self):
+    def read_Planck_samples(self, Nmaps=100, from_this = 'from_commander_32band_100', URL=None, fits_name=None):
         '''
-        Read the 100 Planck posterior samples into 100 instances of Universe 
+        Read the Nmaps Planck posterior samples into Nmaps instances
+        of Universe 
+        - fits_name is a string containing the common name of the .fits
+          files inside the tarball
+        - URL is a string containing the path from which the tarball 
+          must be downloaded
+        - from_this is a string containing the name of the tarball 
+          without the extension .tar.gz
         '''
         
-        # download the tarball containing 100 posterior sample "COMMANDER-Ruler"
-        #    low resolution maps, if not there already
-        tarball = "commander_32band_Clsamples100.tar.gz"
-        datadir = "../data/commander_32band_Clsamples100/"
-
-        if not os.path.isfile(datadir+tarball):
-            URL = "http://folk.uio.no/ingunnkw/planck/32band/"+tarball
-#            !wget -O "$tarball" "$URL"
-#            !tar xvfz "$tarball"
-#            !mkdir -p "$datadir"
-#            !mv cmb_Cl_c000*.fits "$datadir"
+        # If we are using the 100 Commander samples, load the Tmaps 
+        if from_this is 'from_commander_32band_100':
+            # download the tarball containing 100 posterior sample 
+            #    "COMMANDER-Ruler" low resolution maps, if not there already
+            tarball = "commander_32band_Clsamples100.tar.gz"
+            datadir = "../data/commander_32band_Clsamples100/"
+            
+#            test1 = "testdirectory"
+#            testcomd = "mkdir " + test1
+#            print testcomd
+#            os.system(testcomd)
+            
+            if not os.path.isfile(datadir+tarball):
+                URL = "http://folk.uio.no/ingunnkw/planck/32band/"+tarball
+                command = "wget -O " + tarball + " " +URL
+                os.system(command)
+                tarcmd = "tar xvfz " + tarball
+                os.system(tarcmd)
+                mkdircmd = "mkdir -p " + datadir
+                os.system(mkdircmd)
+                mvcmd = "cmb_Cl_c000*.fits" + datadir
+                os.system(mvcmd)
         
         
-        Tmapfiles = glob.glob(datadir+"cmb_Cl_c000*.fits")
-        Nmaps = len(Tmapfiles) 
+            Tmapfiles = glob.glob(datadir+"cmb_Cl_c000*.fits")
+            Nmaps = len(Tmapfiles) 
+        
+        else:
+            datadir = "../data/%s" % from_this
+            tarball = "%s.tar.gz" % from_this
+            
+            if not os.path.isfile(datadir+tarball):
+                URL = URL+tarball
+                command = "wget -O " + tarball + " " +URL
+                os.system(command)
+                tarcmd = "tar xvfz " + tarball
+                os.system(tarcmd)
+                mkdircmd = "mkdir -p " + datadir
+                os.system(mkdircmd)
+                mvcmd = fits_name+"*.fits" + datadir
+                os.system(mvcmd)
+               
+        
+            Tmapfiles = glob.glob(datadir+fits_name+"*.fits")
+            Nmaps = len(Tmapfiles) 
         
         self.all_data_universes = np.append(self.all_data_universes, [beatbox.Universe() for i in range(Nmaps)])
         

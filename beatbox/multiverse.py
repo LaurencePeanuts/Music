@@ -40,6 +40,37 @@ class Multiverse(object):
         self.all_simulated_universes=np.array([])
         self.all_reconstructed_universes=np.array([])
         
+        try:
+            #print beatbox.Universe.truncated_nmax
+        
+            i = 0
+            reslms = 0
+            if Multiverse.truncated_nmax is not beatbox.Universe.truncated_nmax:
+                beatbox.Universe.truncated_nmax = Multiverse.truncated_nmax
+                i=i+1
+            if Multiverse.truncated_nmin is not beatbox.Universe.truncated_nmin:
+                beatbox.Universe.truncated_nmin = Multiverse.truncated_nmin
+                i=i+1
+            if Multiverse.truncated_lmax is not beatbox.Universe.truncated_lmax:
+                beatbox.Universe.truncated_lmax = Multiverse.truncated_lmax
+                i=i+1
+                reslms = reslms + 1
+            if Multiverse.truncated_lmin is not beatbox.Universe.truncated_lmin:
+                beatbox.Universe.truncated_lmin = Multiverse.truncated_lmin
+                i=i+1
+                reslms = reslms + 1
+            if reslms is not 0:
+                beatbox.Universe.lms = [(l, m) for l in range(beatbox.Universe.truncated_lmin,beatbox.Universe.truncated_lmax+1) for m in range(-l, l+1)]
+            if i is not 0:
+                We_first=beatbox.Universe()
+                We_first.set_Universe_k_filter()
+                We_first.populate_Universe_R()
+                print 'Restarted new Universes from scratch with new properties. '
+            print 'This is the end of the universe as we know it...'
+        
+        except AttributeError:
+            i=None
+        
         return
 
     # ====================================================================
@@ -290,7 +321,7 @@ class Multiverse(object):
         return log_likelihood+log_prior
     
     
-    def solve_for_3D_potential(self, datamap, inv_Cyy=None):
+    def solve_for_3D_potential(self, datamap, inv_Cyy=None, print_alpha=0):
         
         #Initiate the inverse of the a_y covariance matrix
         if inv_Cyy is None:
@@ -331,7 +362,7 @@ class Multiverse(object):
         inv_A = np.dot(V_star.T, np.dot(np.diag(1./s),U.T))
         
         #Solve for the normalization of the prior
-        inv_Cf = self.solve_for_prior_normalization(inv_Cyy, inv_Cf, A, inv_A, R_real, datamap)
+        inv_Cf = self.solve_for_prior_normalization(inv_Cyy, inv_Cf, A, inv_A, R_real, datamap, print_alpha)
         
         # Redefine A with the properly normalized prior
         A = np.dot(R_real.T , np.dot( inv_Cyy , R_real)) + inv_Cf
@@ -350,13 +381,19 @@ class Multiverse(object):
         
         return
     
-    def solve_for_prior_normalization(self, inv_Cyy, inv_Cf, A, inv_A, R_real, datamap):
+    def solve_for_prior_normalization(self, inv_Cyy, inv_Cf, A, inv_A, R_real, datamap, print_alpha):
         
         N = R_real.shape[1]
         
         from numpy.linalg import inv
         alpha = N / ( np.trace( np.dot(inv_A, inv_Cf) ) + np.dot( datamap.T  , np.dot( inv_Cyy, np.dot(R_real, np.dot( inv_A , np.dot(inv_Cf , np.dot( inv_A , np.dot( R_real.T ,np.dot(inv_Cyy, datamap)))))))) )
-#        print alpha
+        if print_alpha is 1:
+            outfile = 'alpha_lmax' + str(Multiverse.truncated_lmax) + 'lmin' + str(Multiverse.truncated_lmin) + 'nmax' + str(Multiverse.truncated_nmax) + 'nmin' + str(Multiverse.truncated_nmin) + '.txt'
+            f = open('RobustnessAnalysis/' + outfile, 'a')
+            towrite = str(alpha) + "\n"
+            f.write(towrite)
+            f.close()
+            
         return alpha*inv_Cf
     
     def generate_one_realization_of_noise(self):
@@ -364,7 +401,7 @@ class Multiverse(object):
         Generate one realization of the noise given by C_yy
         '''
         
-        np.random.seed(3)
+        #np.random.seed(3)
         
         mean=np.zeros(self.C_yy.shape[0])
         noise = np.random.multivariate_normal(mean, self.C_yy, 1)
@@ -377,6 +414,10 @@ class Multiverse(object):
         Generate realizations of the posterior
         '''
         
+        if self.inv_A is None:
+            print 'A matrix not initialized'
+            return
+            
         samples = np.random.multivariate_normal(mean.reshape(len(mean)), self.inv_A, number_of_realizations)
         
         

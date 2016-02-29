@@ -1,11 +1,9 @@
-#%load_ext autoreload
-#%autoreload 2
-
-import numpy as np
-import math
-import beatbox
-import os.path
-import healpy as hp
+# First run the _ImportScript.py so that these don't have to be imported:
+#import numpy as np
+#import math
+#import beatbox
+#import os.path
+#import healpy as hp
 
 # declaring initial objects
 beatbox.You.create_original_Universe()

@@ -106,7 +106,7 @@ class Multiverse(object):
         return 
     
     
-    def initiate_simulated_universe(self, truncated_nmax=None, truncated_nmin=None, truncated_lmax=None, truncated_lmin=None, n_s=0.97,kstar=0.02,PSnorm=2.43e-9,Pdist=1,Pmax=np.pi,Pvar=0.0, fngrid=None):
+    def initiate_simulated_universe(self, truncated_nmax=None, truncated_nmin=None, truncated_lmax=None, truncated_lmin=None, n_s=0.97,kstar=0.02,PSnorm=2.43e-9,Pdist=1,Pmax=np.pi,Pvar=0.0, fngrid=None, printout=1):
         '''
         Makes an instance of the universe with containing a random
         realization of the gravitational field phi.
@@ -127,7 +127,7 @@ class Multiverse(object):
             usedefault=usedefault+1
         
         if fngrid is None: 
-            We.generate_a_random_potential_field(truncated_nmax=We.truncated_nmax, truncated_nmin=We.truncated_nmin, n_s=n_s,kstar=kstar,PSnorm=PSnorm,Pdist=Pdist,Pmax=Pmax,Pvar=Pvar)
+            We.generate_a_random_potential_field(truncated_nmax=We.truncated_nmax, truncated_nmin=We.truncated_nmin, n_s=n_s,kstar=kstar,PSnorm=PSnorm, Pdist=Pdist, Pmax=Pmax,Pvar=Pvar, printout=printout)
             We.transform_3D_potential_into_alm(truncated_nmax=We.truncated_nmax, truncated_nmin=We.truncated_nmin,truncated_lmax=We.truncated_lmax, truncated_lmin=We.truncated_lmin,usedefault=usedefault)
 
         else:

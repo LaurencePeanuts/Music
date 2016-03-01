@@ -11,6 +11,7 @@ beatbox.You.create_original_Universe()
 numreal=1000
 
 #Make the mock Universe
+beatbox.You.initiate_simulated_universe(printout=0)
 beatbox.You.all_simulated_universes[0].show_CMB_T_map(from_perspective_of="observer")
 
 

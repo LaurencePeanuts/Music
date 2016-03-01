@@ -526,7 +526,7 @@ class Universe(object):
         return
 
 
-    def generate_a_random_potential_field(self,truncated_nmax=6,truncated_nmin=2,n_s=0.97,kstar=0.02,PSnorm=2.43e-9,Pdist=1,Pmax=2*np.pi,Pvar=0.0):
+    def generate_a_random_potential_field(self,truncated_nmax=6,truncated_nmin=2,n_s=0.97,kstar=0.02,PSnorm=2.43e-9,Pdist=1,Pmax=2*np.pi,Pvar=0.0, printout=1):
 
         #is this realy necessary since filter def moved up in __init__ function??
         # Set the k filter:
@@ -566,12 +566,13 @@ class Universe(object):
         Z = np.concatenate( ( FT[:, :self.nmax ,self.nmax ], X.reshape(2*self.nmax+1,1), np.conjugate(FT[:, :self.nmax ,self.nmax ])[::-1,::-1]), axis=1 )
         self.fngrid = np.concatenate( (FT[:,:,:self.nmax], Z.reshape(2*self.nmax+1,2*self.nmax+1,1), np.conjugate( FT[:,:,:self.nmax])[::-1,::-1,::-1] ), axis=2  )
 
-        print "Generated ",self.fngrid[~(self.fngrid[:,:,:] == 0)].size," potential Fourier coefficients"
+        if printout is 1: 
+            print "Generated ",self.fngrid[~(self.fngrid[:,:,:] == 0)].size," potential Fourier coefficients"
 
-        if Pdist == 1:
-            print " with phases uniformly distributed between 0 and ", Pmax
-        else:
-            print " with phases sampled from a Gaussian distribution with mean ", Pmax," and variance ", Pvar
+            if Pdist == 1:
+                print " with phases uniformly distributed between 0 and ", Pmax
+            else:
+                print " with phases sampled from a Gaussian distribution with mean ", Pmax," and variance ", Pvar
 
         # Evaluate it on our Phi grid:
         self.evaluate_potential_given_fourier_coefficients()

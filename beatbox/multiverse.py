@@ -8,6 +8,7 @@ import yt
 import os
 import glob
 from PIL import Image as PIL_Image
+from scipy.stats import chi2
 
 #import beatbox.universe
 import beatbox
@@ -270,7 +271,7 @@ class Multiverse(object):
         if inv_Cyy is None:
             inv_Cyy = self.inv_Cyy
         
-        import scipy.stats as st
+        
         
         naccept = 0
         niters = 10000
@@ -278,7 +279,7 @@ class Multiverse(object):
         self.samples = self.samples.tolist()
         self.logpost = np.zeros(niters+1)
         
-        #self.initiate_simulated_universe()
+        
         ay = self.all_simulated_universes[0].ay2ayreal_for_inference(self.all_simulated_universes[0].ay)
         fngrid = self.all_simulated_universes[0].fngrid
         
@@ -385,7 +386,7 @@ class Multiverse(object):
         
         N = R_real.shape[1]
         
-        from numpy.linalg import inv
+        #from numpy.linalg import inv
         alpha = N / ( np.trace( np.dot(inv_A, inv_Cf) ) + np.dot( datamap.T  , np.dot( inv_Cyy, np.dot(R_real, np.dot( inv_A , np.dot(inv_Cf , np.dot( inv_A , np.dot( R_real.T ,np.dot(inv_Cyy, datamap)))))))) )
         if print_alpha is 1:
             outfile = 'alpha_lmax' + str(Multiverse.truncated_lmax) + 'lmin' + str(Multiverse.truncated_lmin) + 'nmax' + str(Multiverse.truncated_nmax) + 'nmin' + str(Multiverse.truncated_nmin) + '.txt'
@@ -433,8 +434,22 @@ class Multiverse(object):
     
     
     
-    
-    
+    def calculate_chi2_in_posterior(self, fn_true, fn_rec):
+        '''
+        Calculate the chi2 and the p-value distance between the most probable
+        values of fn's and their true, noiseless value.
+        '''
+        
+        if self.inv_A is None:
+            print 'A matrix not initialized'
+            return
+        
+        Delta_fn = fn_true-fn_rec
+        chi2value = np.dot (Delta_fn.T , np.dot( self.inv_A, Delta_fn  ))
+        
+        p_value = 1-chi2.cdf(chi2value, len(fn_true)) 
+        
+        return p_value, chi2value
     
     
     

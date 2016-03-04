@@ -14,6 +14,9 @@ MockUniverse = np.array([])
 MockUniverse = np.append(MockUniverse, [beatbox.Universe() for i in range(numreal)])
 beatbox.You.all_reconstructed_universes = np.append(beatbox.You.all_reconstructed_universes, [beatbox.Universe() for i in range(numreal)])
 
+pvals=np.array([])
+chi2vals=np.array([])
+
 # Calculate C_yy from the 100 posterior sample Commander Planck CMB temperature maps 
 #    or load the C_yy matrix if already calculated
 if not os.path.isfile('../data/covCyy_lmax%d_lmin%d.txt' % (beatbox.Multiverse.truncated_lmax, beatbox.Multiverse.truncated_lmin)):
@@ -46,6 +49,9 @@ for i in range(numreal):
     beatbox.You.all_reconstructed_universes[i].transform_3D_potential_into_alm( truncated_nmax=beatbox.You.all_reconstructed_universes[i].truncated_nmax, truncated_nmin=beatbox.You.all_reconstructed_universes[i].truncated_nmin, truncated_lmax=beatbox.You.all_reconstructed_universes[i].truncated_lmax, truncated_lmin=beatbox.You.all_reconstructed_universes[i].truncated_lmin,usedefault=1, fn=1)
     #beatbox.You.all_reconstructed_universes[i].fn.show_CMB_T_map( from_perspective_of="observer")
     
+    p_value, chi2value = beatbox.You.calculate_chi2_in_posterior( beatbox.You.all_simulated_universes[i], beatbox.You.all_reconstructed_universes[i])
+    pvals = np.append(pvals, p_value)
+    chi2vals = np.append(chi2vals, chi2value)
 #-----------------------------------------------
 
 # Make a histogram with the alpha values for those numreal reconstructions
@@ -60,9 +66,9 @@ n, bins, patches = plt.hist(alphas, 40, normed=1, facecolor='green', alpha=0.75)
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
 # bug: the Tex interpretor doesn't work properly...
-plt.xlabel('$\displaystyle\alpha$')
+plt.xlabel(r'$\alpha$')
 plt.ylabel('Probability')
-plt.title('Histogram of $\displaystyle\alpha$ values')
+plt.title(r'Histogram of $\alpha$ values')
 
 
 # Find the best fit mu and sigma
@@ -79,7 +85,7 @@ max_ind = np.argmax(posterior)
 
 x = np.linspace(0,1.6, 100)
 rv = norm()
-plt.plot(x, norm.pdf(x, loc=1.02, scale=0.16), 'k-', lw=2, label='frozen pdf')
+plt.plot(x, norm.pdf(x, loc=1.02, scale=0.14), 'k-', lw=2, label='frozen pdf')
 
 
 #plt.axis([40, 160, 0, 0.03])

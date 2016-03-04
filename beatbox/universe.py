@@ -178,7 +178,7 @@ class Universe(object):
             
         if from_perspective_of == "observer":
             # Sky map:
-            hp.mollview(self.Tmap, rot=(-90,0,0),title=title + ", l_max=%d" % self.truncated_lmax)
+            hp.mollview(self.Tmap, rot=(-90,0,0),title=title + ", $l_max=$%d" % self.truncated_lmax)
         else:
             # Interactive "external" view ([like this](http://zonca.github.io/2013/03/interactive-3d-plot-of-sky-map.html))            pass
             #   beatbox.zoncaview(self.Tmap)
@@ -575,12 +575,12 @@ class Universe(object):
                 print " with phases sampled from a Gaussian distribution with mean ", Pmax," and variance ", Pvar
 
         # Evaluate it on our Phi grid:
-        self.evaluate_potential_given_fourier_coefficients()
+        self.evaluate_potential_given_fourier_coefficients(printout=printout)
 
         return
 
     
-    def evaluate_potential_given_fourier_coefficients(self):
+    def evaluate_potential_given_fourier_coefficients(self,printout=1):
 
         self.phi = np.zeros(self.x.shape,dtype=np.float_)
         ComplexPhi = np.zeros(self.x.shape,dtype=np.complex128)
@@ -595,8 +595,8 @@ class Universe(object):
 
         # Throw out the residual imaginary part of the potential [< O(10^-16)]
         self.phi = ComplexPhi.real
-
-        print "Built potential grid, with dimensions ",self.phi.shape,\
+        if printout is 1:
+            print "Built potential grid, with dimensions ",self.phi.shape,\
               " and mean value ", round(np.mean(self.phi),4),"+/-",round(np.std(self.phi),7)
 
         return

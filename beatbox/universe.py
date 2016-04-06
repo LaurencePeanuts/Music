@@ -90,6 +90,7 @@ class Universe(object):
     # Real space: define a coordinate grid:
     NPIX = int(BOXSIZE/PIXSCALE) + 1
     Nj = np.complex(0.0,NPIX)
+    #x, y, z = np.mgrid[-BOXSIZE/2.0+BOXSIZE/(2*float(NPIX)):BOXSIZE/2.0-BOXSIZE/(2*float(NPIX)):Nj, -BOXSIZE/2.0+BOXSIZE/(2*float(NPIX)):BOXSIZE/2.0-BOXSIZE/(2*float(NPIX)):Nj, -BOXSIZE/2.0+BOXSIZE/(2*float(NPIX)):BOXSIZE/2.0-BOXSIZE/(2*float(NPIX)):Nj]
     x, y, z = np.mgrid[-BOXSIZE/2.0+BOXSIZE/(2*float(NPIX)):BOXSIZE/2.0-BOXSIZE/(2*float(NPIX)):Nj, -BOXSIZE/2.0+BOXSIZE/(2*float(NPIX)):BOXSIZE/2.0-BOXSIZE/(2*float(NPIX)):Nj, -BOXSIZE/2.0+BOXSIZE/(2*float(NPIX)):BOXSIZE/2.0-BOXSIZE/(2*float(NPIX)):Nj]
     
     
@@ -133,6 +134,12 @@ class Universe(object):
     k = np.sqrt(np.power(kx, 2)+np.power(ky,2)+np.power(kz,2))
     nx, ny, nz = np.meshgrid(np.linspace(-nmax,nmax,NPIX),np.linspace(-nmax,nmax,NPIX),np.linspace(-nmax,nmax,NPIX), indexing='ij');
     n = np.sqrt(np.power(nx, 2)+np.power(ny,2)+np.power(nz,2));
+    # Define the computer Fourier coordinates, used for iFFT
+    kmax_for_iFFt = 1/(2*PIXSCALE)
+    Deltak_for_iFFT = (1/BOXSIZE)
+    kx_for_iFFT = nx/BOXSIZE 
+    ky_for_iFFT = ny/BOXSIZE
+    kz_for_iFFT = nz/BOXSIZE
     
     # Define filter in k-space, that contains the modes we want:
     kfilter = None
@@ -178,7 +185,7 @@ class Universe(object):
             
         if from_perspective_of == "observer":
             # Sky map:
-            hp.mollview(self.Tmap, rot=(-90,0,0),title=title + ", $l_max=$%d" % self.truncated_lmax)
+            hp.mollview(self.Tmap, rot=(-90,0,0), title=title + ", $l_max=$%d" % self.truncated_lmax)
         else:
             # Interactive "external" view ([like this](http://zonca.github.io/2013/03/interactive-3d-plot-of-sky-map.html))            pass
             #   beatbox.zoncaview(self.Tmap)
@@ -186,7 +193,7 @@ class Universe(object):
             # spherical surface plot routine using matplotlib? For
             # now, just use the healpix vis.
             R = (0.0,0.0,0.0) # (lon,lat,psi) to specify center of map and rotation to apply
-            hp.orthview(self.Tmap,rot=R,flip='geo',half_sky=True,title="CMB graviational potential fluctuations as seen from outside the LSS, l_max=%d" % self.truncated_lmax)
+            hp.orthview(self.Tmap,rot=R,flip='geo',half_sky=True,title="CMB graviational potential fluctuations as seen from outside the LSS, l_{max}=%d" % self.truncated_lmax)
             # print "Ahem - we can't visualize maps on the surface of the sphere yet, sorry."
         return
 
@@ -543,7 +550,7 @@ class Universe(object):
         self.kstar = kstar*1.394e4
 
         # Draw Gaussian random Fourier coefficients with a k^{-3+(n_s-1)} power spectrum:
-        self.Power_Spectrum = self.PSnorm*1000*np.power((self.k/self.kstar) ,(-3+(self.n_s-1)))
+        self.Power_Spectrum = self.PSnorm*10000*np.power((self.k/self.kstar) ,(-3+(self.n_s-1)))
         self.Power_Spectrum[np.isinf(self.Power_Spectrum)] = 10**-9
 
         fn_Norm = np.random.normal(0, np.sqrt(self.Power_Spectrum) )*np.power(self.kfilter,2)
@@ -588,13 +595,13 @@ class Universe(object):
         #THIS PART DID THE iFFT MANUALLY
         # for i in range((2*self.nmax+1)**3):
         #    phase = self.kx.reshape((2*self.nmax+1)**3,1)[i] * self.x + self.ky.reshape((2*self.nmax+1)**3,1)[i] * self.y + self.kz.reshape((2*self.nmax+1)**3,1)[i] * self.z
-        #    ComplexPhi += self.fn.reshape((2*self.nmax+1)**3,1)[i] * (np.cos(phase)+np.sin(phase)*1j)
+        #    ComplexPhi += self.fngrid.reshape((2*self.nmax+1)**3,1)[i] * (np.cos(phase)+np.sin(phase)*1j)
 
         #Now use iFFT to invert the Fourier coefficients f_n to a real space potential
-        ComplexPhi = np.fft.fftshift(np.fft.ifftn(np.fft.ifftshift(self.fngrid)))
+        ComplexPhi = np.fft.fftshift(np.fft.ifftn(np.fft.ifftshift(self.fngrid* self.Deltak_for_iFFT**3)))
 
         # Throw out the residual imaginary part of the potential [< O(10^-16)]
-        self.phi = ComplexPhi.real
+        self.phi = ComplexPhi.real*(self.kx_for_iFFT.shape[0])**3
         if printout is 1:
             print "Built potential grid, with dimensions ",self.phi.shape,\
               " and mean value ", round(np.mean(self.phi),4),"+/-",round(np.std(self.phi),7)
@@ -614,6 +621,19 @@ class Universe(object):
         self.fn[:len(ind[1])] = (self.fngrid[ind]).real
         self.fn[len(ind[1]):] = (self.fngrid[ind]).imag
         return
+    
+    def rearrange_fn_from_vector_to_grid(self):
+        '''
+        It's easiest to generate a potential from the prior on a 3D
+        grid, so we can use the iFFT. For the linear algebra in the
+        inference, we need the fourier coefficients arranged in a
+        vector.
+        '''
+        ind = np.where(self.kfilter>0)
+        self.fngrid = np.zeros(self.kfilter.shape, dtype=np.complex128)
+        self.fngrid[ind]=self.fn[:len(ind[1]),0] + 1j*self.fn[len(ind[1]):,0]
+        return
+    
 
     def transform_3D_potential_into_alm(self, truncated_nmax=None, truncated_nmin=None,truncated_lmax=None, truncated_lmin=None, usedefault=1, fn=None):
         '''
@@ -650,7 +670,7 @@ class Universe(object):
         return
 
 
-    def show_potential_with_yt(self,output='',angle=np.pi/4.0, N_layer=5, alpha_norm=5.0, cmap='BrBG', Proj=0, Slice=0, gifmaking=0, show3D=0):
+    def show_potential_with_yt(self,output='',angle=np.pi/4.0, N_layer=5, alpha_norm=5.0, cmap='BrBG', Proj=0, Slice=0, gifmaking=0, show3D=0, continoursshade = 2.0, boxoutput='scratch/opac_phi3D_Gauss_phases_mean'):
         """
         Visualize the gravitational potential using yt. We're after something
         like http://yt-project.org/doc/_images/vr_sample.jpg - described
@@ -662,6 +682,7 @@ class Universe(object):
         # First get extrema of phi array:
         mi = np.min(self.phi)
         ma = np.max(self.phi)
+        print mi, ma
         # Symmetrize to put zero at center of range:
         ma = np.max(np.abs([mi,ma]))
         mi = -ma
@@ -683,18 +704,20 @@ class Universe(object):
         xnorm=np.sqrt(self.x**2 + self.y**2 + self.z**2); 
         
         if (Slice is not 1) and (Proj is not 1):
-            indgtr = (~(xnorm < 0.94)).astype(int)
-            indsmlr = (~(xnorm > 1.05)).astype(int)
+            indgtr = (~(xnorm < 0.9)).astype(int)
+            indsmlr = (~(xnorm > 1.1)).astype(int)
             ind = indgtr*indsmlr
         
             sphere = np.ones(self.phi.shape)
-            sphere = 1000*ind
+            sphere = 50000*ind
+            #sphere = 0.0007*ind
             negsphere = -self.phi*ind
         else:
             sphere = np.zeros(self.phi.shape)
             negsphere = np.zeros(self.phi.shape)
         
-        ds = yt.load_uniform_grid((dict(density=(self.phi+offset+negsphere+sphere, 'g/cm**3'), Xnorm=(xnorm, 'g/cm**3'))), self.phi.shape, bbox=bbox,  nprocs=1)
+        #ds = yt.load_uniform_grid((dict(density=(self.phi+sphere, 'g/cm**3'), Xnorm=(xnorm, 'g/cm**3'))), self.phi.shape, bbox=bbox,  nprocs=1)
+        ds = yt.load_uniform_grid((dict(density=(self.phi+offset+sphere, 'g/cm**3'), Xnorm=(xnorm, 'g/cm**3'))), self.phi.shape, bbox=bbox,  nprocs=1)
         field = 'density'
         #Check that the loaded field is recognized by yt
         #    print ds.field_list
@@ -734,11 +757,12 @@ class Universe(object):
         tfh.build_transfer_function()
         tfh.tf.grey_opacity=False
         #For small units, wide Gaussians:
-        tfh.tf.add_layers(N_layer,  w=0.05*(ma2 - mi2) /N_layer, mi=0.3*ma, ma=ma-0.3*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.3*ma] , colormap=cmap)
+        tfh.tf.add_layers(N_layer,  w=0.0005*(ma2 - mi2) /N_layer, mi=0.25*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.25*ma,ma-0.2*ma] , colormap=cmap)
         #For big units, small Gaussians
-        #tfh.tf.add_layers(N_layer,  w=0.0000001*(ma2 - mi2) /N_layer, mi=0.3*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.3*ma,ma-0.3*ma] , colormap=cmap)
+        #tfh.tf.add_layers(N_layer,  w=0.00000005*(ma2 - mi2) /N_layer, mi=0.3*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.3*ma,ma-0.3*ma] , colormap=cmap)
         if (Slice is not 1) and (Proj is not 1):
-            tfh.tf.map_to_colormap(600, 2000, colormap='Reds', scale=1.)
+            tfh.tf.map_to_colormap(60000, 90000, colormap='jet', scale=continoursshade)
+            #tfh.tf.map_to_colormap(0.001, 0.0014, colormap='jet', scale=continoursshade)
         #tfh.tf.add_layers(1, w=0.001*ma2, mi=0.0108, ma=0.012, colormap='Pastel1', col_bounds=[0.01, 0.012])
         # Check if the transfer function captures the data properly:
         densityplot1 = tfh.plot('densityplot1')
@@ -762,13 +786,13 @@ class Universe(object):
         if self.Pdist == 1:
         	im1 = cam.snapshot('scratch/opac_phi3D_Uniform_phases_0-'+str(self.Pmax)+'.png', clip_ratio=5)
         else:
-            im1 = cam.snapshot('scratch/opac_phi3D_Gauss_phases_mean'+str(self.Pmax)+'_var'+str(self.Pvar)+'.png', clip_ratio=5)
+            im1 = cam.snapshot('scratch/'+boxoutput+str(self.Pmax)+'_var'+str(self.Pvar)+'.png', clip_ratio=5)
 
         nim = cam.draw_domain(im1)
         #im=cam.snapshot
         #nim = cam.draw_box(im, np.array([0.25,0.25,0.25]), np.array([0.75,0.75,0.75]))  
         if show3D == 1:
-            nim.write_png('scratch/opac_phi3Ddomain.png')
+            nim.write_png(boxoutput)
             cam.show()
             # Make a color bar with the colormap.
             # cam.save_annotated("vol_annotated.png", nim, dpi=145, clear_fig=False)

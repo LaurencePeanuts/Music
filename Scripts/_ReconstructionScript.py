@@ -8,7 +8,7 @@
 np.random.seed(1)
 
 # declaring initial objects
-You=beatbox.Multiverse(truncated_nmax=6, truncated_nmin=1, truncated_lmax=30, truncated_lmin=2)
+#You=beatbox.Multiverse(truncated_nmax=2, truncated_nmin=1, truncated_lmax=8, truncated_lmin=2)
 beatbox.You.create_original_Universe()
 
 #make a realization of the sky to be used as a mock:

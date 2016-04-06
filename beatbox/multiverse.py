@@ -375,10 +375,10 @@ class Multiverse(object):
         
         # Use linear algebra to solve the A*f_n=b linear equation
         b =  np.dot(R_real.T , np.dot (inv_Cyy , datamap) )
-        self.reconstrunct_fn = np.linalg.solve(A, b)
+        #self.reconstrunct_fn = np.linalg.solve(A, b)
     
         #from numpy.linalg import inv
-        #self.reconstrunct_fn = np.dot( inv_A , np.dot(R_real.T , np.dot (inv_Cyy , datamap) ) )
+        self.reconstrunct_fn = np.dot( inv_A , np.dot(R_real.T , np.dot (inv_Cyy , datamap) ) )
         
         return
     

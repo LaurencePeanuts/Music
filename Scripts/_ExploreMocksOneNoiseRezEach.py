@@ -8,7 +8,7 @@
 # declaring initial objects
 beatbox.You.create_original_Universe()
 #  Number of noise realizations to make
-numreal=10000
+numreal=1000
 
 MockUniverse = np.array([])
 MockUniverse = np.append(MockUniverse, [beatbox.Universe() for i in range(numreal)])
@@ -49,7 +49,7 @@ for i in range(numreal):
     beatbox.You.all_reconstructed_universes[i].transform_3D_potential_into_alm( truncated_nmax=beatbox.You.all_reconstructed_universes[i].truncated_nmax, truncated_nmin=beatbox.You.all_reconstructed_universes[i].truncated_nmin, truncated_lmax=beatbox.You.all_reconstructed_universes[i].truncated_lmax, truncated_lmin=beatbox.You.all_reconstructed_universes[i].truncated_lmin,usedefault=1, fn=1)
     #beatbox.You.all_reconstructed_universes[i].fn.show_CMB_T_map( from_perspective_of="observer")
     
-    p_value, chi2value = beatbox.You.calculate_chi2_in_posterior( beatbox.You.all_simulated_universes[i], beatbox.You.all_reconstructed_universes[i])
+    p_value, chi2value = beatbox.You.calculate_chi2_in_posterior( beatbox.You.all_simulated_universes[i].fn, beatbox.You.all_reconstructed_universes[i].fn)
     pvals = np.append(pvals, p_value)
     chi2vals = np.append(chi2vals, chi2value)
 #-----------------------------------------------

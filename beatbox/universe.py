@@ -847,6 +847,14 @@ class Universe(object):
         writeGif(output, images, duration=0.2)
 
         return
+    
+    def make_gif_from_frames_with_yt(self,folder='../frames/', output='phi.gif'):
+
+        # Create an animated gif of all the frames:
+        images = [PIL_Image.open(framefile) for framefile in glob.glob(folder+'*.png')]
+        writeGif(output, images, duration=0.2)
+
+        return
 
 
 # ====================================================================

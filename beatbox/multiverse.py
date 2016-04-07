@@ -367,7 +367,7 @@ class Multiverse(object):
         
         # Redefine A with the properly normalized prior
         A = np.dot(R_real.T , np.dot( inv_Cyy , R_real)) + inv_Cf
-        
+        self.A = A
         # Find the inverse of A that has been the properly normalized Cf
         U, s, V_star = np.linalg.svd(A)
         inv_A = np.dot(V_star.T, np.dot(np.diag(1./s),U.T))
@@ -444,8 +444,8 @@ class Multiverse(object):
             print 'A matrix not initialized'
             return
         
-        Delta_fn = fn_true-fn_rec
-        chi2value = np.dot (Delta_fn.T , np.dot( self.inv_A, Delta_fn  ))
+        Delta_fn = fn_true.reshape(len(fn_true),1)-fn_rec.reshape(len(fn_rec),1)
+        chi2value = np.dot (Delta_fn.T , np.dot( self.A, Delta_fn  ))
         
         p_value = 1-chi2.cdf(chi2value, len(fn_true)) 
         

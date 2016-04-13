@@ -54,52 +54,57 @@ for i in range(numreal):
     chi2vals = np.append(chi2vals, chi2value)
 #-----------------------------------------------
 
-# Make a histogram with the alpha values for those numreal reconstructions
+# This has now been moved to the _Alpharobustness.py
 
-# Make the histogram
-import matplotlib.pyplot as plt
-from scipy.stats import norm
-from scipy.stats import multivariate_normal
-
-n, bins, patches = plt.hist(alphas, 40, normed=1, facecolor='green', alpha=0.75)
-
-plt.rc('text', usetex=True)
-plt.rc('font', family='serif')
-# bug: the Tex interpretor doesn't work properly...
-plt.xlabel(r'$\alpha$')
-plt.ylabel('Probability')
-plt.title(r'Histogram of $\alpha$ values')
-
-
-# Find the best fit mu and sigma
-sigma, mu = np.mgrid[0.1:0.2:.01, 0.9:1.2:.01]
-posterior = np.zeros(sigma.shape)
-
-for i in range(sigma.shape[0]):
-    for j in range(sigma.shape[1]):
-        posterior[i, j] = multivariate_normal.pdf(alphas, mu[i, j]*np.ones(alphas.shape), sigma[i, j]*np.diag(np.ones(alphas.shape)))
-
-max_ind = np.argmax(posterior)
-
-
-
-x = np.linspace(0,1.6, 100)
-rv = norm()
-plt.plot(x, norm.pdf(x, loc=1.02, scale=0.14), 'k-', lw=2, label='frozen pdf')
-
-
-#plt.axis([40, 160, 0, 0.03])
-plt.grid(True)
-
-plt.show()
-
-#-------------------------------------------
-
-# Calculate the 'recovery success' for the alpha parameter:
-sum_alpha = 0
-for i in range(len(alphas)):
-    sum_alpha = sum_alpha+(alphas[i]-1)**2
-    
-sum_alpha = sum_alpha/len(alphas)
-
-print 'The alpha recovery success is ' + sum_alpha + '.' 
+## Make a histogram with the alpha values for those numreal reconstructions
+#
+## First load the alphas saved
+#alphas = np.loadtxt("RobustnessAnalysis/alpha_lmax8lmin1nmax2nmin1.txt")
+#
+## Make the histogram
+#import matplotlib.pyplot as plt
+#from scipy.stats import norm
+#from scipy.stats import multivariate_normal
+#
+#n, bins, patches = plt.hist(alphas, 40, normed=1, facecolor='green', alpha=0.75)
+#
+#plt.rc('text', usetex=True)
+#plt.rc('font', family='serif')
+## bug: the Tex interpretor doesn't work properly...
+#plt.xlabel(r'$\alpha$')
+#plt.ylabel('Probability')
+#plt.title(r'Histogram of $\alpha$ values')
+#
+#
+## Find the best fit mu and sigma
+#sigma, mu = np.mgrid[0.1:0.2:.01, 0.9:1.2:.01]
+#posterior = np.zeros(sigma.shape)
+#
+#for i in range(sigma.shape[0]):
+#    for j in range(sigma.shape[1]):
+#        posterior[i, j] = multivariate_normal.pdf(alphas, mu[i, j]*np.ones(alphas.shape), sigma[i, j]*np.diag(np.ones(alphas.shape)))
+#
+#max_ind = np.argmax(posterior)
+#
+#
+#
+#x = np.linspace(0,1.6, 100)
+#rv = norm()
+#plt.plot(x, norm.pdf(x, loc=1.02, scale=0.14), 'k-', lw=2, label='frozen pdf')
+#
+#
+##plt.axis([40, 160, 0, 0.03])
+#plt.grid(True)
+#
+#plt.show()
+#
+##-------------------------------------------
+#
+## Calculate the 'recovery success' for the alpha parameter:
+#sum_alpha = 0
+#for i in range(len(alphas)):
+#    sum_alpha = sum_alpha+(alphas[i]-1)**2
+#    
+#sum_alpha = sum_alpha/len(alphas)
+#
+#print 'The alpha recovery success is ' + sum_alpha + '.' 

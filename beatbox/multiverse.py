@@ -367,11 +367,15 @@ class Multiverse(object):
         
         # Redefine A with the properly normalized prior
         A = np.dot(R_real.T , np.dot( inv_Cyy , R_real)) + inv_Cf
-        self.A = A
+        #self.A = A
         # Find the inverse of A that has been the properly normalized Cf
         U, s, V_star = np.linalg.svd(A)
         inv_A = np.dot(V_star.T, np.dot(np.diag(1./s),U.T))
         self.inv_A=inv_A
+        
+        U2, s2, V_star2 = np.linalg.svd(inv_A)
+        inv_inv_A = np.dot(V_star2.T, np.dot(np.diag(1./s2),U2.T))
+        self.A=inv_inv_A
         
         # Use linear algebra to solve the A*f_n=b linear equation
         b =  np.dot(R_real.T , np.dot (inv_Cyy , datamap) )

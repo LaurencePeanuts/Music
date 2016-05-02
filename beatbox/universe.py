@@ -629,6 +629,8 @@ class Universe(object):
         inference, we need the fourier coefficients arranged in a
         vector.
         '''
+        self.fn.reshape(len(beatbox.You.all_reconstructed_universes[-1].fn),1)
+        
         ind = np.where(self.kfilter>0)
         self.fngrid = np.zeros(self.kfilter.shape, dtype=np.complex128)
         self.fngrid[ind]=self.fn[:len(ind[1]),0] + 1j*self.fn[len(ind[1]):,0]

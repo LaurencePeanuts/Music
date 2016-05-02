@@ -45,7 +45,7 @@ for i in range(numreal):
     
     # Give those reconstructed f_n's to one of the reconstructed Universes
     beatbox.You.all_reconstructed_universes[i].fn = beatbox.You.reconstrunct_fn
-#We.fn = beatbox.You.all_simulated_universes[-1].fn * 0.5
+
     beatbox.You.all_reconstructed_universes[i].transform_3D_potential_into_alm( truncated_nmax=beatbox.You.all_reconstructed_universes[i].truncated_nmax, truncated_nmin=beatbox.You.all_reconstructed_universes[i].truncated_nmin, truncated_lmax=beatbox.You.all_reconstructed_universes[i].truncated_lmax, truncated_lmin=beatbox.You.all_reconstructed_universes[i].truncated_lmin,usedefault=1, fn=1)
     #beatbox.You.all_reconstructed_universes[i].fn.show_CMB_T_map( from_perspective_of="observer")
     

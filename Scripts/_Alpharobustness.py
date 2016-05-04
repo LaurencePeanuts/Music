@@ -83,7 +83,7 @@ plt.plot(x, norm.pdf(x, loc=mu.reshape(-1)[max_ind], scale=np.sqrt(sigma.reshape
 plt.grid(True)
 
 
-plt.savefig('RobustnessAnalysis/alphahist_lmax'+str(beatbox.Universe.truncated_lmax)+'_nmin'+str(beatbox.Universe.truncated_lmin)+'_nmax'+str(beatbox.Universe.truncated_nmax)+'_nmin'+str(beatbox.Universe.truncated_nmin)+'.png')
+plt.savefig('RobustnessAnalysis/alphahist_lmax'+str(beatbox.Universe.truncated_lmax)+'_lmin'+str(beatbox.Universe.truncated_lmin)+'_nmax'+str(beatbox.Universe.truncated_nmax)+'_nmin'+str(beatbox.Universe.truncated_nmin)+'.png')
 
 
 plt.show()

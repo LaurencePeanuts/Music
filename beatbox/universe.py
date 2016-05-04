@@ -50,7 +50,7 @@ def populate_response_matrix(self):
     # The n index spans 2x that length, 1st half for the cos coefficients, 2nd half
     #    for the sin coefficients
     NN = 2*len(ind[1])
-    Universe.R = np.zeros([NY,NN], dtype=np.complex128)
+    R_long = np.zeros([NY,NN], dtype=np.complex128)
 
     k, theta, phi = Universe.k[ind], np.arctan2(Universe.ky[ind],Universe.kx[ind]), np.arccos(Universe.kz[ind]/Universe.k[ind])
     # We need to fix the 'nan' theta element that came from having ky=0
@@ -66,11 +66,13 @@ def populate_response_matrix(self):
         
         trigpart = np.cos(np.pi*l/2.0)
         B = np.asarray([A[ki][l] for ki in range(len(k))])
-        Universe.R[y,:NN/2] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(NN/2)*B.reshape(NN/2) * trigpart
+        R_long[y,:NN/2] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(NN/2)*B.reshape(NN/2) * trigpart
         trigpart = np.sin(np.pi*l/2.0)
-        Universe.R[y,NN/2:] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(NN/2)*B.reshape(NN/2)* trigpart
+        R_long[y,NN/2:] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(NN/2)*B.reshape(NN/2)* trigpart
                 
-        y = y+1    
+        y = y+1
+    Universe.R = np.zeros([NY,len(ind[1])], dtype=np.complex128)
+    Universe.R = np.append(R_long[:,0:len(ind[1])/2], R_long[:,len(ind[1]):3*len(ind[1])/2], axis=1)
     return
 
 
@@ -185,16 +187,17 @@ class Universe(object):
             
         if from_perspective_of == "observer":
             # Sky map:
-            hp.mollview(self.Tmap, rot=(-90,0,0), title=title + ", $l_max=$%d" % self.truncated_lmax)
-        else:
-            # Interactive "external" view ([like this](http://zonca.github.io/2013/03/interactive-3d-plot-of-sky-map.html))            pass
-            #   beatbox.zoncaview(self.Tmap)
-            # This did not work, sadly. Maybe we can find a 3D
-            # spherical surface plot routine using matplotlib? For
-            # now, just use the healpix vis.
-            R = (0.0,0.0,0.0) # (lon,lat,psi) to specify center of map and rotation to apply
-            hp.orthview(self.Tmap,rot=R,flip='geo',half_sky=True,title="CMB graviational potential fluctuations as seen from outside the LSS, l_{max}=%d" % self.truncated_lmax)
-            # print "Ahem - we can't visualize maps on the surface of the sphere yet, sorry."
+            hp.mollview(self.Tmap, rot=(-90,0,0), min=-60, max=45, title=title + ", $l_max=$%d" % self.truncated_lmax)
+            
+#        else:
+#            # Interactive "external" view ([like this](http://zonca.github.io/2013/03/interactive-3d-plot-of-sky-map.html))            pass
+#            #   beatbox.zoncaview(self.Tmap)
+#            # This did not work, sadly. Maybe we can find a 3D
+#            # spherical surface plot routine using matplotlib? For
+#            # now, just use the healpix vis.
+#            R = (0.0,0.0,0.0) # (lon,lat,psi) to specify center of map and rotation to apply
+#            hp.orthview(self.Tmap,rot=R,flip='geo',half_sky=True,title="CMB graviational potential fluctuations as seen from outside the LSS, l_{max}=%d" % self.truncated_lmax)
+#            # print "Ahem - we can't visualize maps on the surface of the sphere yet, sorry."
         return
 
 
@@ -457,7 +460,7 @@ class Universe(object):
         # The n index spans 2x that length, 1st half for the cos coefficients, 2nd half
         #    for the sin coefficients
         NN = 2*len(ind[1])
-        self.R = np.zeros([NY,NN], dtype=np.complex128)
+        R_long = np.zeros([NY,NN], dtype=np.complex128)
 
         # In case we need n1, n2, n3 at some point...:
         #    n1, n2, n3 = self.kx[ind]/self.Deltak , self.ky[ind]/self.Deltak, self.kz[ind]/self.Deltak
@@ -474,12 +477,15 @@ class Universe(object):
             m = i[1]
             trigpart = np.cos(np.pi*l/2.0)
             B = np.asarray([A[ki][l] for ki in range(len(k))])
-            self.R[y,:NN/2] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(NN/2)*B.reshape(NN/2) * trigpart
+            R_long[y,:NN/2] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(NN/2)*B.reshape(NN/2) * trigpart
 
             trigpart = np.sin(np.pi*l/2.0)
-            self.R[y,NN/2:] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(NN/2)*B.reshape(NN/2)* trigpart
+            R_long[y,NN/2:] = 4.0 * np.pi * sph_harm(m,l,theta,phi).reshape(NN/2)*B.reshape(NN/2)* trigpart
                 
-            y = y+1   
+            y = y+1
+        
+        self.R = np.zeros([NY,len(ind[1])], dtype=np.complex128)
+        self.R = np.append(R_long[:,0:len(ind[1])/2], R_long[:,len(ind[1]):3*len(ind[1])/2], axis=1)
         return
 
     # ----------------------------------------------------------------
@@ -616,10 +622,16 @@ class Universe(object):
         inference, we need the fourier coefficients arranged in a
         vector.
         '''
+        
         ind = np.where(self.kfilter>0)
-        self.fn = np.zeros(2*len(ind[1]))
-        self.fn[:len(ind[1])] = (self.fngrid[ind]).real
-        self.fn[len(ind[1]):] = (self.fngrid[ind]).imag
+        fn_long = np.zeros(2*len(ind[1]))
+        fn_long[:len(ind[1])] = (self.fngrid[ind]).real
+        fn_long[len(ind[1]):] = (self.fngrid[ind]).imag
+        
+        self.fn = np.zeros(len(ind[1]))
+        self.fn[:len(ind[1])/2] = fn_long[:len(ind[1])/2]
+        self.fn[len(ind[1])/2:] = fn_long[len(ind[1]):3*len(ind[1])/2]
+        
         return
     
     def rearrange_fn_from_vector_to_grid(self):
@@ -629,11 +641,20 @@ class Universe(object):
         inference, we need the fourier coefficients arranged in a
         vector.
         '''
-        self.fn.reshape(len(beatbox.You.all_reconstructed_universes[-1].fn),1)
+        
+        np.squeeze(self.fn)
         
         ind = np.where(self.kfilter>0)
+        
+        fn_long = np.zeros(2*len(ind[1]))
+        fn_long[:len(ind[1])/2] = self.fn[:len(ind[1])/2] 
+        fn_long[len(ind[1])-1:len(ind[1])/2-1 :-1] = self.fn[:len(ind[1])/2] 
+        fn_long[len(ind[1]):3*len(ind[1])/2] = self.fn[len(ind[1])/2:]
+        fn_long[:3*len(ind[1])/2-1 :-1] = -self.fn[:len(ind[1])/2] 
+        
+        
         self.fngrid = np.zeros(self.kfilter.shape, dtype=np.complex128)
-        self.fngrid[ind]=self.fn[:len(ind[1]),0] + 1j*self.fn[len(ind[1]):,0]
+        self.fngrid[ind]=fn_long[:len(ind[1])] + 1j*fn_long[len(ind[1]):]
         return
     
 

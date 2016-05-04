@@ -330,9 +330,13 @@ class Multiverse(object):
         
         #Initiate the inverse covariance matrix of the prior
         ind = np.where(beatbox.Universe.kfilter>0)
-        PS = np.zeros(2*len(ind[1]))
-        PS[:len(ind[1])] = (self.all_simulated_universes[-1].Power_Spectrum[ind])
-        PS[len(ind[1]):] = (self.all_simulated_universes[-1].Power_Spectrum[ind])
+        PS_long = np.zeros(2*len(ind[1]))
+        PS_long[:len(ind[1])] = (self.all_simulated_universes[0].Power_Spectrum[ind])
+        PS_long[len(ind[1]):] = (self.all_simulated_universes[0].Power_Spectrum[ind])
+        
+        PS = np.zeros(len(ind[1]))
+        PS[:len(ind[1])/2] = PS_long[:len(ind[1])/2]
+        PS[len(ind[1])/2:] = PS_long[len(ind[1]):3*len(ind[1])/2]
         
         inv_Cf=np.diag(1./PS)
         

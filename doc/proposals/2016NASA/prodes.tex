@@ -103,7 +103,7 @@ where the coefficients $f_n$ are also real and ${\bf k}=\Delta k\{n_1,n_2,n_3\}=
 \end{equation}
 
 \ni{\bf Gaussian Prior:}
-Detailed study of the CMB (e.g.~\cite{Aghanim:2015xee, Ade:2015ava}) has led to the conclusion that the amplitude of each discrete mode with wave vector $\bf k$ is well modeled as having been drawn from a Gaussian distribution of variance $\sigma_{\bf n}^2=\alpha^2(n_1^2+n_2^2+n_3^2)^{-3/2}$. Adopting this model, we can determine the coefficient $\alpha$ approximately and empirically, by computing the spherical harmonic coefficients $a_y =\mathbf{R}_{yn}f_n$ for sets of Gaussian $f_n$s where the ``response matrix'' is given by:
+Detailed study of the CMB (e.g.~\cite{Aghanim:2015xee, Ade:2015ava}) has led to the conclusion that the amplitude of each discrete mode with wave vector $\bf k$ is well modeled as having been drawn from a Gaussian distribution of variance $\sigma_{\bf n}^2=\alpha^2(n_1^2+n_2^2+n_3^2)^{-3+(n_s-1)}$, where $n_s$ is the . Adopting this model, we can determine the coefficient $\alpha$ approximately and empirically, by computing the spherical harmonic coefficients $a_y =\mathbf{R}_{yn}f_n$ for sets of Gaussian $f_n$s where the ``response matrix'' is given by:
 \begin{equation}
 \mathbf{R}_{yn}=4\pi Y_y(\theta'\phi')j_\ell(k)[\cos(\pi\ell/2),\sin(\pi\ell/2)]\ {\rm for}\ [1\le n\le N/2,\ N/2<n\le N]\, ,
 \end{equation}
@@ -174,11 +174,12 @@ We want to describe perturbations of the scalar field, which we call $\varphi$, 
 \ee
 Here, $\nu$ is a slowly varying function which encapsulates the specific dynamics of the inflationary model, $\mathcal{H}^{(1)}_\nu$ is a Hankel function of the first kind, $\tau$ is the conformal time, defined by $d\tau=a(t)dt$, and $\theta$ is a random variable endowing each mode with a random phase. A prediction of inflation is that $\theta$ should have a uniform probability distribution between 0 and $2\pi$. This is a fundamental prediction of inflation which stems from the assumption that the fluctuations are quantum mechanical in origin, the very assumption the idea of inflation is based upon.
 
-However, the actual distribution of the phases for the modes of $\zeta$ (or $\Phi$) in the CMB has yet to be measured. This is because, so far, most experiments have strived to measure the power spectrum of fluctuations, $\Delta_\zeta^2$. %defined by:
+However, the actual distribution of the phases for the modes of $\zeta$ (or $\Phi$) in the CMB has yet to be measured. This is because, so far, most analyses of CMB data have strived to measure the power spectrum of fluctuations, $\Delta_\zeta^2$.%, defined by
 %\be
 %	\Delta_\zeta^2=\frac{k^3}{2\pi^2}\mathcal{P}_\zeta \propto |\zeta_{\vec{k}}|^2\,.
 %\ee
-Because the power spectrum is proportional to $ |\zeta_{{\bf k}}|^2$, when such a measurement is made, the phase information of the modes is lost. With the reconstruction method proposed in this proposal, such measurement will become possible.
+Because the power spectrum is proportional to $ |\zeta_{{\bf k}}|^2$, when such a measurement is made, the phase information of the modes is lost. With a reconstruction of the interior of the CMB sphere that outputs three-dimensional Fourier modes, this phase information will become readily available.
+Therefore, the new analysis of the CMB data we are proposing will make the measurement of the distribution of the phases possible. This will constitute a direct test of the quantum origin of the CMB fluctuations.
 
 \begin{figure*}[t]
 \vspace{-1cm}
@@ -210,14 +211,15 @@ which defines uniquely a shape for the potential around $\varphi_*$. Here, the s
 \be
 \mathcal{P}(\vec{\eta}| a_{y})=\frac{1}{(2\pi)^{p/2}} \left[\mathrm{Det}(C_{nn'})\mathrm{Det}(C_{yy'})\mathrm{Det}\,\mathbf{A}_{nn'}\right]^{-1/2}e^{\left\{\frac{1}{2}\mathbf{B}_{n}\mathbf{A}_{nn'}^{-1}\mathbf{B}_{n'}-\frac{1}{2}a^{\mathrm{T}}_{y'}C_{y'y}^{-1}a_{y} \right\}}\frac{\mathcal{P}(\vec{\eta})}{\mathcal{P}(a_{y})}\, ,
 \ee
-where $\mathcal{P}(\vec{\eta})$ is the prior on $\vec{\eta}$, ~$C_{n'n}^{-1}$ is a diagonal matrix with diagonal elements given by $1/|\zeta_{{\bf k}}|^2$, generalizing $1/{\sigma_{\bf n}^2}$ from our Gaussian prior
+where $\mathcal{P}(\vec{\eta})$ is the prior on $\vec{\eta}$, ~$C_{n'n}^{-1}$ is a diagonal matrix with diagonal elements given by $1/|\zeta_{{\bf k}}|^2$, generalizing $1/{\sigma_{\bf n}^2}$ from our Gaussian prior (note that this relaxes the assumption of scale invariance)
 %\footnote{$C_{n'n}^{-1}$ therefore corresponds to the covariance matrix of the Gaussian prior for fixed $\vec{\eta}$ values}
 and the $\mathbf{A}$ matrix and $\mathbf{B}$ vector are given by:
 \be
 	\mathbf{A}_{nn'}=\mathbf{R}_{ny'}C^{-1}_{y'y} \mathbf{R}_{yn'}+C_{nn'}^{-1}\, ,\qquad \qquad
 	 \mathbf{B}_{n}=  \mathbf{R}_{ny'} C_{y'y}^{-1}  a_{y}\, .
 \ee
-MENTION THAT THIS CAN BE GENERALIZED TO NG $f_n$
+Generalizing this formalism to inflationary parameters that produce primordial non-Gaussianities is straightforward, however, a key assumption in the above formalism is the assumption of a Gaussian prior for the $f_n$. To exploit the full information present in data samples containing an increasingly larger range of $\ell$ modes, we will further extend our numerical analysis and develop a pipeline capable of handling non-Gaussian priors for the $f_n$ and solve for the $\vec{\eta}$ vector using MCMC sampling. 
+
 \ni{\bf Detailed Approach Incorporating Planck Polarization Data:}
 Up to this point, we have only considered the CMB temperature data. We anticipate making significant gains in map fidelity when we incorporate the Planck polarization data as well after it is made public. While these will be more sensitive to systematic effects (such as galactic dust and synchrotron emission), the additional signal to noise alone should allow us to make maps of higher spatial resolution. The prediction of E and B mode CMB polarization at low $\ell$ from a 3D model potential is more involved compared to the temperature field. Initial simple Monte Carlo ray tracing experiments suggest that this may be an instructive way to capture the dependence of the polarized radiation field on the underlying potential -- a challenge will be to capture this in a form that preserves our ability to use only the fast linear inversions described above.
 
@@ -226,6 +228,10 @@ Up to this point, we have only considered the CMB temperature data. We anticipat
 Then, we will carry out an extensive systematic error analysis, assessing sources of contamination from the various foregrounds (using the Planck products as templates) and quantifying the robustness of our results to them. We expect all our inferences to increase in precision as a result of including the polarization information; whether we can reach the commensurate degree of accuracy will depend on both the computational and modeling problems outlined here.
 
 %PJM: SUFFICIENT ON SYSTEMATICS? WHAT OTHER GAINS/PITFALLS DO WE EXPECT? I think it better to say this is TBD
+
+NOTE: they say this in the guidelines:
+
+In addition, proposals may not anticipate future public data releases. The scientific case for any proposed investigation must be based on - and executable with - data that are in the public domain at the time of the original proposal. Any proposal that invokes the use of data that are not public at the time of the ADAP 2016 proposal submission deadline (other than that explicitly allowed under Section 1.3.4) will be ruled noncompliant and will not be rated or considered for funding.
 
 \ni{\bf Tree Representation and Non-Parametric Investigation of Gaussianity:}
 There is another way to think about this problem. Let us build up the resolution of the potential on the CMB photosphere by increasing $\ell$ continuously from zero. Saddle points -- designated  S -- accompanied by extrema -- either maxima, designated H,  or minima, designated, L -- will be created. They will be accompanied by fresh separatrices -- the contours that pass through the saddles. These come in two types - ``lemniscates'', like an infinity symbol, and designated X, and ``lima\c cons'', with the shape of a pinched annulus, and designated K~\cite{Blandford:1986}. New separatrices may be created between existing separatrices or out of a contour encircling a $L$ or a $H$.  Occasionally, the inverse process -- annihilation -- will occur. If we designate the total number of maxima, minima, saddles, lemniscates and lima\c cons by $N_H,N_L,N_S,N_X,N_K$, respectively, then clearly $N_S=N_X+N_K=N_H+N_L-2$.\footnote{It is also instructive to calculate the Hessian matrix for the potential on the sphere and divide the sphere into ``H-zones'' (where both eigenvalues are negative), ``L-zones'' (where they are both positive) and ``S-zones'' (where they have opposite signs). These ``curvature maps''~\cite{Nye:1978} are complementary to the tree representation.}

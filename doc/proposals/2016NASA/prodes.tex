@@ -494,7 +494,8 @@ for the $f_n$. To exploit the full information present in data samples
 containing an increasingly larger range of $\ell$ modes, we will further
 extend our numerical analysis and develop a pipeline capable of handling
 non-Gaussian priors for the $f_n$ and solve for the $\vec{\eta}$ vector
-using MCMC sampling. Need some more details here...!!!
+using MCMC sampling.
+% LLP,PJM: Need some more details here...!!!
 
 \ni{\bf Detailed Approach Incorporating Planck Polarization Data:}
 Up to this point, we have only considered the CMB temperature data. We
@@ -580,11 +581,27 @@ identified. b) Equivalent tree describing the same data.}}
 
 \subsection{Stage 2. From 3D to 4D: Incorporating Existing ``Local'' Volumetric Data}
 
-% PJM: add preamble here on 3D to 4D concept.
+At the end of Stage 1, we will have in hand the posterior PDF for the
+fourier mode applitudes of a 3D model of the potential on large scales
+throughout the observable universe (and slightly beyond) at the epoch of
+last scattering. If we now assume a  Friedman-Robertson-Walker expansion
+model, with suitably-parameterized expansion rate and a particular
+choice of those expansion parameters,  we can evolve the fourier modes
+of any sample potential map we draw  from this PDF forward in cosmic
+time in order to make posterior  predictions about the ``local'' (i.e,
+$z << 1000$) Universe. The likelihood of these predictions given various
+observations in the local Universe will allow us to downweight some
+possible models, and hence further reduce the uncertainty in the map.
+As we discuss below, the process of combining CMB data with local surveys
+will not always be as straightforward as this simple picture of
+prediction and evaluation: Stage 2 of this program will involve
+investigation of how to carry out the joint inferences robustly and
+efficiently.
 
 \ni{\bf CMB Lensing and ISW Measurements:}
-An important way to add 3D information is to include CMB
-lensing~\cite{Planck2015cosmopara}. A uniform CMB is unchanged by
+An important way to add 3D information on the potential throughout a
+significant fraction of the Universe's volume is to include the lensing
+of the CMB~\cite{Planck2015cosmopara}. A uniform CMB is unchanged by
 gravitational lensing. However, if there is a gradient in the background
 temperature, intervening structure will appear as extra power on the
 scale of intervening large scale structure.\footnote{More subtle
@@ -599,19 +616,27 @@ analytical effort on this region of the spectrum. It is proposed to see
 if the addition of these measurements will improve the specification of
 the 3D body modes.
 
-% PJM: need a note on non-linearity here. The same 3D potential model
-% will be predicting both the lensing effect on the T map, and the
-% intrinsic structure in the ``background'' T map itself. This will lead
-% to a non-linear system, which will need to be treated with care.
-% The posterior PDF for the Fourier modes will no longer have a Gaussian,
-% form, but the weakness of the lensing effect may leave it to be close
-% enough to Gaussian for simple approximations to be sufficient...
+Note that in the case of CMB lensing, it is the same 3D potential model
+that will be predicting both the lensing effect on the CMB temperature
+map (due to structures at $z < 1000$), and  also the intrinsic structure
+in this ``background'' temperature map (at $z \sim 1000$) itself. The
+consequence will be a non-linear system, which will need to be treated
+with care in the inference. The posterior PDF for the Fourier modes will
+no longer have a Gaussian form, but the weakness of the lensing effect
+may leave it to be close enough to Gaussian for a simple Gaussian
+approximation to give sufficient accuracy. This will be the starting
+point for our research in this area, which may develop into an
+exploration  of better approximations to the posterior PDF for the
+Fourier modes  which retain as much of the the computational efficiency
+as the linear model as possible.
 
 Similar remarks apply to the Integrated Sachs Wolfe effect which is
-caused by variation in the potential over time attributable to the
-cosmological constant at late times. It is proposed to see if such
+caused by variation in the potential over time, attributable to the
+cosmological constant (or a ``dark energy'' component) at late times.
+It is proposed to see if such
 measurements can also contribute to the specification of structure on
-the largest scale, although here the challenge seems even greater.
+the largest scales.
+% although here the challenge seems even greater.
 
 \ni{\bf Galaxy Surveys and the ``Local'' Universe:}
 Most of the use of galaxy surveys to date has been for drawing statistical inferences

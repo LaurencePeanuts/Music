@@ -224,7 +224,14 @@ Universe including what can be inferred beyond our horizon.
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 \subsection{Stage 1. From 2D to 3D: Potential Reconstruction from CMB Data}
-\ni{\bf Temperature Fluctuations:}
+
+In this first phase of our proposed program we will extend our
+methodology beyond our pilot study, in order to carry out an
+investigation of the inflationary paradigm in various different ways. We
+first provide a  brief review of our results so far, to place this
+proposed investigation in context.
+
+\ni{\bf CMB Temperature Fluctuation Input Data:}
 % Most quantitative cosmology derives from CMB observations.
 Observations of the CMB are the foundation on which modern
 quantitative cosmology rests. The
@@ -246,16 +253,18 @@ identify systematic effects.)
 \begin{figure}[t]
 \centering
 \includegraphics[width=6in]{figures/nsffig2.jpg}
-\caption{{\small Photospheric potential fluctuations of the CMB for $\ell_{\rm max}=2,4.5,10$ derived from Planck data shown as Mollweide projections.}}
+\caption{{\small Photospheric potential fluctuations of the CMB for
+$\ell_{\rm max}=2,4.5,10$ derived from Planck data shown as Mollweide
+projections.}}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Most investigations have focused on measuring the ``power'' in the
+Most investigations have to date focused on measuring the ``power'' in the
 temperature fluctuations (including polarization) associated with a
 given $\ell$, obtained by summing products of the coefficients of the
 harmonic components over $m$, and comparing it with the predictions of
 various cosmological models. This program has been wonderfully
-productive, and has resulted in the world model just outlined.
+productive, and has resulted in the world model outlined in the introduction.
 Furthermore this power spectrum has been successfully reconciled with
 features of the local Universe, such as galaxy counts. One common
 assumption is that the particular realization of the Universe that we
@@ -275,7 +284,7 @@ hear.}  In the proposed study, only one specific realization of the
 Universe -- the one we inhabit --  is considered.
 
 In order to start us on a pilot investigation, Planck team members Wehus \&
-Eriksen  (Oslo) have kindly supplied 100 sample Planck temperature
+Eriksen  (Oslo) have kindly supplied us with 100 sample Planck temperature
 fluctuation maps for $0\le\ell\le10$ or $1\le y\le121$. From this
 ensemble we are able to compute the mean photospheric potential
 fluctuation map at the time of recombination $\Phi=a_yY_y$, (including
@@ -291,9 +300,13 @@ More samples are available on request: we will continue to work with
 Wehus \& Eriksen to make sure the data quality keeps up with the
 reconstruction methodology as our map resolution increases.
 
-\ni{{\bf Fourier Modes:}
-It is conventional to Fourier expand the potential $\Phi$ today; the
-expansion at other times is then simply calculable. Although the full
+\ni{{\bf Fourier Mode Modeling of the 3D Potential:}
+It is convenient to represent the 3D potential $\Phi$ at the epoch
+of last scattering
+with a Fourier expansion; the
+potential at other times is then calculable through simple manipulation
+of the resulting
+modes. Although the full
 spectrum of the Fourier modes we are discussing is continuous in ${\bf
 k}$, the fact that our observations are made over a restricted volume
 means that we can treat the waves as a discrete Fourier transform of
@@ -326,7 +339,7 @@ matrix'' is given by:
 \mathbf{R}_{yn}=4\pi Y_y(\theta'\phi')j_\ell(k)[\cos(\pi\ell/2),\sin(\pi\ell/2)]\ {\rm for}\ [1\le n\le N/2,\ N/2<n\le N]\, ,
 \end{equation}
 and then adjusting $\alpha$ such that the model-predicted and measured
-spherical harmonics match. This approach is adequate for our pilot
+spherical harmonics match. This approach has been adequate for our pilot
 study; an improved determination will be investigated following the
 evidence analysis of~\cite{Suyu2006}, {\sl en route} to a hierarchical
 modeling of the system where the normalization $\alpha$ is one of a set
@@ -341,42 +354,44 @@ holography.} At first sight this might seem hopeless, because if one
 associates $\ell_{\rm max}$ with $k\,x_{\rm CMB}$, then we are trying to
 solve for $O((k_{\rm max}\,x_{\rm CMB})^3)$ Fourier modes using only
 $O(\ell_{max}^2)$ spherical harmonics. However, if we confine our
-attention to the longest wavelength waves,\footnote{Our approach is
-quite complementary to that of Yadav and Wandelt~\cite{Yadav:2005} who
-are concerned with wavelengths comparable with the thickness of the
-recombination surface around the acoustic peak near $\ell\sim200$.} and
+attention to the longest wavelength waves, and
 use all the information that is at our disposal to exploit the high
 accuracy of the measurements while accepting uncertainty in the result,
-then it is possible to make some progress.
+then it is possible to make some progress.\footnote{Our approach is
+quite complementary to that of Yadav and Wandelt~\cite{Yadav:2005} who
+are concerned with wavelengths comparable with the thickness of the
+recombination surface around the acoustic peak near $\ell\sim200$.}
 
 We approximately characterize the posterior PDF (which under our
-assumptions is a multi-variate Gaussian distribution) for the
-coefficients $f_n$ by first finding its peak, minimizing the quantity
+assumptions is a multivariate Gaussian distribution) for the
+coefficients $f_n$ by first finding its peak, by minimizing the quantity
 \begin{equation}
 -2\ln{\cal P}\left(f_n|a_y\right) \approx (a_y- f_n\mathbf{R}_{ny})C_{yy'}^{-1}(a_{y'}-\mathbf{R}_{y'n'}f_{n'})+\frac{f_n^2}{\sigma_{{\bf n}}^2} + \mathrm{const.}
 \end{equation}
 with respect to variation of $f_n$. Note that $\sigma_{\bf n}$ contains
 the normalization $\alpha$.
-
 Here, $C_{yy'}^{-1}$ is the inverse
-of the covariance matrix. This leads to the linear equations:
+of the covariance matrix. This leads to the following set of
+linear equations, which can be solved using standard library routines:
 \begin{equation}
 f_n=\left(\mathbf{R}_{ny}C_{yy'}^{-1}\mathbf{R}_{y'n'}+\frac{\delta_{nn'}}{\sigma_{\bf n}^2}\right)^{-1}\mathbf{R}_{n'y}C_{yy'}^{-1}a_{y'}
 \end{equation}
 
 % In Section~\ref{} below, we give a more rigorously-derived expression for the posterior PDF ${\cal P}$.
-The approximate form given here is sufficient for a feasibility check:
+The approximate form given above is sufficient for a feasibility check:
 using mock data, we have found that {\it it is possible to solve for
 stable, low order maximum posterior Fourier coefficients, which can
 recover harmonic coefficients $a_y$ that are consistent with the
 original data.} We have applied this approximate procedure to the
-actual Planck data, and our results are exhibited in Fig.~3. There are
-features of the data which we have yet to understand but this suffices
+actual Planck data, and our results are exhibited in Figure~3. There are
+features of the data which we have yet to understand, but this suffices
 to illustrate what we hope will be possible. It is proposed to refine
 and improve upon this basic approach to obtain the best map we can
 based upon the CMB data alone. In particular we intend to set clear,
 statistical criteria for assessing when it is significant to add
-additional Fourier components to the map.
+additional Fourier components to the map. With a better understanding of
+the robustness of the inference, we will be equipped to proceed with
+our further investigation.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
 \centering\includegraphics[width=0.9\linewidth]{figures/nsffig3.jpg}
@@ -392,11 +407,19 @@ exhibiting encouraging consistency with the input data.}}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\ni{\bf Inflationary Origin of Perturbations and Hyperparameter Estimation:}
-% PJM: read the following, insert text on hierarchical inference...
+\ni{\bf Hierarchical Modeling of the Inflationary Origin of Perturbations:}
 As explained above, inflation provides a mechanism for seeding
 perturbations in the CMB from quantum fluctuations in the early
-Universe. It is standard, as we shall do here, for most models to assume
+Universe. The resulting statistical distribution of perturbation
+amplitudes provides a conditional PDF for the parameters of the
+3D potential in the Universe: {\it inflation provides a physically-motivated
+prior for us to use when mapping the potential.} Because we do not know
+the exact values of the parameters (or rather, hyper-parameters)
+of the inflation model, we must infer them from the data as well, in a
+hierarachical model for the CMB data. In this section we step through the
+construction of this statistical model.
+
+It is standard, as we shall do here, for most inflation models to assume
 that the main matter components during inflation are in the form of
 scalar fields.
 %, an assumption which shall be adopted in what follows
@@ -429,15 +452,17 @@ Here, $\nu$ is a slowly varying function which encapsulates the specific
 dynamics of the inflationary model, $\mathcal{H}^{(1)}_\nu$ is a Hankel
 function of the first kind, $\tau$ is the conformal time, defined by
 $d\tau=a(t)dt$, and $\theta$ is a random variable endowing each mode
-with a random phase. A prediction of inflation is that $\theta$ should
-have a uniform probability distribution between 0 and $2\pi$. This is a
-fundamental prediction of inflation which stems from the assumption that
+with a random phase. One prediction of inflation is that {\it $\theta$ should
+have a uniform probability distribution between 0 and $2\pi$}.
+
+This is a
+fundamental prediction of inflation, which stems from the assumption that
 the fluctuations are quantum mechanical in origin, the very assumption
 the idea of inflation is based upon.
-
 However, the actual distribution of the phases for the modes of $\zeta$
 (or $\Phi$) in the CMB has yet to be measured. This is because, so far,
-most analyses of CMB data have strived to measure the power spectrum of
+most analyses of CMB data have been restricted to measuring
+the power spectrum of
 fluctuations, $\Delta_\zeta^2$.
 %, defined by
 %\be
@@ -445,12 +470,23 @@ fluctuations, $\Delta_\zeta^2$.
 %\ee
 Because the power spectrum is proportional to $ |\zeta_{{\bf k}}|^2$,
 when such a measurement is made, the phase information of the modes is
-lost. With a reconstruction of the interior of the CMB sphere that
-outputs three-dimensional Fourier modes, this phase information will
-become readily available. Therefore, the new analysis of the CMB data we
-are proposing will make the measurement of the distribution of the
-phases possible. This will constitute a direct test of the quantum
-origin of the CMB fluctuations.
+lost.
+Since our proposed hierarchical model explicitly
+includes the 3D potential interior to the sphere of last scattering
+explicitly,
+this phase information will
+be readily available:
+% Therefore, the new analysis of the CMB data we
+% are proposing will make the measurement of the distribution of the
+% phases possible.
+we will be able to perform a direct test of the quantum
+origin of the CMB fluctuations. In Figure~\ref{f:variations} we
+show an example visualization of the phases of a mock 3D potential:
+a key part of our research program will be to develop
+robust statistical
+tests of the posterior inferences of such phases, first using realistic
+mock data (to avoid {a posteriori} bias),
+and then on the Planck temperature map.
 
 \begin{figure*}[t]
 \vspace{-1cm}
@@ -476,48 +512,69 @@ of $\Delta_\zeta^2$ would not be affected. }
 \end{center}
 \end{figure*}
 
-
-One on the main uncertainties pertaining to inflation remains the shape
+One of the main uncertainties pertaining to inflation remains the shape
 of the potential for the scalar field $\varphi$, which determines the
 specific dynamics of inflation, e.g. its energy scale and the precise
 shape of the power spectrum, bi-spectrum, etc. it produces. Using our
-low-$k$ 3D reconstruction of the potential $\Phi$, it will also be
-possible to reconstruct the inflationary potential over a limited range
-of $\varphi$. This is achieved by expanding the potential locally around
-a fixed $\varphi=\varphi_*$ in a model independent way in terms of the
-``slow-roll'' parameters. We can then define the inflationary vector
-parameter
+low-$k$ 3D reconstruction of the potential $\Phi$, it will  be
+possible to {\it reconstruct the inflationary potential over a limited range
+of $\varphi$.} This can be achieved by expanding the potential locally around
+a fixed $\varphi=\varphi_*$ in
+% a model independent way in
+terms of the
+``slow-roll'' parameters. We can then define the inflationary
+hyperparameter vector
 \be
 	\vec{\eta}=(H^2_*/\epsilon_*,\, \epsilon_*, \,\eta_*, \, (\eta_2)_*, \,(\eta_3)_*)\, ,
 \ee
 which defines uniquely a shape for the potential around $\varphi_*$.
 Here, the star quantities refer to their values when
-$\varphi=\varphi_*$. Using Bayes theorem, we then infer the probability
+$\varphi=\varphi_*$.
+We then infer the probability
 of a given vector $\vec{\eta}$ given the data $a_y$, via the potential
-map $f_n$ (which we marginalize over), $\mathcal{P}(\vec{\eta}| a_{y})$,
+map $f_n$, which we marginalize over,
+as
+% $\mathcal{P}(\vec{\eta}| a_{y})$,
 \be
 \mathcal{P}(\vec{\eta}| a_{y})=\frac{1}{(2\pi)^{p/2}} \left[\mathrm{Det}(C_{nn'})\mathrm{Det}(C_{yy'})\mathrm{Det}\,\mathbf{A}_{nn'}\right]^{-1/2}e^{\left\{\frac{1}{2}\mathbf{B}_{n}\mathbf{A}_{nn'}^{-1}\mathbf{B}_{n'}-\frac{1}{2}a^{\mathrm{T}}_{y'}C_{y'y}^{-1}a_{y} \right\}}\frac{\mathcal{P}(\vec{\eta})}{\mathcal{P}(a_{y})}\, ,
 \ee
-where $\mathcal{P}(\vec{\eta})$ is the prior on $\vec{\eta}$,
+where $\mathcal{P}(\vec{\eta})$ is the prior on the
+hyperparameters $\vec{\eta}$,
 ~$C_{n'n}^{-1}$ is a diagonal matrix with diagonal elements given by
-$1/|\zeta_{{\bf k}}|^2$, generalizing $1/{\sigma_{\bf n}^2}$ from our
-Gaussian prior (note that this relaxes the assumption of fixed spectral
-index $n_s$ and amplitude $\alpha$)
+$1/|\zeta_{{\bf k}}|^2$.
+Note that this generalizes the simple $1/{\sigma_{\bf n}^2}$ term
+in the
+Gaussian prior introduced above, by relaxing
+the assumption of fixed spectral
+index $n_s$ and amplitude $\alpha$.
 %\footnote{$C_{n'n}^{-1}$ therefore corresponds to the covariance matrix of the Gaussian prior for fixed $\vec{\eta}$ values}
-and the $\mathbf{A}$ matrix and $\mathbf{B}$ vector are given by:
+The $\mathbf{A}$ matrix and $\mathbf{B}$ vector are given by:
 \be
-	\mathbf{A}_{nn'}=\mathbf{R}_{ny'}C^{-1}_{y'y} \mathbf{R}_{yn'}+C_{nn'}^{-1}\, ,\qquad \qquad
-	 \mathbf{B}_{n}=  \mathbf{R}_{ny'} C_{y'y}^{-1}  a_{y}\, .
+	\mathbf{A}_{nn'} = \mathbf{R}_{ny'}C^{-1}_{y'y} \mathbf{R}_{yn'}+C_{nn'}^{-1}\, ,\qquad \qquad
+	 \mathbf{B}_{n}  = \mathbf{R}_{ny'} C_{y'y}^{-1}  a_{y}\, .
 \ee
-Generalizing this formalism to inflationary parameters that produce
-primordial non-Gaussianities is straightforward, however, a key
-assumption in the above formalism is the assumption of a Gaussian prior
+
+Generalizing this analytic formalism to include the
+inflationary parameters that produce
+{\it primordial non-Gaussianities} is straightforward. However, a key
+assumption in the implementation of the above inference
+is the assumption of a Gaussian prior
 for the $f_n$. To exploit the full information present in data samples
-containing an increasingly larger range of $\ell$ modes, we will further
-extend our numerical analysis and develop a pipeline capable of handling
-non-Gaussian priors for the $f_n$ and solve for the $\vec{\eta}$ vector
-using MCMC sampling.
-% PJM: Need some more details here...!!!
+containing an increasingly larger range of $\ell$ modes to look
+for signs of non-Gaussianity, we will investigate suitable
+approximations for a non-Gaussian
+$\mathcal{P}(f_n|\vec{\eta})$. These approximations will need to preserve
+the computational efficiency of the linear modeling inherent to their
+Gaussian precursor; this could be achieved via extensions such as Gaussian
+mixture models, or Gaussian processes, depending on the form of the
+non-Gaussianity. An alternative route could be to implement
+the requisite
+non-Gaussian prior directly, and sample the $f_n$ and the $\vec{\eta}$
+using MCMC sampling. Hamiltonian Monte Carlo has been shown to
+work well in simular situations \cite{JascheAndWandelt2013}; Gibbs
+sampling (as used by the Planck team themselves)
+could also be a good way to cope with the high dimensionality
+of the problem \cite{SeljebotnEtal2014}.
 
 \ni{\bf Detailed Approach Incorporating Planck Polarization Data:}
 Up to this point, we have only considered the CMB temperature data. We

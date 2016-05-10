@@ -405,7 +405,26 @@ as shown in Figure~\ref{Fig:Mockreconstruction} using mock data, we have found t
 stable, low order maximum posterior Fourier coefficients, which can
 recover harmonic coefficients $a_y$ that are consistent with the
 original data.} We have applied this approximate procedure to the
-actual Planck data, and our results are exhibited in Figure~\ref{Fig:PlanckRec}. There are
+actual Planck data, and our results are exhibited in Figure~\ref{Fig:PlanckRec}.
+
+The error on the recovered Fourier coefficients $f_n$ is given by the covariance of the posterior distribution,
+\be
+	C_{posterior}=\mathbf{A}_{nn'}^{-1} = \left(\mathbf{R}_{ny'}C^{-1}_{y'y} \mathbf{R}_{yn'}+C_{nn'}^{-1}\right)^{-1}\, .
+\ee
+Therefore, the marginalized error on individual reconstructed $f_n$ parameters is given by the square root of the corresponding diagonal elements of $\mathbf{A}_{nn'}^{-1} $. The error on the recovered parameters for the reconstruction displayed in Figure~\ref{Fig:Mockreconstruction} is shown in Figure~\ref{Fig:recerror}
+
+\begin{figure}[t]
+\centering\includegraphics[width=1.\linewidth]{figures/errorrec.png}
+\caption{{\small 
+Error on the reconstructed $f_n$ parameters in the reconstruction from Figure~\ref{Fig:Mockreconstruction}. The left panel shows the real part of the coefficients while the right panel shows the corresponding imaginary part.
+ {\it Blue:} True $f_n$ values. {\it Orange: } Reconstructed $f_n$ values. The error bars are given by the  posterior covariance matrix $\mathbf{A}_{nn'}^{-1}$.
+}}
+\label{Fig:recerror}
+\end{figure}
+
+
+
+There are
 features of the data which we have yet to understand, but this suffices
 to illustrate what we hope will be possible. It is proposed to refine
 and improve upon this basic approach to obtain the best map we can
@@ -414,6 +433,7 @@ statistical criteria for assessing when it is significant to add
 additional Fourier components to the map. With a better understanding of
 the robustness of the inference, we will be equipped to proceed with
 our further investigation.
+To extend our analysis to larger l, when density and velocity effects are also important. It will become necessary to use the standard transfer function to relate the observed temperature fluctuation to the inflationary perturbations and the contemporary potential (and density) perturbations.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
@@ -573,7 +593,7 @@ Gaussian prior introduced above, by relaxing
 the assumption of fixed spectral
 index $n_s$ and amplitude $\alpha$.
 %\footnote{$C_{n'n}^{-1}$ therefore corresponds to the covariance matrix of the Gaussian prior for fixed $\vec{\eta}$ values}
-The $\mathbf{A}$ matrix and $\mathbf{B}$ vector are given by:
+The $\mathbf{A}$ matrix is defined as above and $\mathbf{B}$ vector are given by:
 \be
 	\mathbf{A}_{nn'} = \mathbf{R}_{ny'}C^{-1}_{y'y} \mathbf{R}_{yn'}+C_{nn'}^{-1}\, ,\qquad \qquad
 	 \mathbf{B}_{n}  = \mathbf{R}_{ny'} C_{y'y}^{-1}  a_{y}\, .

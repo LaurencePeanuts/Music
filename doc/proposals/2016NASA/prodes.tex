@@ -315,9 +315,8 @@ $13.9$~Gpc which we adopt as our unit of length.
 \Phi[{\bf x}(r,\theta,\phi)]=\sum_{n=1}^{N/2}[f_n\cos({\bf k}_n\cdot{\bf x})+f_{N+1-n}\sin({\bf k}_n\cdot{\bf x})]
 \end{equation}
 where the coefficients $f_n$ are also real and
-\be
- {\bf k}=\Delta k\{n_1,n_2,n_3\}=k\{\sin\theta'\cos\phi',\sin\theta'\sin\phi',\cos\theta'\}\, ,
- \ee
+$
+ {\bf k}=\Delta k\{n_1,n_2,n_3\}=k\{\sin\theta'\cos\phi',\sin\theta'\sin\phi',\cos\theta'\}$,
   with $n_1,n_2,n_3$ integers and $\Delta k=2\pi/L=\pi/2$.  We restrict the sum to $(n_1^2+n_2^2+n_3^2)^{1/2}\le n_{\rm max}$ and only need consider $\bf k$ over a hemisphere (since the potential must everywhere be real.) We label the coefficients by the index $n$ running from $1$ to $N\sim4\pi n_{\rm max}^3/3$. ($N=6$ through $4168$ for $n_{\rm max}=1$ through $10$.) $\Phi({\bf x})$ can be expanded formally as an infinite sum of Legendre polynomials and approximately as a finite sum:
 \begin{equation}
 \Phi({\bf x;\ell_{\rm max}})=\sum_{\ell=0} ^{\ell_{\rm max}}(2\ell+1)\sum_{n=1}^{N/2}j_{\ell}(k_nx)P_{\ell}({\hat{\bf k}}_n\cdot{\hat{\bf x}})[\cos(\ell\pi/2)f_n+\sin(\ell\pi/2)f_{N+1-n}].
@@ -419,9 +418,7 @@ original data.} We have applied this approximate procedure to the
 actual Planck data, and our results are exhibited in Figure~\ref{Fig:PlanckRec}.
 
 The error on the recovered Fourier coefficients $f_n$ is given by the covariance of the posterior distribution,
-\be
-	C_{posterior}=\mathbf{A}_{nn'}^{-1} = \left(\mathbf{R}_{ny'}C^{-1}_{y'y} \mathbf{R}_{yn'}+C_{nn'}^{-1}\right)^{-1}\, .
-\ee
+$C_{posterior}=\mathbf{A}_{nn'}^{-1} = \left(\mathbf{R}_{ny'}C^{-1}_{y'y} \mathbf{R}_{yn'}+C_{nn'}^{-1}\right)^{-1}$.
 Therefore, the marginalized error on individual reconstructed $f_n$ parameters is given by the square root of the corresponding diagonal elements of $\mathbf{A}_{nn'}^{-1} $. The error on the recovered parameters for the reconstruction displayed in Figure~\ref{Fig:Mockreconstruction} is shown in Figure~\ref{Fig:recerror}
 
 
@@ -695,7 +692,7 @@ polarization patterns~\cite{Scheuer:1977}.} exploring the nesting of the
 equipotential surfaces within the photosphere. This leads to similar
 type of tree. Although these trees are essentially topological, they can only be measured in 3D if there is very careful control of the systematics in the data.
 \begin{figure}[t]
-\centering\includegraphics[width=0.9\linewidth]{figures/nsffig5.jpg}
+\centering\includegraphics[width=0.6\linewidth]{figures/nsffig5.jpg}
 \caption{{\small a) Nesting of separatrices for Planck data, with
 $\ell_{\rm max}=4.5$. The extrema, H, L and saddles, K, X are
 identified. b) Equivalent tree describing the same data.}}
@@ -980,33 +977,33 @@ issues of theoretical principle which we intend to try to clarify.
 
 % ====================================================================
 
-\section{Personnel and Responsibilites}
-\label{sec:personnel}
-
-This work will be primarily a collaboration between the PI and the
-collaborator Dr.\ Phil Marshall, who is currently a Staff Scientist at
-SLAC and one of the LSST Dark Energy Science analysis working group
-conveners. It is proposed to support a postdoctoral fellow, Laurence
-Perreault Levasseur to work on this project half time for two years. As
-we are conducting this research in open view, we expect to attract
-additional collaborators and several local colleagues have already
-expressed interest in it.
-We are considering recruiting a graduate student in the fall to join us
-on this project. Already an excellent junior undergraduate has expressed
-interest in joining immediately. Both would be supported by
-Stanford/KIPAC funds.
-
-
-Blandford will start by taking the lead experimenting with the
-simulation of potential maps and then CMB temperature and polarization
-maps and finally using the publicly released Planck temperature and
-polarization data to do the best job we can on this data alone.
-Meanwhile, Marshall will lead the consideration of existing local
-surveys, including those listed above, and work on addressing the
-underlying Bayesian inference problems posed by combining them with CMB
-data.  Perreault-Levasseur is has begun preliminary work on the connection to
-inflation and intends to participate fully in developing the new
-statistical approaches.
+%\section{Personnel and Responsibilites}
+%\label{sec:personnel}
+%
+%This work will be primarily a collaboration between the PI and the
+%collaborator Dr.\ Phil Marshall, who is currently a Staff Scientist at
+%SLAC and one of the LSST Dark Energy Science analysis working group
+%conveners. It is proposed to support a postdoctoral fellow, Laurence
+%Perreault Levasseur to work on this project half time for two years. As
+%we are conducting this research in open view, we expect to attract
+%additional collaborators and several local colleagues have already
+%expressed interest in it.
+%We are considering recruiting a graduate student in the fall to join us
+%on this project. Already an excellent junior undergraduate has expressed
+%interest in joining immediately. Both would be supported by
+%Stanford/KIPAC funds.
+%
+%
+%Blandford will start by taking the lead experimenting with the
+%simulation of potential maps and then CMB temperature and polarization
+%maps and finally using the publicly released Planck temperature and
+%polarization data to do the best job we can on this data alone.
+%Meanwhile, Marshall will lead the consideration of existing local
+%surveys, including those listed above, and work on addressing the
+%underlying Bayesian inference problems posed by combining them with CMB
+%data.  Perreault-Levasseur is has begun preliminary work on the connection to
+%inflation and intends to participate fully in developing the new
+%statistical approaches.
 
 % ====================================================================
 

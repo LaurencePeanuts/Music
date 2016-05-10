@@ -256,6 +256,7 @@ identify systematic effects.)
 \caption{{\small Photospheric potential fluctuations of the CMB for
 $\ell_{\rm max}=2,5,10$ derived from Planck data shown as Mollweide
 projections.}}
+\label{Fig:placklmaxs}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -284,14 +285,14 @@ hear.}  In the proposed study, only one specific realization of the
 Universe -- the one we inhabit --  is considered.
 
 In order to start us on a pilot investigation, Planck team members Wehus \&
-Eriksen  (Oslo) have kindly supplied us with 100 sample Planck temperature
+Eriksen  (Oslo) have kindly supplied us with 100 sample Commander Planck temperature
 fluctuation maps for $0\le\ell\le10$ or $1\le y\le121$. From this
-ensemble we are able to compute the mean photospheric potential
-fluctuation map at the time of recombination $\Phi=a_yY_y$, (including
+ensemble we are able to compute the mean 2D photospheric potential
+fluctuation map at the time of recombination, $\Phi=a_yY_y$, up to various $\ell_{max}$ as shown in Figure \ref{Fig:placklmaxs} (including
 the monopole and dipole components and adopting the summation
 convention) and the covariance matrix $C_{yy'}$ associated with the
 harmonic components $a_y$. We find that this matrix is invertible and
-can be used directly up to $\ell=8$. More careful treatment of the data
+can be used directly up to $\ell_{max}=8$. More careful treatment of the data
 is needed beyond this. The fractional variance in individual harmonics
 varies between $\sim0.0001$ and $\sim0.01$. Undoubtedly, there are
 systematic effects present in this data set which need to be explored,
@@ -317,7 +318,11 @@ $13.9$~Gpc which we adopt as our unit of length.
 \begin{equation}
 \Phi[{\bf x}(r,\theta,\phi)]=\sum_{n=1}^{N/2}[f_n\cos({\bf k}_n\cdot{\bf x})+f_{N+1-n}\sin({\bf k}_n\cdot{\bf x})]
 \end{equation}
-where the coefficients $f_n$ are also real and ${\bf k}=\Delta k\{n_1,n_2,n_3\}=k\{\sin\theta'\cos\phi',\sin\theta'\sin\phi',\cos\theta'\}$, with $n_1,n_2,n_3$ integers and $\Delta k=2\pi/L=\pi/2$.  We restrict the sum to $(n_1^2+n_2^2+n_3^2)^{1/2}\le n_{\rm max}$ and only need consider $\bf k$ over a hemisphere (since the potential must everywhere be real.) We label the coefficients by the index $n$ running from $1$ to $N\sim4\pi n_{\rm max}^3/3$. ($N=6$ through $4168$ for $n_{\rm max}=1$ through $10$.) $\Phi({\bf x})$ can be expanded formally as an infinite sum of Legendre polynomials and approximately as a finite sum:
+where the coefficients $f_n$ are also real and
+\be
+ {\bf k}=\Delta k\{n_1,n_2,n_3\}=k\{\sin\theta'\cos\phi',\sin\theta'\sin\phi',\cos\theta'\}\, ,
+ \ee
+  with $n_1,n_2,n_3$ integers and $\Delta k=2\pi/L=\pi/2$.  We restrict the sum to $(n_1^2+n_2^2+n_3^2)^{1/2}\le n_{\rm max}$ and only need consider $\bf k$ over a hemisphere (since the potential must everywhere be real.) We label the coefficients by the index $n$ running from $1$ to $N\sim4\pi n_{\rm max}^3/3$. ($N=6$ through $4168$ for $n_{\rm max}=1$ through $10$.) $\Phi({\bf x})$ can be expanded formally as an infinite sum of Legendre polynomials and approximately as a finite sum:
 \begin{equation}
 \Phi({\bf x;\ell_{\rm max}})=\sum_{\ell=0} ^{\ell_{\rm max}}(2\ell+1)\sum_{n=1}^{N/2}j_{\ell}(k_nx)P_{\ell}({\hat{\bf k}}_n\cdot{\hat{\bf x}})[\cos(\ell\pi/2)f_n+\sin(\ell\pi/2)f_{N+1-n}].
 \end{equation}
@@ -344,6 +349,27 @@ study; an improved determination will be investigated following the
 evidence analysis of~\cite{Suyu2006}, {\sl en route} to a hierarchical
 modeling of the system where the normalization $\alpha$ is one of a set
 of hyperparameters governing the statistics of the potential field.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[t]
+\centering\includegraphics[width=1.\linewidth]{figures/Reconstruction2D.pdf}
+\\
+\centering\includegraphics[width=1.\linewidth]{figures/Reconstruction3D.pdf}
+\caption{{\small LPL: I will write a caption soon!! 
+\label{Fig:Mockreconstruction}
+%a) 3D gravitational potential at the time
+%of recombination, recovered from 2D fluctuations on the CMB
+%photosphere (represented by the circle), and displayed in the
+%$x_3=0$ plane. In this pilot study, 81 spherical harmonics and a
+%Gaussian prior were used to recover 122 Fourier components with
+%$n_{\rm max}=3$. The monopole and dipole were not removed.   b) The
+%predicted 2D potential fluctuations on the CMB photosphere
+%were then recomputed,
+%exhibiting encouraging consistency with the input data.
+}}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \ni{\bf Preliminary Results:}
 The simple question that motivated this investigation, and which did not
@@ -379,11 +405,11 @@ f_n=\left(\mathbf{R}_{ny}C_{yy'}^{-1}\mathbf{R}_{y'n'}+\frac{\delta_{nn'}}{\sigm
 
 % In Section~\ref{} below, we give a more rigorously-derived expression for the posterior PDF ${\cal P}$.
 The approximate form given above is sufficient for a feasibility check:
-using mock data, we have found that {\it it is possible to solve for
+as shown in Figure~\ref{Fig:Mockreconstruction} using mock data, we have found that {\it it is possible to solve for
 stable, low order maximum posterior Fourier coefficients, which can
 recover harmonic coefficients $a_y$ that are consistent with the
 original data.} We have applied this approximate procedure to the
-actual Planck data, and our results are exhibited in Figure~3. There are
+actual Planck data, and our results are exhibited in Figure~\ref{Fig:PlanckRec}. There are
 features of the data which we have yet to understand, but this suffices
 to illustrate what we hope will be possible. It is proposed to refine
 and improve upon this basic approach to obtain the best map we can
@@ -392,24 +418,6 @@ statistical criteria for assessing when it is significant to add
 additional Fourier components to the map. With a better understanding of
 the robustness of the inference, we will be equipped to proceed with
 our further investigation.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[t]
-\centering\includegraphics[width=1.\linewidth]{figures/Reconstruction2D.pdf}
-\\
-\centering\includegraphics[width=1.\linewidth]{figures/Reconstruction3D.pdf}
-\caption{{\small LPL: I will write a caption soon!! 
-%a) 3D gravitational potential at the time
-%of recombination, recovered from 2D fluctuations on the CMB
-%photosphere (represented by the circle), and displayed in the
-%$x_3=0$ plane. In this pilot study, 81 spherical harmonics and a
-%Gaussian prior were used to recover 122 Fourier components with
-%$n_{\rm max}=3$. The monopole and dipole were not removed.   b) The
-%predicted 2D potential fluctuations on the CMB photosphere
-%were then recomputed,
-%exhibiting encouraging consistency with the input data.
-}}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
@@ -417,6 +425,7 @@ our further investigation.
 \\
 \centering\includegraphics[width=1.\linewidth]{figures/Planck3d.pdf}
 \caption{{\small LPL: This is the reconstruction fromPlanck data. I will write a caption soon!}}
+\label{Fig:PlanckRec}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

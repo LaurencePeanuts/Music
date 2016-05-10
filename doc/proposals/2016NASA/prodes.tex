@@ -200,7 +200,7 @@ surveys by producing an evolving three-dimensional (or in other
 words, four-dimensional) map of the Universe that is valid from before 380~kyr to
 today, and out beyond 14 Gpc. The exercise is not purely cartographic, as
 it is essential that we use secure physical inferences
-about the early Universe in making this map. This research was originally envisaged as a three stage program. 
+about the early Universe in making this map. This research was originally envisaged as a three stage program.
 
 The first stage of our proposed program is to use 2D CMB observations alone
 to test internal consistency and to recover as much as we can of the 3D
@@ -222,7 +222,7 @@ Universe including what can be inferred beyond our horizon. We anticipate that w
 
 \subsection{Stage 1. From 2D to 3D: Potential Reconstruction from CMB Data Alone}
 
-During the first phase of our program we are extending our methodology to carry out an independent analysis of the data provided by WMAP and Planck to 
+During the first phase of our program we are extending our methodology to carry out an independent analysis of the data provided by WMAP and Planck to
 investigate of the inflationary paradigm in various different new ways. We
 first provide a  brief review of our results so far, to place this
 proposed investigation in context.
@@ -343,10 +343,10 @@ of hyperparameters governing the statistics of the potential field.
 \centering\includegraphics[width=1.\linewidth]{figures/Reconstruction2D.pdf}
 \\
 \centering\includegraphics[width=1.\linewidth]{figures/Reconstruction3D-1.pdf}
-\caption{{\small 
+\caption{{\small
 a)  Demonstration of the reconstruction pipeline.  In this pilot study, 81 spherical harmonics and a
 Gaussian prior were used to recover 122 Fourier components with
-$n_{\rm max}=2$. The monopole and dipole were not removed. 
+$n_{\rm max}=2$. The monopole and dipole were not removed.
  {\it First panel: } Simulated, noiseless 2D potential fluctuations on the CMB photosphere. {\it Second panel: } Noisy mock observation. {\it Thris panel: } Most probable model, as given by equation \ref{eq:mostprobablemodel}. {\it Fourth panel: } Residuals.
   b) Simulated 3D gravitational potential at the time
 of recombination.  {\it First panel: } Slice of the 3D potential in the
@@ -420,10 +420,10 @@ our further investigation.
 \centering\includegraphics[width=1.\linewidth]{figures/PlanckMoll.pdf}
 \\
 \centering\includegraphics[width=1.\linewidth]{figures/Planck3d.pdf}
-\caption{{\small 
+\caption{{\small
 a)  Reconstruction of the 3D temperature map from the Planck 2D CMB photosphere.  In this pilot study, 81 spherical harmonics and a
 Gaussian prior were used to recover 122 Fourier components with
-$n_{\rm max}=3$. The monopole and dipole were not removed. 
+$n_{\rm max}=3$. The monopole and dipole were not removed.
  {\it First panel: } Planck temperature map on the CMB photosphere. {\it Second panel: } Most probable model, as given by equation \ref{eq:mostprobablemodel}. {\it Fourth panel: } Residuals.
   b) Slice of the 3D temperature map in the
 $x_3=0$ plane. The CMB photosphere is represented by the black circle.  c) 3D visualization of the temperature map. The potential can be obtained by multiplying the temperature map by $1/3$.
@@ -682,18 +682,20 @@ identified. b) Equivalent tree describing the same data.}}
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-\subsection{Stage 2.}
+\subsection{Stage 2. Producing Maps at Higher Resolution}
 % From 3D to 4D: Incorporating Existing ``Local'' Volumetric Data
 
 At the end of Stage 1, we will have in hand the posterior PDF for the
 Fourier mode amplitudes of a 3D model of the potential on large scales
 throughout the observable Universe (and slightly beyond) at the epoch of
-last scattering. Our main goal in Stage 2 which is the principal object of this proposal is to improve the linear resolution of our map as far as we can. 
- If we now assume a  Friedman-Robertson-Walker expansion
+last scattering.
+Our main goal in Stage 2 which is the principal object of this proposal
+is to improve the linear resolution of our map as far as we can.
+If we now assume a  Friedman-Robertson-Walker expansion
 model, with suitably-parameterized expansion rate and a particular
-choice of those expansion parameters,  we can evolve the fourier modes
+choice of those expansion parameters,  we can evolve the Fourier modes
 of any sample potential map we draw  from this PDF forward in cosmic
-time in order to make posterior  predictions about the
+time in order to make posterior  predictions about the local
 $z << 1000$ Universe. The likelihood of these predictions given various
 observations in the local Universe will allow us to downweight some
 possible models, and hence further reduce the uncertainty in the map.
@@ -749,7 +751,9 @@ relating the growth of structure to the CMB emphasizing shorter length
 scales, notably those associated with BAO and the largest voids
 $\sim0.1$~Gpc. However, these same surveys can also be used to augment
 the long wavelength CMB data and improve the accuracy and resolution of
-the resulting 3D potential map. A good example is the SDSS/BOSS
+the resulting 3D potential map. A good example is the
+he all-sky survey made by the WISE satellite.\footnote{https://www.nasa.gov/mission\_pages/WISE/mission/index.html}
+Another example is the SDSS/BOSS
 program,\footnote{http://www.sdss.org} which covered nearly a third of
 the sky with over a million redshifts and photometry on galaxies out to
 $z\sim0.7$.\footnote{21 cm redshift surveys provide an important
@@ -772,14 +776,19 @@ is comparable to the precision with which the fractional density
 perturbation can be measured in a single region of size equal to the
 associated length scale. This is $\sim k^{3/2}n^{-1/2}$, and must exceed
 $\delta$. This suggests that the density of such objects must exceed
-$\sim H_0^4/c^2\Phi k_{\rm max}$. If this is
-achievable, then although the data increment will be small, its value
+$\sim H_0^4/c^2\Phi k_{\rm max}$,
+and systematic effects must be adequately controlled in order to connect
+local surveys with the CMB. We propose to carry out a careful study
+based upon trial data to determine when this  is possible.
+If this is achievable
+using currently available data, as our exploration so far suggests is the case,
+then although the data increment will be small, its value
 will be much greater because it can act as a {\it phase reference} for
 anchoring the imperfectly specified modes measured by CMB observations.
 
 One possible starting point for this part of the program could be to
 focus on existing weak lensing surveys, such as in the 1.5 square degree
-{\it HST} COSMOS field \cite{MasseyEtal2007}, or the
+{\it HST} COSMOS field \cite{MasseyEtal2007}, supplemented by the
 publically-available 150 square degree {\it CFHTLens} dataset
 \cite{HeymansEtal2012}. These datasets could provide
 low signal to noise measurements of the long wavelength potential
@@ -909,11 +918,14 @@ treatment.
 \subsection{Stage 3. Posterior Predictions and Ultimate Limits}
 \label{sec:research:stagethree}
 
-The final stage of our research program will be predictive in
+The final stage of our research program,
+which is likely to be prosecuted towards the end of this proposal period,
+will be predictive in
 character. A fully constrained 4D model of the large scale gravitational
 potential in the Universe, with well characterized posterior PDF, will
 enable us to make predictions, with uncertainties, about the  density
-field probed by a number of different upcoming sky surveys. Beyond the
+field probed by a number of different upcoming sky surveys
+and proposed space CMB missions, such as LiteBIRD and PIXIE. Beyond the
 fundamental scientific importance of making, and so enabling the testing
 of, such predictions, our map will provide a new tool for the
 teams analyzing these future surveys. Systematic error control on these
@@ -971,7 +983,7 @@ issues of theoretical principle which we intend to try to clarify.
 
 % ====================================================================
 
-\section{Personnel Plans}
+\section{Personnel and Responsibilites}
 \label{sec:personnel}
 
 This work will be primarily a collaboration between the PI and the
@@ -995,18 +1007,37 @@ polarization data to do the best job we can on this data alone.
 Meanwhile, Marshall will lead the consideration of existing local
 surveys, including those listed above, and work on addressing the
 underlying Bayesian inference problems posed by combining them with CMB
-data.  Perreault Levasseur is has begun preliminary work on the connection to
+data.  Perreault-Levasseur is has begun preliminary work on the connection to
 inflation and intends to participate fully in developing the new
 statistical approaches.
-2018 will be devoted to completing and writing up the Stage 2 results and starting work on Stage 3.
-
 
 % ====================================================================
 
-\section{Impact}
+\section{Work Plan and Key Milestones}
+\label{sec:plan}
+
+A first paper presenting the low resolution map is nearing completion
+and should be submitted over the summer.  A second paper describing the
+tree description of nested contours is underway and should be finished
+in the fall. Essentially all of Stage 1 should be completed by the end
+of the year and the Stage 2 projects will be underway especially those
+involving polarization. 2017 will be devoted towards the Stage 2
+projects and papers will be written presenting higher resolution maps of
+the contemporary universe and analyses of inflation. We expect to be
+able to carry out a series of tests of the self-consistency of the
+assumption of Gaussianity and random phases which underlies this entire
+approach. It remains to be seen if this is competitive with alternative
+apporaches based upon the CMB and large scale structure.
+2018 will be devoted to completing and writing up the Stage 2 results
+and starting work on Stage 3.
+
+% ====================================================================
+
+\section{Relevance and Perceived Impact}
 \label{sec:impact}
 
-The research program that we propose has a broad and popular interest.
+The research program that we propose has a broad and popular interest,
+as we have already learned from popular and semi-popular presentations.
 As our potential map is a 3D object,
 we will explore the use of 3D printing as well as sophisticated 2D movie
 representations to exhibit the results. This project also necessarily
@@ -1027,6 +1058,11 @@ other big dataset visualizations: interactive presentation of these
 products via IPython notebooks is ongoing, and can be supplemented by
 screenshared video recording to provide a narrative for a wider
 audience.
+
+Blandford, Marshall and Perrault-Levasseur all regularly give public
+presentations on cosmology and other topics, and are looking forward to
+including more of this material in future outreach activity.
+
 
 % Marshall has a long and ongoing interest and record in public outreach
 % including various initiatives in citizen science, public talks and large

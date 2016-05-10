@@ -347,7 +347,7 @@ of hyperparameters governing the statistics of the potential field.
 a)  Demonstration of the reconstruction pipeline.  In this pilot study, 81 spherical harmonics and a
 Gaussian prior were used to recover 122 Fourier components with
 $n_{\rm max}=2$. The monopole and dipole were not removed.
- {\it First panel: } Simulated, noiseless 2D potential fluctuations on the CMB photosphere. {\it Second panel: } Noisy mock observation. {\it Thris panel: } Most probable model, as given by equation \ref{eq:mostprobablemodel}. {\it Fourth panel: } Residuals.
+ {\it First panel: } Simulated, noiseless 2D potential fluctuations on the CMB photosphere. {\it Second panel: } Noisy mock observation. {\it Thris panel: } Most probable model, as given by equation \ref{eq:mostprobablemodel}. {\it Fourth panel: } Residuals. As expected, the posterior predicted potential maps have higher uncertainty in the galactic plane.
   b) Simulated 3D gravitational potential at the time
 of recombination.  {\it First panel: } Slice of the 3D potential in the
 $x_3=0$ plane. The CMB photosphere is represented by the black circle.  {\it Second panel: } 3D visualization of the potential. c) 3D reconstructed potential, recovered from the noisy 2D fluctuations on the CMB photosphere. Both panels a analogous to the ones in b), and show very good agreement between simulation and reconstruction.
@@ -373,6 +373,17 @@ then it is possible to complete this task.\footnote{Our approach is
 quite complementary to that of Yadav and Wandelt~\cite{Yadav:2005} who
 are concerned with wavelengths comparable with the thickness of the
 recombination surface around the acoustic peak near $\ell\sim200$.}
+
+
+\begin{figure}[t]
+\centering\includegraphics[width=0.7\linewidth]{figures/errorrec.png}
+\caption{{\small
+Error on the reconstructed $f_n$ parameters in the reconstruction from Figure~\ref{Fig:Mockreconstruction}. The left panel shows the real part of the coefficients while the right panel shows the corresponding imaginary part.
+ {\it Blue:} True $f_n$ values. {\it Orange: } Reconstructed $f_n$ values. The error bars are given by the  posterior covariance matrix $\mathbf{A}_{nn'}^{-1}$.
+}}
+\label{Fig:recerror}
+\end{figure}
+
 
 For a set of $f_n$ parameters, our model for the 2-dimensional sky is defined by computing the spherical harmonic coefficients $a_y
 =\mathbf{R}_{yn}f_n$, where the ``response
@@ -413,15 +424,6 @@ The error on the recovered Fourier coefficients $f_n$ is given by the covariance
 \ee
 Therefore, the marginalized error on individual reconstructed $f_n$ parameters is given by the square root of the corresponding diagonal elements of $\mathbf{A}_{nn'}^{-1} $. The error on the recovered parameters for the reconstruction displayed in Figure~\ref{Fig:Mockreconstruction} is shown in Figure~\ref{Fig:recerror}
 
-\begin{figure}[t]
-\centering\includegraphics[width=1.\linewidth]{figures/errorrec.png}
-\caption{{\small
-Error on the reconstructed $f_n$ parameters in the reconstruction from Figure~\ref{Fig:Mockreconstruction}. The left panel shows the real part of the coefficients while the right panel shows the corresponding imaginary part.
- {\it Blue:} True $f_n$ values. {\it Orange: } Reconstructed $f_n$ values. The error bars are given by the  posterior covariance matrix $\mathbf{A}_{nn'}^{-1}$.
-}}
-\label{Fig:recerror}
-\end{figure}
-
 
 
 There are
@@ -444,7 +446,7 @@ To extend our analysis to larger l, when density and velocity effects are also i
 a)  Reconstruction of the 3D temperature map from the Planck 2D CMB photosphere.  In this pilot study, 81 spherical harmonics and a
 Gaussian prior were used to recover 122 Fourier components with
 $n_{\rm max}=3$. The monopole and dipole were not removed.
- {\it First panel: } Planck temperature map on the CMB photosphere. {\it Second panel: } Most probable model, as given by equation \ref{eq:mostprobablemodel}. {\it Fourth panel: } Residuals.
+ {\it First panel: } Planck temperature map on the CMB photosphere. {\it Second panel: } Most probable model, as given by equation \ref{eq:mostprobablemodel}. {\it Fourth panel: } Residuals. As expected, the posterior predicted temperature maps have higher uncertainty in the galactic plane.
   b) Slice of the 3D temperature map in the
 $x_3=0$ plane. The CMB photosphere is represented by the black circle.  c) 3D visualization of the temperature map. The potential can be obtained by multiplying the temperature map by $1/3$.
 }}
@@ -815,31 +817,6 @@ low signal to noise measurements of the long wavelength potential
 fluctuations along the line of sight to about $z \approx 1$,
 through  a quantitative comparison with our model predictions.
 
-\ni{\bf Further Constraints on Inflation:}
-% LLP: DO WE WANT TO KEEP THIS?
-The newly developed effective field theory of large scale
-structure~\cite{Carrasco2012} has made great promises in terms of
-pushing constraints on the primordial Universe far beyond the scope of
-the CMB. This formalism relies on a separation of scales between the
-linear physics on large, cosmological scales in the infra-red (IR) and
-the non-linear physics on small scales in the ultra-violet (UV) (under
-$\sim10$ Mpc). These small scales are strongly coupled as a result of
-gravitational collapse. The UV modes are then integrated out in a way
-that yields a classical loop expansion correcting the dynamics of the
-linear IR theory. By pushing the theoretical control of modes with $k$
-closer to the non-linear regime, a far greater amount of information
-becomes available. The application of this method to current
-%  and upcoming
-surveys will certainly allow the improvement of our 3D map in
-accuracy and resolution, which will in turn be translated into better
-constraints on the inflaton potential, primordial non-Gaussianities,
-etc. Quantifying the astrophysical systematic errors will be an
-important part of this phase of the investigation: the connection
-between observed galaxy summaries such as their number density and the
-underlying potential will need to be quantified and explored. Both
-galaxy bias and halo bias will need to be incorporated into the
-treatment.
-
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 %
 % \subsection{Stage 3. Future Surveys}
@@ -1079,7 +1056,7 @@ products via IPython notebooks is ongoing, and can be supplemented by
 screenshared video recording to provide a narrative for a wider
 audience.
 
-Blandford, Marshall and Perrault-Levasseur all regularly give public
+Blandford, Marshall and Perreault Levasseur all regularly give public
 presentations on cosmology and other topics, and are looking forward to
 including more of this material in future outreach activity.
 

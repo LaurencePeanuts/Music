@@ -13,7 +13,7 @@ from matplotlib import cm
 cmap = cm.RdBu_r
 cmap.set_under('w')
 
-max=60
+max=50
 
 # declaring initial objects
 #You=beatbox.Multiverse(truncated_nmax=2, truncated_nmin=1, truncated_lmax=8, truncated_lmin=2)
@@ -47,13 +47,13 @@ if MOCK == 1:
     datamap = datamap.T
 
     # Plot the generated T map
-    beatbox.You.all_simulated_universes[-1].show_CMB_T_map(title = "Simulated CMB Temperature Fluctuations", from_perspective_of="observer", cmap=cmap, max=max)
+    beatbox.You.all_simulated_universes[-1].show_CMB_T_map(title = "True CMB Temperature Fluctuations", from_perspective_of="observer", cmap=cmap, max=max)
 
     # Plot the Mock Univers with the noise
     MockUniverse=beatbox.Universe()
     MockUniverse.ayreal2ay_for_mapping(datamap)
     MockUniverse.ay2alm(MockUniverse.ay)
-    MockUniverse.show_CMB_T_map( from_perspective_of="observer", cmap=cmap,  max=max)
+    MockUniverse.show_CMB_T_map( title = "Mock", from_perspective_of="observer", cmap=cmap,  max=max)
     
     
     
@@ -88,7 +88,7 @@ We = beatbox.Universe()
 We.fn = beatbox.You.reconstrunct_fn
 #We.fn = beatbox.You.all_simulated_universes[-1].fn * 0.5
 We.transform_3D_potential_into_alm(truncated_nmax=We.truncated_nmax, truncated_nmin=We.truncated_nmin,truncated_lmax=We.truncated_lmax, truncated_lmin=We.truncated_lmin,usedefault=1, fn=1)
-We.show_CMB_T_map(title = "Mock 3D Potential, $n_{max}$=2", from_perspective_of="observer", cmap=cmap,  max=max)
+We.show_CMB_T_map(title = "Best Fit Model", from_perspective_of="observer", cmap=cmap,  max=max)
 We.rearrange_fn_from_vector_to_grid()
 We.evaluate_potential_given_fourier_coefficients()
 

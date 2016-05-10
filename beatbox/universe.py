@@ -193,7 +193,7 @@ class Universe(object):
             # Sky map:
             hp.mollview(self.Tmap, rot=(-90,0,0),  min=-max, max=max,  title=title + ", $\ell_{max}=$%d " % self.truncated_lmax, cmap=cmap, unit="$\mu$K")
             
-            plt.savefig("nmax"+str(self.truncated_nmax)+".png", dpi=dpi, bbox_inches="tight")
+            plt.savefig(title+".png", dpi=dpi, bbox_inches="tight")
         
         else:
             # Interactive "external" view ([like this](http://zonca.github.io/2013/03/interactive-3d-plot-of-sky-map.html))            pass

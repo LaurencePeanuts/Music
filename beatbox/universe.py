@@ -178,7 +178,7 @@ class Universe(object):
         return
 
 
-    def show_CMB_T_map(self,Tmap=None, title = "CMB graviational potential fluctuations as seen from inside the LSS", from_perspective_of = "observer"):
+    def show_CMB_T_map(self,Tmap=None, max=100, title = "CMB graviational potential fluctuations as seen from inside the LSS", from_perspective_of = "observer", cmap=None):
         if Tmap is None:
             self.NSIDE = 256
             self.Tmap = hp.alm2map(self.alm,self.NSIDE)
@@ -187,17 +187,17 @@ class Universe(object):
             
         if from_perspective_of == "observer":
             # Sky map:
-            hp.mollview(self.Tmap, rot=(-90,0,0), min=-60, max=45, title=title + ", $l_max=$%d" % self.truncated_lmax)
+            hp.mollview(self.Tmap, rot=(-90,0,0),  min=-max, max=max,  title=title + ", $\ell_{max}=$%d " % self.truncated_lmax, cmap=cmap, unit="$\mu$K")
             
-#        else:
-#            # Interactive "external" view ([like this](http://zonca.github.io/2013/03/interactive-3d-plot-of-sky-map.html))            pass
-#            #   beatbox.zoncaview(self.Tmap)
-#            # This did not work, sadly. Maybe we can find a 3D
-#            # spherical surface plot routine using matplotlib? For
-#            # now, just use the healpix vis.
-#            R = (0.0,0.0,0.0) # (lon,lat,psi) to specify center of map and rotation to apply
-#            hp.orthview(self.Tmap,rot=R,flip='geo',half_sky=True,title="CMB graviational potential fluctuations as seen from outside the LSS, l_{max}=%d" % self.truncated_lmax)
-#            # print "Ahem - we can't visualize maps on the surface of the sphere yet, sorry."
+        else:
+            # Interactive "external" view ([like this](http://zonca.github.io/2013/03/interactive-3d-plot-of-sky-map.html))            pass
+            #   beatbox.zoncaview(self.Tmap)
+            # This did not work, sadly. Maybe we can find a 3D
+            # spherical surface plot routine using matplotlib? For
+            # now, just use the healpix vis.
+            R = (0.0,0.0,0.0) # (lon,lat,psi) to specify center of map and rotation to apply
+            hp.orthview(self.Tmap,rot=R,flip='geo',half_sky=True,title="CMB graviational potential fluctuations as seen from outside the LSS, $\ell_{max}$=%d" % self.truncated_lmax)
+            # print "Ahem - we can't visualize maps on the surface of the sphere yet, sorry."
         return
 
 
@@ -646,7 +646,7 @@ class Universe(object):
         
         ind = np.where(self.kfilter>0)
         
-        fn_long = np.zeros(2*len(ind[1]))
+        fn_long = np.zeros((2*len(ind[1])))
         fn_long[:len(ind[1])/2] = self.fn[:len(ind[1])/2] 
         fn_long[len(ind[1])-1:len(ind[1])/2-1 :-1] = self.fn[:len(ind[1])/2] 
         fn_long[len(ind[1]):3*len(ind[1])/2] = self.fn[len(ind[1])/2:]
@@ -693,7 +693,7 @@ class Universe(object):
         return
 
 
-    def show_potential_with_yt(self,output='',angle=np.pi/4.0, N_layer=5, alpha_norm=5.0, cmap='BrBG', Proj=0, Slice=0, gifmaking=0, show3D=0, continoursshade = 2.0, boxoutput='scratch/opac_phi3D_Gauss_phases_mean'):
+    def show_potential_with_yt(self,output='',angle=np.pi/4.0, N_layer=5, alpha_norm=5.0, cmap='BrBG', Proj=0, Slice=0, gifmaking=0, show3D=0, continoursshade = 50.0, boxoutput='scratch/opac_phi3D_Gauss_phases_mean'):
         """
         Visualize the gravitational potential using yt. We're after something
         like http://yt-project.org/doc/_images/vr_sample.jpg - described
@@ -732,14 +732,19 @@ class Universe(object):
             ind = indgtr*indsmlr
         
             sphere = np.ones(self.phi.shape)
-            sphere = 50000*ind
+            sphere = 5.*ind
             #sphere = 0.0007*ind
             negsphere = -self.phi*ind
         else:
             sphere = np.zeros(self.phi.shape)
             negsphere = np.zeros(self.phi.shape)
+        #self.phi[0,0,200]=-40
+        #self.phi[-1,-1,200]=20
         
-        #ds = yt.load_uniform_grid((dict(density=(self.phi+sphere, 'g/cm**3'), Xnorm=(xnorm, 'g/cm**3'))), self.phi.shape, bbox=bbox,  nprocs=1)
+        #phiprime=self.phi
+        #phiprime[np.where(self.phi<-18)]=-20
+        
+#        ds = yt.load_uniform_grid((dict(density=(self.phi+sphere, 'g/cm**3'), Xnorm=(xnorm, 'g/cm**3'))), self.phi.shape, bbox=bbox,  nprocs=1)
         ds = yt.load_uniform_grid((dict(density=(self.phi+offset+sphere, 'g/cm**3'), Xnorm=(xnorm, 'g/cm**3'))), self.phi.shape, bbox=bbox,  nprocs=1)
         field = 'density'
         #Check that the loaded field is recognized by yt
@@ -778,13 +783,13 @@ class Universe(object):
         tfh.set_log(False)
         tfh.set_bounds()
         tfh.build_transfer_function()
-        tfh.tf.grey_opacity=False
+        tfh.tf.grey_opacity=True
         #For small units, wide Gaussians:
-        tfh.tf.add_layers(N_layer,  w=0.0005*(ma2 - mi2) /N_layer, mi=0.25*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.25*ma,ma-0.2*ma] , colormap=cmap)
+        tfh.tf.add_layers(N_layer,  w=0.0005*(ma2 - mi2) /N_layer, mi=0.2*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.2*ma,ma-0.2*ma] , colormap=cmap)
         #For big units, small Gaussians
         #tfh.tf.add_layers(N_layer,  w=0.00000005*(ma2 - mi2) /N_layer, mi=0.3*ma, ma=ma-0.2*ma, alpha=alpha_norm*np.ones(N_layer,dtype='float64'), col_bounds=[0.3*ma,ma-0.3*ma] , colormap=cmap)
         if (Slice is not 1) and (Proj is not 1):
-            tfh.tf.map_to_colormap(60000, 90000, colormap='jet', scale=continoursshade)
+            tfh.tf.map_to_colormap(6., 10.0, colormap='jet', scale=continoursshade)
             #tfh.tf.map_to_colormap(0.001, 0.0014, colormap='jet', scale=continoursshade)
         #tfh.tf.add_layers(1, w=0.001*ma2, mi=0.0108, ma=0.012, colormap='Pastel1', col_bounds=[0.01, 0.012])
         # Check if the transfer function captures the data properly:
@@ -810,8 +815,11 @@ class Universe(object):
         	im1 = cam.snapshot('scratch/opac_phi3D_Uniform_phases_0-'+str(self.Pmax)+'.png', clip_ratio=5)
         else:
             im1 = cam.snapshot('scratch/'+boxoutput+str(self.Pmax)+'_var'+str(self.Pvar)+'.png', clip_ratio=5)
-
-        nim = cam.draw_domain(im1)
+            
+        im1.write_png('scratch/transparent_bg.png', background=[0.,0.,0.,0.])
+        im1.write_png('scratch/white1_bg.png', background=[1.,1.,1.,1.])
+        nim = cam.draw_grids(im1)
+        
         #im=cam.snapshot
         #nim = cam.draw_box(im, np.array([0.25,0.25,0.25]), np.array([0.75,0.75,0.75]))  
         if show3D == 1:
@@ -838,7 +846,7 @@ class Universe(object):
 
         if Slice == 1:
             w = yt.SlicePlot(ds, "z", "density", center="c")
-            w.set_cmap(field="density", cmap=cmap)
+            w.set_cmap(field="density", cmap='jet')
             w.annotate_sphere([0., 0., 0.], radius=(1, 'cm'),
                   circle_args={'color':'red',"linewidth": 3})
             w.show()

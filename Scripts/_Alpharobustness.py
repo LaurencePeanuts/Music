@@ -21,7 +21,7 @@ plt.title(r'Histogram of $\alpha$ values')
 
 
 # Find the best fit mu and sigma
-sigma, mu = np.mgrid[0.001:0.01:.001, 0.9:1.2:.01]
+sigma, mu = np.mgrid[np.std(alphas)**2*0.8:np.std(alphas)**2*1.2:np.std(alphas)**2*0.4/11, 0.999*np.mean(alphas): 1.001*np.mean(alphas): np.mean(alphas)*0.002/11]
 posterior = np.zeros(sigma.shape)
 
 for i in range(sigma.shape[0]):

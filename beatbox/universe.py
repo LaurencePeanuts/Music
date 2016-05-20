@@ -177,6 +177,13 @@ class Universe(object):
             self.NSIDE = hp.npix2nside(len(self.Tmap))
         return
 
+    def write_CMB_T_map(self, from_this=None, to_this='my_map'):
+        if from_this is None:
+            print "No CMB T map supplied"
+        else:
+            self.Tmapfile=to_this+".fits"
+            hp.write_map(self.Tmapfile, from_this)
+        return
 
     def show_CMB_T_map(self,Tmap=None, max=100, title = "CMB graviational potential fluctuations as seen from inside the LSS", from_perspective_of = "observer", cmap=None):
         if Tmap is None:
@@ -660,7 +667,7 @@ class Universe(object):
         
         ind = np.where(self.kfilter>0)
         
-        fn_long = np.zeros((2*len(ind[1]),1))
+        fn_long = np.zeros((2*len(ind[1])))
         fn_long[:len(ind[1])/2] = self.fn[:len(ind[1])/2] 
         fn_long[len(ind[1])-1:len(ind[1])/2-1 :-1] = self.fn[:len(ind[1])/2] 
         fn_long[len(ind[1]):3*len(ind[1])/2] = self.fn[len(ind[1])/2:]
@@ -668,7 +675,7 @@ class Universe(object):
         
         
         self.fngrid = np.zeros(self.kfilter.shape, dtype=np.complex128)
-        self.fngrid[ind]=fn_long[:len(ind[1]),0] + 1j*fn_long[len(ind[1]):,0]
+        self.fngrid[ind]=fn_long[:len(ind[1])] + 1j*fn_long[len(ind[1]):]
         return
     
 

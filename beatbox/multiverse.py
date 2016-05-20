@@ -367,7 +367,7 @@ class Multiverse(object):
         inv_A = np.dot(V_star.T, np.dot(np.diag(1./s),U.T))
         
         #Solve for the normalization of the prior
-        inv_Cf = self.solve_for_prior_normalization(inv_Cyy, inv_Cf, A, inv_A, R_real, datamap, print_alpha)
+        #inv_Cf = self.solve_for_prior_normalization(inv_Cyy, inv_Cf, A, inv_A, R_real, datamap, print_alpha)
         
         # Redefine A with the properly normalized prior
         A = np.dot(R_real.T , np.dot( inv_Cyy , R_real)) + inv_Cf

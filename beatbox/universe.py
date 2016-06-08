@@ -663,7 +663,7 @@ class Universe(object):
         vector.
         '''
         
-        np.squeeze(self.fn)
+        self.fn=np.squeeze(self.fn)
         
         ind = np.where(self.kfilter>0)
         

@@ -1,59 +1,139 @@
                 
-    \        |         |         |         |         |         |         |         |    
-     \  nmax |    2    |    3    |    4    |    5    |    6    |    8    |    9    |    50
-lmax  \      |         |         |         |         |         |         |         |    
+    \        |            |            |            |            |            |         |    
+     \  nmax |     2      |     3      |     4      |     5      |     6      |    8    |   15
+lmax  \      |            |            |            |            |            |         |      
 ----------------------------------------------------------------------------------------------
-             |alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms
-    3        | 0.09882 | 0.02322 |**0.01094| 0.005392|         |         |         |    
-             |         |         |         |         |         |         |         |    
-----------------------------------------------------------------------------------------------              |alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms
-    4        | 0.12588 | 0.03085 |  0.01442| 0.00720 |         |         |         |    
-             |         |         |         |         |         |         |         |    
+             |mean sig    |mean sig    |mean sig    |mean sig    |mean sig    |
+    3        |     0.13   |   0.01     | 9.806e-7   |   1.11e-18 |           |
+             |% under 1sig|% under 1sig|% under 1sig|% under 1sig|% under 1sig|         | 
+             |   99.1     |  100       |   100      |    100     |       |         |   
+             |Bias        |Bias        |Bias        |Bias        |Bias        |         | 
+             |0.142pm3.54 |   0.09pm3.7|   -0.1pm2.7|0.027pm2    |pm |         |    
+             |x(7.5,-7.7) |x(17.0,-12.7|  x(17,-13) |x(17,-13)   |x(,)   |         | 
+             |(0.05pm2.6)i|-0.05ipm3.0i|0.35ipm2.24i|(0.27pm1.7)i|ipmi  |         |  
+             |x(6.6,-4.4)i|x(7.1,-9.0)i|x(8.2,-8.9)i|x(8.3,-8.6)i|x(,)i|         |
+             |EvidMean    |EvidMean    |EvidMean    |EvidMean    |EvidMean    |         | 
+             | 4.4984e-25 |3.23392e-28 | 2.290e-28  |1.14637e-28 | |         |     
+             |logEvidMean |logEvidMean |logEvidMean |logEvidMean |logEvidMean |         |  
+             |  -24.35    |  -27.49    |   -27.64   |  -27.94    |   |
+             |Post Cov Mat|Post Cov Mat|Post Cov Mat|Post Cov Mat|Post Cov Mat|         |   
+             |41pm32      |19.6pm27.0  |11.2pm20.4  |6.48pm15.35 |pm  |         |   
+             | ma108mi16  |x(127.8,5.6)|x(128.9,2.4)| 130ma1.2mi | ma mi|         |  
+             |23.2ipm21.0i|16.4ipm18.5i|9.9ipm14.9i |5.8ipm11.4i |ipmi  |         |   
+             |x66.8,9.0i  |x(84.3,5.1)i|x(87.2,2.4)i|x88.16,1.21i|mai mi |  
+             |Fig of merit|Fig of merit|Fig of merit|Fig of merit|Fig of merit|         |
+             |   9.81257  | 11.336     |   6.33     |  3.53      |     |         |
+----------------------------------------------------------------------------------------------                |mean sig    |mean sig    |mean sig    |mean sig    |mean sig    |
+    4        |   0.3221   |   0.026    | 6.64516e-06| 3.173e-17  |           |
+             |% under 1sig|% under 1sig|% under 1sig|% under 1sig|% under 1sig|         | 
+             |   93.2     |  100       |   100      |   100      |       |         |   
+             |Bias        |Bias        |Bias        |Bias        |Bias        |         | 
+             |0.254pm3.13 |  0.13pm3.77|   -0.1pm2.8|-0.03pm2.00 |pm |         |    
+             |x(8.6,-6.8) |x(17.2,-13.7|  x(17,-14) |x(17,-14)   |x(,)   |         | 
+             |(0.06pm2.6)i|-0.06ipm3.0i|0.35ipm2.25i|(0.3pm1.7)i |ipmi  |         |  
+             |x(6.6,-4.4)i|x(7.1,-9.0)i|x(8.2,-8.9)i|x(8.3,-8.6)i|x(,)i|         |
+             |EvidMean    |EvidMean    |EvidMean    |EvidMean    |EvidMean    |         | 
+             | 8.04955e-30|1.74069e-40 | 2.969e-42  | 3.1888e-43 | |         |     
+             |logEvidMean |logEvidMean |logEvidMean |logEvidMean |logEvidMean |         |  
+             |  -29.319   |  -39.766   |   -41.53   |  -42.5     |   |
+             |Post Cov Mat|Post Cov Mat|Post Cov Mat|Post Cov Mat|Post Cov Mat|         |   
+             |27.4pm37.5  |17.9pm27.1  |10.7pm20.4  |6.3pm15.3   |pm  |         |   
+             | ma105mi6   |x(126.8,4.5)|x(128.4,2.3)| ma130mi1.2 | ma mi|         |  
+             |23.2ipm21.0i|16.4ipm18.5i|9.9ipm14.9i |5.8ipm11.4i |ipmi  |         |   
+             |x66.7,9.0i  |x(84.3,5.1)i|x(87.3,2.4)i|x88.2i,1.2i |mai mi |  
+             |Fig of merit|Fig of merit|Fig of merit|Fig of merit|Fig of merit|         |
+             |   8.695    | 11.5844    |   6.384    |  3.53281   |     |         |
 ----------------------------------------------------------------------------------------------
-             |alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms
-    5        | 0.134997|0.0365635|  0.01698| 0.008347|         |         |         |    
-             |         |         |         |         |         |         |         |    
+             |mean sig    |mean sig    |mean sig    |mean sig    |mean sig    |
+    5        |   0.445889 |   0.0143   | 1.08567e-05| 1.7727e-16 |           |
+             |% under 1sig|% under 1sig|% under 1sig|% under 1sig|% under 1sig|         | 
+             |   88.5     |  100       |   100      |   100      |       |         |   
+             |Bias        |Bias        |Bias        |Bias        |Bias        |         | 
+             |0.252pm3.12 |  0.13pm3.77|   -0.1pm2.8|-0.03pm2.00 |pm |         |    
+             |x(8.6,-6.8) |x(17.2,-13.6|  x(17,-14) |x(17,-14)   |x(,)   |         | 
+             | (0.1pm1.9)i|-0.09ipm2.5i|0.31ipm2.14i|(0.3pm1.7)i |ipmi  |         |  
+             |x(6.2,-1.9)i|x(6.4,-8.8)i|x(8.1,-9.1)i|x(8.2,-8.8)i|x(,)i|         |
+             |EvidMean    |EvidMean    |EvidMean    |EvidMean    |EvidMean    |         | 
+             | 7.61900e-31|1.65383e-53 | 1.18278e-57| 6.5474e-60 | |         |     
+             |logEvidMean |logEvidMean |logEvidMean |logEvidMean |logEvidMean |         |  
+             |  -30.816   |  -52.8733  |   -56.94   |   -59.189  |   |
+             |Post Cov Mat|Post Cov Mat|Post Cov Mat|Post Cov Mat|Post Cov Mat|         |   
+             |27.2pm37.6  |17.9pm27.1  |10.8pm20.4  |6.3pm15.3   |pm  |         |   
+             | ma105mi5.9 |x(126.4,4.5)|x(128.4,2.3)| ma130mi1.2 | ma mi|         |  
+             |12.0ipm18.0i|14.8ipm19.1i|9.5ipm15.0i |5.7ipm11.4i |ipmi  |         |   
+             |x60.4,0.4i  |x(84.0,3.5)i|x(87.3,2.1)i|x88.1i,1.2i |mai mi |  
+             |Fig of merit|Fig of merit|Fig of merit|Fig of merit|Fig of merit|         |
+             |   8.0957   | 10.3624    |   6.1354   |  3.4396966 |     |         |
 ----------------------------------------------------------------------------------------------
-             |alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms
-    6        | 0.145427| 0.046351| 0.021084| 0.010040|         |         |         |    
-             |         |         |         |         |         |         |         |    
+             |mean sig    |mean sig    |mean sig    |mean sig    |mean sig    |
+    6        |   0.5169967|   0.041734 | 0.000169   | 6.7853e-14 |           |
+             |% under 1sig|% under 1sig|% under 1sig|% under 1sig|% under 1sig|         | 
+             |   85.7     |  99.9      |   100      |   100      |       |         |   
+             |Bias        |Bias        |Bias        |Bias        |Bias        |         | 
+             |0.301pm2.91 |  0.13pm3.66|   -0.1pm2.7|-0.03pm1.99 |pm |         |    
+             |x(7.9,-6.6) |x(17.2,-13.9|  x(17,-14) |x(17,-14)   |x(,)   |         | 
+             |(0.08pm1.6)i|-0.09ipm2.5i|0.31ipm2.14i|(0.3pm1.7)i |ipmi  |         |  
+             |x(5.3,-1.7)i|x(6.4,-8.8)i|x(8.1,-9.1)i|x(8.2,-8.8)i|x(,)i|         |
+             |EvidMean    |EvidMean    |EvidMean    |EvidMean    |EvidMean    |         | 
+             | 3.62502e-27|4.50045e-61 | 5.32684e-70| 6.7083e-77 | |         |     
+             |logEvidMean |logEvidMean |logEvidMean |logEvidMean |logEvidMean |         |  
+             |  -27.87    |  -60.5366  |   -69.33   |   -76.193  |   |
+             |Post Cov Mat|Post Cov Mat|Post Cov Mat|Post Cov Mat|Post Cov Mat|         |   
+             |24.9pm35.4  |16.4pm27.6  |10.4pm20.5  |6.2pm15.3   |pm  |         |   
+             | ma102mi4.5 |x(126.3,2.3)|x(128.4,1.8)| ma130mi1.1 | ma mi|         |  
+             |9.1ipm15.3i |14.8ipm19.1i|9.5ipm15.0i |5.7ipm11.4i |ipmi  |         |   
+             |x55.1,0.4i  |x(84.0,3.5)i|x(87.3,2.1)i|x88.1i,1.2i |mai mi |  
+             |Fig of merit|Fig of merit|Fig of merit|Fig of merit|Fig of merit|         |
+             |   7.7027   | 10.0496    |   6.109047 |  3.4043    |     |         |
 ----------------------------------------------------------------------------------------------
-             |alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms
-    7        | 0.166566| 0.05138 | 0.023029| 0.0113  |         |         |         |    
-             |         |postcov_m|         |         |         |         |         |    
-             |         |39 \pm 38|         |         |         |         |         |   
-             |         |ma119mi11|         |         |         |         |         |    
-             |         |28i\pm23i|         |         |         |         |         |    
-             |         | ma74 mi9|         |         |         |         |         |    
-             |         |Bias     |         |         |         |         |         |    
-             |         |0.33pm2.6|         |         |         |         |         |    
-             |         |ma8  mi-5|         |         |         |         |         |    
-             |         |2e-8pm.03|         |         |         |         |         |    
-             |         |m |0.09| |         |         |         |         |         |    
-             |         |mean sig |         |         |         |         |         | 
-             |         |   0.008 |         |         |         |         |         | 
+             |mean sig    |mean sig    |mean sig    |mean sig    |mean sig    |
+    7        |   0.618    |   0.0717775| 0.0005113  | 4.6269e-13 |           |
+             |% under 1sig|% under 1sig|% under 1sig|% under 1sig|% under 1sig|         | 
+             |   81.1     |  99.6      |   100      |   100      |       |         |   
+             |Bias        |Bias        |Bias        |Bias        |Bias        |         | 
+             |0.32pm2.85  |  0.13pm3.66|   -0.1pm2.7|-0.03pm1.99 |pm |         |    
+             |x(8.1,-5.9) |x(17.2,-13.8|  x(17,-14) |x(17,-14)   |x(,)   |         | 
+             |(.004pm.05)i|-0.04ipm2.3i|0.29ipm2.09i|(0.3pm1.7)i |ipmi  |         |  
+             |x(.10,-.12)i|x(6.2,-8.6)i|x(8.1,-8.8)i|x(8.2,-8.8)i|x(,)i|         |
+             |EvidMean    |EvidMean    |EvidMean    |EvidMean    |EvidMean    |         | 
+             | 1.18015e-18|1.73246e-64 | 4.34384e-80| 1.1355e-92 | |         |     
+             |logEvidMean |logEvidMean |logEvidMean |logEvidMean |logEvidMean |         |  
+             |  -20.128   |  -64.40565 |   -79.54459|   -91.985  |   |
+             |Post Cov Mat|Post Cov Mat|Post Cov Mat|Post Cov Mat|Post Cov Mat|         |   
+             |23.4pm34.3  |16.4pm27.6  |10.4pm20.5  |6.2pm15.3   |pm  |         |   
+             | ma100mi2.7 |x(126.3,2.3)|x(128.4,1.8)| ma130mi1.1 | ma mi|         |  
+             |0.11ipm0.16i|13.6ipm19.5i|9.1ipm15.1i |5.6ipm11.4i |ipmi  |         |   
+             |x.57i,.004i |x(84.0,1.3)i|x(87.2,1.5)i|x88.1i,1.0i |mai mi |  
+             |Fig of merit|Fig of merit|Fig of merit|Fig of merit|Fig of merit|         |
+             |  5.3281196 | 9.65762    |   6.01459  |  3.3786    |     |         |
 ----------------------------------------------------------------------------------------------
-             |mean sig    |alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms|alpha_rms|
-    8        |   0.63     |  0.05498| 0.025733| 0.013292| 0.007296|         |         |    
-             |Bias        |         |         |         |         |         |         |    
-             |0.4pm0.3    |ma119mi11|         |         |         |         |         |    
-             |x(0.9, .1)  |28i\pm23i|         |         |         |         |         |    
-             |(0pm7)ie-3  | ma74 mi9|         |         |         |         |         |    
-             |x(7,-10)ie-3|Bias     |         |         |         |         |         |    
-             |            |0.33pm2.6|         |         |         |         |         |    
-             |Post Cov Mat|ma8  mi-5|         |         |         |         |         |    
-             |13pm19      |2e-8pm.03|         |         |         |         |         |    
-             | ma52 mi.4  |m |0.09| |         |         |         |         |         |    
-             |0.04ipm0.05i|mean sig |         |         |         |         |         | 
-             |x0.17,0.002i|   0.008 |         |         |         |         |         | 
+             |mean sig    |mean sig    |mean sig    |mean sig    |mean sig    |
+    8        |   0.63     |  0.1111    | 0.00116    | 5.5321e-12 |   1        |
+             |% under 1sig|% under 1sig|% under 1sig|% under 1sig|% under 1sig|         | 
+             |     78.1   |   99.6     |   100      |   100      |     100    |         |   
+             |Bias        |Bias        |Bias        |Bias        |Bias        |         | 
+             |0.4pm0.3    |0.08pm3.60  |-0.09pm2.71 |-0.03pm1.97 |-0.01pm1.54 |         |    
+             |x(0.9, .1)  |x(17.4,-13.7|  x(17,-14) |x(17,-14)   |x(-14,17)   |         | 
+             |(0pm7)ie-3  |-0.02ipm2.3i|0.29ipm2.09i|(0.2pm1.7)i |0.1ipm1.3i  |         |  
+             |x(7,-10)ie-3|x(6.1,-8.5)i|x(8.1,-8.8)i|x(8.3,-8.7)i|x(-8.5,8.8)i|         |
+             |EvidMean    |EvidMean    |EvidMean    |EvidMean    |EvidMean    |         | 
+             |0.00245428  |3.1498e-62  |4.63304e-86 | 2.4697e-106|4.5557e-115 |         |     
+             |logEvidMean |logEvidMean |logEvidMean |logEvidMean |logEvidMean |         |  
+             |-5.8674936  |  -63.05    |  -85.875   |  -105.82   |-114.4027   |
+             |Post Cov Mat|Post Cov Mat|Post Cov Mat|Post Cov Mat|Post Cov Mat|         |   
+             |13pm19      |15.7pm27.8  |10.4pm20.6  |6.1pm15.3   |3.81pm11.7  |         |   
+             | ma52 mi.4  |x(126.2,1.5)|x(128.4,1.4)| ma130mi0.9 | ma130 mi0.6|         |  
+             |0.04ipm0.05i|13.4ipm19.6i|9.1ipm15.2i |5.6ipm11.4i |3.5ipm8.9i  |         |   
+             |x0.17,0.002i|x(83.9,1.2)i|x(87.2,1.5)i|x88.1i,1.0i |ma88i mi0.7 |  
+             |Fig of merit|Fig of merit|Fig of merit|Fig of merit|Fig of merit|         |
+             |  0.242331  |  9.444957  |  5.936797  |   3.35812  |  2.0968    |         |
 ----------------------------------------------------------------------------------------------
-             |alpha_rms|alpha_rms|alpha_rms|alpha_rms|
-    10       |  74.9   |  13.84  |  923.314|
+             |
+    10       |
              |
 ----------------------------------------------------------------------------------------------
-             |alpha_rms|alpha_rms|
-    11       |         |  701.92 |
-
+             |
+    11       | 
 ----------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------

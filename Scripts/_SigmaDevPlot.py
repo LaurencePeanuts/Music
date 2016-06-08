@@ -26,8 +26,17 @@ plt.grid(True)
 
 plt.axvline(np.mean(sigmas_dev))
 print np.mean(sigmas_dev)
+print len(np.squeeze(np.where(sigmas_dev<1.)))*100./len(sigmas_dev)
 
-plt.savefig('RobustnessAnalysis/rob_plt_lmax'+str(beatbox.Universe.truncated_lmax)+'_lmin'+str(beatbox.Universe.truncated_lmin)+'_nmax'+str(beatbox.Universe.truncated_nmax)+'_nmin'+str(beatbox.Universe.truncated_nmin)+'/sigma_histogram.png')
+path_to_save='RobustnessAnalysis/rob_plt_lmax'+str(beatbox.Universe.truncated_lmax)+'_lmin'+str(beatbox.Universe.truncated_lmin)+'_nmax'+str(beatbox.Universe.truncated_nmax)+'_nmin'+str(beatbox.Universe.truncated_nmin)
+
+try: 
+    os.makedirs(path_to_save)
+except OSError:
+    if not os.path.isdir(path_to_save):
+        raise  
+
+plt.savefig(path_to_save+'/sigma_histogram.png')
 
 plt.show()
 

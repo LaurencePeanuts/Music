@@ -21,7 +21,7 @@ n, bins, patches = plt.hist(postn, 20, normed=1, facecolor='green', alpha=0.75)
 plt.xlabel('$f_n$ values for $n=$'+str(num))
 plt.ylabel('Probability')
 plt.title(r'$\mathrm{Histogram\ of\ most\ probable\ reconstructed\ values:}$')
-plt.axis([-3, 1, 0, 2])
+plt.axis([-1.5, 0., 0, 5])
 plt.grid(True)
 
 plt.axvline(beatbox.You.all_simulated_universes[0].fn[num])
@@ -29,8 +29,8 @@ plt.axvline(beatbox.You.all_reconstructed_universes[-1].fn[num], color='y')
 
 #N = (2.*pi)**(len(beatbox.You.all_simulated_universes[-1-i].fn)/2.) / (np.linalg.det(beatbox.You.A)**0.5) * np.exp(0.5*np.dot(beatbox.You.all_reconstructed_universes[0].fn.T, np.dot(beatbox.You.inv_A, beatbox.You.all_reconstructed_universes[0].fn)))
 #t = np.linspace(-3.,3.,6./200.)
-t = np.linspace(-3,2,1000)
-plt.plot(t, norm.pdf(t, loc=beatbox.You.all_reconstructed_universes[-1].fn[num], scale=1./np.sqrt(beatbox.You.A[num, num])), 'k-', lw=1, label='frozen pdf')
+t = np.linspace(-4.5,2,1000)
+#plt.plot(t, norm.pdf(t, loc=beatbox.You.all_reconstructed_universes[-1].fn[num], scale=1./np.sqrt(beatbox.You.A[num, num])), 'k-', lw=1, label='frozen pdf')
 
 #plt.plot(t, np.linalg.det(beatbox.You.A)**0.5/(2.*np.pi)**(0.5*len(beatbox.You.all_reconstructed_universes[0].fn)) *np.exp(-0.5*(beatbox.You.all_reconstructed_universes[0].fn[num]-t)**2. * beatbox.You.A[num, num]), 'k-', lw=2, label='frozen pdf')
 

@@ -396,10 +396,11 @@ class Multiverse(object):
         
         #from numpy.linalg import inv
         alpha = N / ( np.trace( np.dot(inv_A, inv_Cf) ) + np.dot( datamap.T  , np.dot( inv_Cyy, np.dot(R_real, np.dot( inv_A , np.dot(inv_Cf , np.dot( inv_A , np.dot( R_real.T ,np.dot(inv_Cyy, datamap)))))))) )
+        alpha_towrite=np.flatten(alpha)[0]
         if print_alpha is 1:
             outfile = 'alpha_lmax' + str(Multiverse.truncated_lmax) + 'lmin' + str(Multiverse.truncated_lmin) + 'nmax' + str(Multiverse.truncated_nmax) + 'nmin' + str(Multiverse.truncated_nmin) + '.txt'
             f = open('RobustnessAnalysis/' + outfile, 'a')
-            towrite = str(alpha) + "\n"
+            towrite = str(alpha_towrite) + "\n"
             f.write(towrite)
             f.close()
             

@@ -22,6 +22,7 @@ print np.mean(imagbias), np.std(imagbias), np.max(imagbias), np.min(imagbias)
 
 
 
+
 #Save a histogram of the real & imaginary biases
 n, bins, patches = plt.hist(realbias, 80, normed=0, facecolor='green', alpha=0.75)
 

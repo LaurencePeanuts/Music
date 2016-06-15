@@ -10,7 +10,7 @@ from scipy.stats import norm
 from scipy.stats import multivariate_normal
 
 
-num=11
+num=3
 
 postn=np.zeros(1000)
 for i in range(1000):

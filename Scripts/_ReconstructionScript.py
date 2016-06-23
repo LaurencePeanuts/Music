@@ -5,7 +5,7 @@
 #import os.path
 #import healpy as hp
 
-np.random.seed(3)
+#np.random.seed(3)
 
 #from astroML.plotting import setup_text_plots
 #setup_text_plots(fontsize=8, usetex=True)
@@ -13,14 +13,14 @@ from matplotlib import cm
 cmap = cm.RdBu_r
 cmap.set_under('w')
 
-max=50
+max=100
 
 # declaring initial objects
 #You=beatbox.Multiverse(truncated_nmax=2, truncated_nmin=1, truncated_lmax=8, truncated_lmin=2)
-beatbox.You.create_original_Universe()
+#beatbox.You.create_original_Universe()
 
 #make a realization of the sky to be used as a mock:
-beatbox.You.initiate_simulated_universe()
+#beatbox.You.initiate_simulated_universe()
 
 # Calculate C_yy from the 100 posterior sample Commander Planck CMB temperature maps 
 #    or load the C_yy matrix if already calculated
@@ -61,8 +61,9 @@ if MOCK == 1:
 
 else:
     beatbox.You.all_data_universes = np.append(beatbox.You.all_data_universes, beatbox.Universe())
-    beatbox.You.all_data_universes[-1].read_in_CMB_T_map(from_this = '../data/commander_32band_Clsamples100/cmb_Cl_c0001_k00031.fits')
-    beatbox.You.all_data_universes[-1].decompose_T_map_into_spherical_harmonics()
+#    beatbox.You.all_data_universes[-1].read_in_CMB_T_map(from_this = '../data/commander_32band_Clsamples100/cmb_Cl_c0001_k00031.fits')
+    beatbox.You.all_data_universes[-1].read_in_CMB_T_map(from_this = fromthis)
+    beatbox.You.all_data_universes[-1].decompose_T_map_into_spherical_harmonics(lmax=60)
     beatbox.You.all_data_universes[-1].alm2ay()
     beatbox.You.all_data_universes[-1].ay2alm(beatbox.You.all_data_universes[-1].ay)
     datamap = beatbox.You.all_data_universes[-1].ay2ayreal_for_inference(beatbox.You.all_data_universes[-1].ay)

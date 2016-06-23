@@ -227,7 +227,7 @@ class Universe(object):
         self.mmax = self.lmax
 
         self.alm = hp.sphtfunc.map2alm(self.Tmap,lmax=self.lmax,mmax=self.mmax)
-        self.alm = self.alm
+        
         return
 
 
@@ -259,7 +259,7 @@ class Universe(object):
                 i.append(hp.Alm.getidx(self.lmax, l, m))
         print "Displaying sky map of the l = ",l," and lower spherical harmonics only..."
         truncated_alm[i] = self.alm[i]
-        self.truncated_map = hp.alm2map(truncated_alm,self.NSIDE)
+        self.truncated_map = hp.alm2map(truncated_alm, 256)
         
         dpi = 300
         figsize_inch = 60, 40
@@ -564,7 +564,7 @@ class Universe(object):
 
         #is this realy necessary since filter def moved up in __init__ function??
         # Set the k filter:
-        if (beatbox.Universe.kfilter is None) or (truncated_nmax != self.truncated_nmax) or (truncated_nmin != self.truncated_nmin):
+        if (beatbox.Universe.kfilter is None) or (truncated_nmax != beatbox.Universe.truncated_nmax) or (truncated_nmin != beatbox.Universe.truncated_nmin):
             self.set_instance_k_filter(truncated_nmax=truncated_nmax,truncated_nmin=truncated_nmin)
 
         # Define the constants that go in the power spectrum

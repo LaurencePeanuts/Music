@@ -352,7 +352,7 @@ class Multiverse(object):
         # Find the indices of the negative ms
         neg_ind = (m<0)
         
-        R_real = np.zeros((len(beatbox.Universe.lms), len(beatbox.You.all_simulated_universes[0].fn)), dtype=np.float)
+        R_real = np.zeros((len(beatbox.Universe.lms), len(beatbox.You.all_simulated_universes[-1].fn)), dtype=np.float)
         
         R_real[pos_ind,:] = beatbox.Universe.R[pos_ind,:].real
         R_real[neg_ind,:] = beatbox.Universe.R[pos_ind,:].imag
@@ -396,8 +396,9 @@ class Multiverse(object):
         
         #from numpy.linalg import inv
         alpha = N / ( np.trace( np.dot(inv_A, inv_Cf) ) + np.dot( datamap.T  , np.dot( inv_Cyy, np.dot(R_real, np.dot( inv_A , np.dot(inv_Cf , np.dot( inv_A , np.dot( R_real.T ,np.dot(inv_Cyy, datamap)))))))) )
-        alpha_towrite=np.flatten(alpha)[0]
+        
         if print_alpha is 1:
+            alpha_towrite=np.flatten(alpha)[0]
             outfile = 'alpha_lmax' + str(Multiverse.truncated_lmax) + 'lmin' + str(Multiverse.truncated_lmin) + 'nmax' + str(Multiverse.truncated_nmax) + 'nmin' + str(Multiverse.truncated_nmin) + '.txt'
             f = open('RobustnessAnalysis/' + outfile, 'a')
             towrite = str(alpha_towrite) + "\n"

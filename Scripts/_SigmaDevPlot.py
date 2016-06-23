@@ -1,10 +1,10 @@
 from scipy.stats import chi2
 from scipy.special import erfinv
-probabilities2=chi2.cdf(chi2vals, len(beatbox.You.all_simulated_universes[-1].fn)) 
+probabilities2=chi2.cdf(chi2vals, len(beatbox.You.all_reconstructed_universes[-1].fn)) 
 sigmas_dev=erfinv(probabilities2)*np.sqrt(2)
 
 import matplotlib.pyplot as plt
-n, bins, patches = plt.hist(sigmas_dev,40, facecolor='green', alpha=0.75)
+n, bins, patches = plt.hist(sigmas_dev,5, facecolor='green', alpha=0.75)
 #plt.gca().set_xscale("log")
 #n, bins, patches = plt.hist(pvals,bins=np.linspace(0.9, 1.0, 100), facecolor='green', alpha=0.75)
 plt.rc('text', usetex=True)

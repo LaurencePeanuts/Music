@@ -128,3 +128,16 @@ Planck
 
 # Ignore Roger's mathematica stuff:
 classicalmusic
+
+# Scratch areas are not to be checked in
+scratch
+Demos/scratch
+Scripts/scratch
+Demos/Tests.ipynb
+
+# Movies are not to be checked in! (except the ones in the demos)
+*gif
+frames
+
+# Don't check in the .DS_Store files
+*.DS_Store

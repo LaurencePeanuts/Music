@@ -12,8 +12,8 @@ from scipy.stats import multivariate_normal
 
 num=3
 
-postn=np.zeros(1000)
-for i in range(1000):
+postn=np.zeros(numreal)
+for i in range(numreal):
     postn[i] = beatbox.You.all_reconstructed_universes[i].fn[num] 
     
 n, bins, patches = plt.hist(postn, 20, normed=1, facecolor='green', alpha=0.75)
@@ -21,10 +21,10 @@ n, bins, patches = plt.hist(postn, 20, normed=1, facecolor='green', alpha=0.75)
 plt.xlabel('$f_n$ values for $n=$'+str(num))
 plt.ylabel('Probability')
 plt.title(r'$\mathrm{Histogram\ of\ most\ probable\ reconstructed\ values:}$')
-plt.axis([-1.5, 0., 0, 5])
+plt.axis([-5, 5, 0, 5])
 plt.grid(True)
 
-plt.axvline(beatbox.You.all_simulated_universes[0].fn[num])
+plt.axvline(beatbox.You.all_simulated_universes[-1].fn[num])
 plt.axvline(beatbox.You.all_reconstructed_universes[-1].fn[num], color='y')
 
 #N = (2.*pi)**(len(beatbox.You.all_simulated_universes[-1-i].fn)/2.) / (np.linalg.det(beatbox.You.A)**0.5) * np.exp(0.5*np.dot(beatbox.You.all_reconstructed_universes[0].fn.T, np.dot(beatbox.You.inv_A, beatbox.You.all_reconstructed_universes[0].fn)))

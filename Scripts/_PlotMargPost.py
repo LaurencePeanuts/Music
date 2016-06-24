@@ -18,14 +18,14 @@ n, bins, patches = plt.hist(post106, 20, normed=1, facecolor='green', alpha=0.75
 #plt.axis([40, 160, 0, 0.03])
 plt.grid(True)
 
-plt.axvline(beatbox.You.all_simulated_universes[0].fn[num])
+plt.axvline(beatbox.You.all_simulated_universes[2].fn[num])
 #plt.axvline(beatbox.You.all_reconstructed_universes[-1].fn[num])
 
 #n2, bins2, patches2 = plt.hist(postn, 100, normed=1, facecolor='yellow', alpha=0.75)
 
 #plt.axvline(We.fn[5])
 
-t = np.linspace(-15,15,1000)
+t = np.linspace(-5,5,1000)
 plt.plot(t, norm.pdf(t, loc=beatbox.You.all_reconstructed_universes[0].fn[num], scale=np.sqrt(beatbox.You.inv_A[num, num])), 'r-', lw=2, label='frozen pdf')
 plt.plot(t, 1./(np.sqrt(beatbox.You.inv_A[num, num]*2.*np.pi))*np.exp(-0.5*(t-beatbox.You.all_reconstructed_universes[0].fn[num])**2./beatbox.You.inv_A[num, num]), 'k:', lw=2)
 

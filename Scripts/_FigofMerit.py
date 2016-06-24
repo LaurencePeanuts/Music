@@ -1,9 +1,9 @@
 sum_fn = np.zeros(numreal)
 for n in range(numreal):
-    for i in range(len(beatbox.You.all_simulated_universes[0].fn)):
-        sum_fn[n] = sum_fn[n]+(beatbox.You.all_simulated_universes[0].fn[i]-beatbox.You.all_reconstructed_universes[n].fn[i])**2
+    for i in range(len(beatbox.You.all_simulated_universes[-1].fn)):
+        sum_fn[n] = sum_fn[n]+(beatbox.You.all_simulated_universes[-1].fn[i]-beatbox.You.all_reconstructed_universes[n].fn[i])**2
     
-    sum_fn[n] = sum_fn[n]/len(beatbox.You.all_simulated_universes[0].fn)
+    sum_fn[n] = sum_fn[n]/len(beatbox.You.all_simulated_universes[-1].fn)
 
 n, bins, patches = plt.hist(sum_fn, 50, normed=0, facecolor='green', alpha=0.75)
 
@@ -12,7 +12,7 @@ plt.rc('font', family='serif')
 
 plt.xlabel('FoM')
 # plt.ylabel('Probability')
-plt.title(r'Histogram of values of the Figure of Merit for 1000 realizations of noise')
+plt.title(r'Histogram of values of the Figure of Merit for '+str(numreal)+' realizations of noise')
 
 
 # #plt.axis([0.5, 4, 0, 2])

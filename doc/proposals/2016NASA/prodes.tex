@@ -344,7 +344,7 @@ of hyperparameters governing the statistics of the potential field.
 \centering\includegraphics[width=1.\linewidth]{figures/Reconstruction3D-1.pdf}
 \caption{{\small
 a)  Demonstration of the reconstruction pipeline.  In this pilot study, 81 spherical harmonics and a
-Gaussian prior were used to recover 122 Fourier components with
+Gaussian prior were used to recover 36 Fourier components with
 $n_{\rm max}=2$. The monopole and dipole were not removed.
  {\it First panel: } Simulated, noiseless 2D potential fluctuations on the CMB photosphere. {\it Second panel: } Noisy mock observation. {\it Thris panel: } Most probable model, as given by equation \ref{eq:mostprobablemodel}. {\it Fourth panel: } Residuals. As expected, the posterior predicted potential maps have higher uncertainty in the galactic plane.
   b) Simulated 3D gravitational potential at the time
@@ -375,7 +375,7 @@ recombination surface around the acoustic peak near $\ell\sim200$.}
 
 
 \begin{figure}[t]
-\centering\includegraphics[width=0.7\linewidth]{figures/errorrec.png}
+\centering\includegraphics[width=0.7\linewidth]{figures/errorrec.pdf}
 \caption{{\small
 Error on the reconstructed $f_n$ parameters in the reconstruction from Figure~\ref{Fig:Mockreconstruction}. The left panel shows the real part of the coefficients while the right panel shows the corresponding imaginary part.
  {\it Blue:} True $f_n$ values. {\it Orange: } Reconstructed $f_n$ values. The error bars are given by the  posterior covariance matrix $\mathbf{A}_{nn'}^{-1}$.
@@ -419,7 +419,7 @@ actual Planck data, and our results are exhibited in Figure~\ref{Fig:PlanckRec}.
 
 The error on the recovered Fourier coefficients $f_n$ is given by the covariance of the posterior distribution,
 $C_{posterior}=\mathbf{A}_{nn'}^{-1} = \left(\mathbf{R}_{ny'}C^{-1}_{y'y} \mathbf{R}_{yn'}+C_{nn'}^{-1}\right)^{-1}$.
-Therefore, the marginalized error on individual reconstructed $f_n$ parameters is given by the square root of the corresponding diagonal elements of $\mathbf{A}_{nn'}^{-1} $. The error on the recovered parameters for the reconstruction displayed in Figure~\ref{Fig:Mockreconstruction} is shown in Figure~\ref{Fig:recerror}
+Therefore, the marginalized error on individual reconstructed $f_n$ parameters is given by the square root of the corresponding diagonal elements of $\mathbf{A}_{nn'}^{-1} $. The error on the recovered parameters for the reconstruction displayed in Figure~\ref{Fig:Mockreconstruction} is shown in Figure~\ref{Fig:recerror}.
 
 
 
@@ -623,7 +623,7 @@ of the problem \cite{SeljebotnEtal2014}.
 \ni{\bf Detailed Approach Incorporating Planck and WMAP Polarization Data:}
 Up to this point, we have only considered the CMB temperature data. We
 anticipate making significant gains in map fidelity when we incorporate
-the existing polarization data as well. While
+the Planck polarization data as well after it is made public. While
 these will be more sensitive to systematic effects (such as galactic
 dust and synchrotron emission), the additional signal to noise alone
 should allow us to make maps of higher spatial resolution. The
@@ -642,17 +642,6 @@ results to them. We expect all our inferences to increase in precision
 as a result of including the polarization information; whether we can
 reach the commensurate degree of accuracy will depend on both the
 computational and modeling problems outlined here.
-
-
-% NOTE: they say this in the guidelines:
-%
-% In addition, proposals may not anticipate future public data releases.
-% The scientific case for any proposed investigation must be based on -
-% and executable with - data that are in the public domain at the time of
-% the original proposal. Any proposal that invokes the use of data that
-% are not public at the time of the ADAP 2016 proposal submission deadline
-% (other than that explicitly allowed under Section 1.3.4) will be ruled
-% noncompliant and will not be rated or considered for funding.
 
 \ni{\bf Tree Representation and Non-Parametric Investigation of Gaussianity:}
 There is another way to think about this problem. Let us build up the
@@ -814,6 +803,10 @@ low signal to noise measurements of the long wavelength potential
 fluctuations along the line of sight to about $z \approx 1$,
 through  a quantitative comparison with our model predictions.
 
+\ni{\bf Constraints on Inflation:}
+The newly developed effective field theory of large scale structure~\cite{Carrasco2012} has made great promises in terms of pushing constraints on the primordial Universe far beyond the scope of the CMB. This formalism relies on a separation of scales between the linear physics on large, cosmological scales in the infra-red (IR) and the non-linear physics on small scales in the ultra-violet (UV) (under $\sim10$ Mpc). These small scales are strongly coupled as a result of gravitational collapse. The UV modes are then integrated out in a way that yields a classical loop expansion correcting the dynamics of the linear IR theory. By pushing the theoretical control of modes with $k$ closer to the non-linear regime, a far greater amount of information becomes available. The future application of this method to current and upcoming surveys will certainly allow the improvement of our 3D map in accuracy and resolution, which will in turn be translated into better constraints on the inflaton potential, primordial non-Gaussianities, etc. Quantifying the astrophysical systematic errors will be an important part of this phase of the investigation: the connection between observed galaxy summaries such as their number density and the underlying potential will need to be quantified and explored. Both galaxy bias and halo bias will need to be incorporated into the treatment.
+
+
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 %
 % \subsection{Stage 3. Future Surveys}
@@ -973,6 +966,49 @@ opportunity to make statements about structure somewhat outside our
 horizon, predicated on our adopted inflationary model on these large
 scales. This raises interesting
 issues of theoretical principle which we intend to try to clarify.
+
+
+
+
+\subsection{Stage 2. From 3D to 4D: Incorporating Existing Volumetric Data}
+\ni{\bf CMB Lensing and ISW Measurements:}
+An important way to add 3D information is to include CMB lensing~\cite{Planck2015cosmopara}. A uniform CMB is unchanged by gravitational lensing. However, if there is a gradient in the background temperature, intervening structure will appear as extra power on the scale of intervening large scale structure.\footnote{More subtle manifestations including those involving polarization are possible~\cite{Hu:2002}, but this is the main effect.} The consequences are largest on much smaller scales than those in which we are primarily interested. However there are still integral effects with $\ell\sim30-100$ which are relevant. Furthermore the intense interest in the claim that inflationary B-modes have been detected~\cite{Planck2015cosmopara}  has focused much observational and analytical effort on this region of the spectrum. It is proposed to see if the addition of these measurements will improve the specification of the 3D body modes.
+
+Similar remarks apply to the Integrated Sachs Wolfe effect which is caused by variation in the potential over time attributable to the cosmological constant at late times. It is proposed to see if such measurements can also contribute to the specification of structure on the largest scale, although here the challenge seems even greater.
+
+\ni{\bf Galaxy Surveys and the Local Universe:}
+Most of the use of surveys has been for drawing statistical inferences relating the growth of structure to the CMB emphasizing shorter length scales, notably those associated with BAO and the largest voids $\sim0.1$~Gpc. However, these same surveys can also be used to augment the long wavelength CMB data and improve the accuracy and resolution of the resulting 3D map. A good example is the SDSS/BOSS program,\footnote{http://www.sdss.org} which covered nearly a third of the sky with over a million redshifts and photometry on galaxies out to $z\sim0.7$.\footnote{21 cm redshift surveys provide an important complement to optical surveys but the survey volumes to date are comparatively modest.} For our purposes this translates to a comoving volume $\sim50{\rm Gpc}^3$, about 0.005 of the total. Surveys of much rarer quasars and the brightest star forming galaxies which extend to  $z\sim6$ provide much greater volumes over which the potential on Gpc scales can be estimated but with inferior precision.
+
+It is helpful at this point to consider a volume limited-survey of objects out to some radius $r$. Suppose we have a set of objects, ($L^\ast$ galaxies, quasars, bright, star-forming galaxies $\dots$) with space density $n$ and we want to measure the amplitude of a given Fourier component with wave vector $k$ of the relative density perturbation associated with this potential $\delta\sim-2k^2\Phi/3a^2H^2$. Now the accuracy with which the amplitude of a single relative density perturbation Fourier mode can be measured is comparable with the precision with which the fractional density perturbation can be measured in a single region of size equal to the associated length scale. This is $\sim k^{3/2}n^{-1/2}$ and must exceed $\delta$. This suggests that the density of such objects must exceed $\sim H_0^4/c^2\Phi k_max$ if local surveys can possible connect with the CMB. A slightly more careful calculation indicates that making such a connection with existing survey and CMB data from stage 1 is just possible and so it is worth exploring this further. If this is achievable, then although the data increment will be small, its value will be much greater because it can act as a {\it phase reference} for anchoring the imperfectly specified modes measured by CMB observations.
+
+\ni{\bf Constraints on Inflation:}
+The newly developed effective field theory of large scale structure~\cite{Carrasco2012} has made great promises in terms of pushing constraints on the primordial Universe far beyond the scope of the CMB. This formalism relies on a separation of scales between the linear physics on large, cosmological scales in the infra-red (IR) and the non-linear physics on small scales in the ultra-violet (UV) (under $\sim10$ Mpc). These small scales are strongly coupled as a result of gravitational collapse. The UV modes are then integrated out in a way that yields a classical loop expansion correcting the dynamics of the linear IR theory. By pushing the theoretical control of modes with $k$ closer to the non-linear regime, a far greater amount of information becomes available. The future application of this method to current and upcoming surveys will certainly allow the improvement of our 3D map in accuracy and resolution, which will in turn be translated into better constraints on the inflaton potential, primordial non-Gaussianities, etc. Quantifying the astrophysical systematic errors will be an important part of this phase of the investigation: the connection between observed galaxy summaries such as their number density and the underlying potential will need to be quantified and explored. Both galaxy bias and halo bias will need to be incorporated into the treatment.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+\subsection{Stage 3. Future Surveys}
+Many facilities that are being planned or built will provide data relevant to our approach. In this phase of our program we will use simulated data for a selection of these future surveys to make forecasts of how our maps should improve, and look for new opportunities to exploit them.
+
+\ni{\bf Ground-based CMB Telescopes:}
+While there are exciting proposals for future space-based CMB measurements, most attention is currently focused on the next two generations -- Stages 3 and 4 -- of ground-based CMB telescopes, which have been proposed to deliver results in very roughly five and ten years respectively. While these are mostly focused on probing the physics of inflation and cosmological neutrinos \cite{CMBS4Inflation,CMBS4Neutrinos}, they will also improve the measurement of CMB temperature and E-mode polarization on the scales $\ell\lo200$ in which we are primarily interested, with signal to noise $\sim3\times10^{-4}$, roughly ten times higher than Planck.
+
+\ni{\bf Survey Telescopes:}
+Construction has begun on the Large Synoptic Survey Telescope (LSST\footnote{http://www.lsst.org/lsst/}), which will commence a decade-long survey in 2022. It will survey half the sky from Chile (with consequently very strong overlap with the ground-based CMB observations) in six optical and near infrared bands, detecting about ten billion galaxies out to $z\sim2$ for $L^\ast$ galaxies and $z\sim6$ for bright, star-forming galaxies and quasars \cite{LSSTOverviewPaper}. Its primary cosmological goal is to perform a multi-probe joint analysis (involving weak lensing, galaxy clustering, type Ia supernovae, time delay lenses and cluster number counts) to see if dark energy (and not just a cosmological constant) is responsible for cosmic acceleration \cite{LSSTDESCWhitePaper}. However, it  will, in practise, contribute to many more important cosmological tests. LSST will only provide photometric redshifts, but these will be well-calibrated by large spectroscopic surveys including that of DESI\footnote{http://desi.lbl.gov}, which is projected to measure $\sim20$ million redshifts to $z\sim1$ starting in 2018, and, potentially, the all-sky SphereX mission.\footnote{http://spherex.caltech.edu/} A complementary source of new local data will be the Euclid space mission\footnote{http://www.euclid-ec.org}, which is scheduled for a 2020 launch and which will carry out weak lensing, baryon acoustic oscillation and redshift space distortion measurements using 1.5 billion galaxies and 50 million redshifts over more than a third of the sky \cite{EuclidSciBook}. The proposed WFIRST-AFTA {http://wfirst.gsfc.nasa.gov} also has an impressive program in observational cosmology \cite{WFIRSTReport2015}, that will build on the LSST and Euclid surveys \cite{JainEtal2015}. Meanwhile, at radio wavelengths, the Canadian High Intensity Mapping Experiment (CHIME\footnote{http://chime.phas.ubc.ca}, see e.g.\ \cite{CHIME}) will measure BAO out to $z\sim2.5$ over half the sky.
+
+As with the CMB, weak lensing and galaxy clustering observations can provide ``tomographic'' distance information and, in principle, should lead to a better map of the long wavelength potential perturbations. Systematic error control on these large scales is as yet uncharted territory: our 4D potential maps may have a role to play in this, effectively regularizing the local analysis on the largest angular scales. At the same time, local constraints on the 3D potential will pin down the  model considerably, improving our constraints on the inflation model.
+
+\ni{\bf Epoch of Reionization:}
+There is a large effort underway to probe the Epoch of Reionization, (EoR) $6\lo z\lo30$ through hydrogen line measurements. This is an exciting area of discovery, as the relevant physics depends upon many factors, notably first star formation and galaxy assembly that are very hard to anticipate.\footnote{JWST (http://www.jwst.nasa.gov), scheduled for launch in 2018, will also help indirectly in understanding the universe during this epoch but seems unlikely to provide quantitative measurements of very large scale structure.} The experiments will probe an ideal range of comoving radius $\sim8-12$~Gpc, interpolating between the CMB photosphere and local surveys,  for either contributing to or expanding upon our incorporating our 3D potential map.
+
+On a longer time scale there are ambitious plans to construct an international Square Kilometer Array (SKA\footnote{https://www.skatelescope.org}). The long term goals include measuring the redshifts of a billion galaxies, performing weak lensing surveys and carrying out more sensitive surveys of the epoch of reionization (see  \cite{SKACosmology} and references therein). It is likely that the SKA capabilities and schedule will become better-defined over the lifetime of this proposed research program.
+
+With a 4D potential model constrained both at $z=1100$ by the CMB and at $z=0.5$ by the Dark Energy surveys of the previous subsection, we will be able to make predictions about the large scale structure present in the volume at $6\lo z\lo30$ probed by EoR surveys. Such a prediction should assist in the interpretation of the survey data, and increase the fidelity of the measurements made there.
+
+\subsection{Stage 4. Limits}
+It is of interest to consider the limitations to what could be learned in principle about the idiosyncratic structure of our universe with {\it any} conceivable observing facility. Galaxy and quasar survey combined with EoR studies an CMB lensing should be able to give a detailed description of 4D potential though the resolution during the dark ages will be poor relative to that earlier and later epochs. Any explicit (not just statistical) linkage between large scale structure at recombination and today must strengthen investigations into basic physics questions including the presence of dynamical dark energy instead of a cosmological constant. Implicit in this approach is the opportunity to make statements about structure somewhat outside our horizon predicated on our adoption of the Gaussian prior on these large scales and involving the $\ell=0,1$ harmonics. This raises interesting issues of theoretical principle which we intend to try to clarify.
+
+
+
 
 
 % ====================================================================

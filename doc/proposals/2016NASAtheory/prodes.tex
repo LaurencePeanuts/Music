@@ -380,7 +380,8 @@ recombination surface around the acoustic peak near $\ell\sim200$.}
 
 
 \begin{figure}[t]
-\centering\includegraphics[width=0.9\linewidth]{figures/errorrec.pdf}
+\vspace{-1cm}
+\centering\includegraphics[width=0.8\linewidth]{figures/errorrec.pdf}
 \caption{
 \openup -0.3em
 {\footnotesize
@@ -425,7 +426,7 @@ original data.} We have applied this approximate procedure to the
 actual Planck data, and our results are exhibited in Figure~\ref{Fig:PlanckRec}.
 
 The error on the recovered Fourier coefficients $f_n$ is given by the covariance of the posterior distribution,
-$C_{posterior}=\mathbf{A}_{nn'}^{-1} = \left(\mathbf{R}_{ny'}C^{-1}_{y'y} \mathbf{R}_{yn'}+C_{nn'}^{-1}\right)^{-1}$.
+$C_{post}=\mathbf{A}_{nn'}^{-1} = \left(\mathbf{R}_{ny'}C^{-1}_{y'y} \mathbf{R}_{yn'}+C_{nn'}^{-1}\right)^{-1}$.
 Therefore, the marginalized error on individual reconstructed $f_n$ parameters is given by the square root of the corresponding diagonal elements of $\mathbf{A}_{nn'}^{-1} $. The error on the recovered parameters for the reconstruction displayed in Figure~\ref{Fig:Mockreconstruction} is shown in Figure~\ref{Fig:recerror}.
 
 
@@ -443,6 +444,7 @@ To extend our analysis to larger l, when density and velocity effects are also i
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
+\vspace{-0.5cm}
 \centering\includegraphics[width=1.\linewidth]{figures/PlanckMoll.pdf}
 \\
 \centering\includegraphics[width=1.\linewidth]{figures/Planck3d.pdf}
@@ -607,7 +609,7 @@ The $\mathbf{A}$ matrix is defined as above and $\mathbf{B}$ vector are given by
 	 \mathbf{B}_{n}  = \mathbf{R}_{ny'} C_{y'y}^{-1}  a_{y}\, .
 \ee
 
-As our reconstruction techniques become more sophisticated, and as a result allow us to robustly increase $\ell_{max}$ and $n_{max}$ in our analysis, the larger range of recovered $f_n$ will make it possible to reconstruct the shape of the inflaton potential over a longer and longer range of $e$-folds. This will potentially give us insight
+As our reconstruction techniques become more sophisticated, and as a result allow us to robustly increase $\ell_{max}$ and $n_{max}$ in our analysis, the larger range of recovered $f_n$ will make it possible to reconstruct the shape of the inflaton potential over a longer and longer range of $e$-folds. This will, for example, potentially give us more insight into the nature of the correct inflationary model, allow us to pose new constraints consistent with our particular realization of the Universe on models parameter space, and enable the use of new, more realistic initial conditions that are consistent with the actual potential seen by our region of the Universe for generating inflationary 3-dimentional simulations. 
 
 
 Generalizing this analytic formalism to include the
@@ -655,6 +657,16 @@ as a result of including the polarization information; whether we can
 reach the commensurate degree of accuracy will depend on both the
 computational and modeling problems outlined here.
 
+
+\begin{figure}[t]
+\vspace{-1cm}
+\centering\includegraphics[width=0.6\linewidth]{figures/nsffig5.jpg}
+\caption{
+\openup -0.3em
+{\footnotesize a) Nesting of separatrices for Planck data, with
+$\ell_{\rm max}=4.5$. The extrema, H, L and saddles, K, X are
+identified. b) Equivalent tree describing the same data.}}
+\end{figure}
 \ni{\bf Tree Representation and Non-Parametric Investigation of Gaussianity:}
 There is another way to think about this problem. Let us build up the
 resolution of the potential on the CMB photosphere by increasing $\ell$
@@ -683,23 +695,16 @@ labeled K or S ), and branches terminating on ``leaves'' (corresponding
 to extrema and labeled H or L)~\cite{west2001introduction}. There is
 only one ``path'' connecting any two leaves. Although our investigation
 has only begun, it is already clear that the statistics and structure of
-the tree, satisfy many rules if the underlying fluctuations are truly
+the tree satisfy many rules if the underlying fluctuations are
 drawn from a random distribution, for example $N_K\sim N_X$ as
 $\ell\rightarrow\infty$. We propose to explore this novel approach to
-testing Gaussianity. We can actually extend this 2D approach on the
+test Gaussianity. We plan to extend this 2D approach on the
 photosphere to a 3D approach\footnote{Another generalization that we
 plan to explore is describe the topological arrangement of the
 polarization patterns~\cite{Scheuer:1977}.} exploring the nesting of the
 equipotential surfaces within the photosphere. This leads to similar
-type of tree. Although these trees are essentially topological, they can only be measured in 3D if there is very careful control of the systematics in the data.
-\begin{figure}[t]
-\centering\includegraphics[width=0.6\linewidth]{figures/nsffig5.jpg}
-\caption{
-\openup -0.3em
-{\footnotesize a) Nesting of separatrices for Planck data, with
-$\ell_{\rm max}=4.5$. The extrema, H, L and saddles, K, X are
-identified. b) Equivalent tree describing the same data.}}
-\end{figure}
+type of tree. 
+
 
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -953,7 +958,7 @@ As with the CMB, weak lensing and galaxy clustering observations can provide ``t
 
 
 \ni{\bf Epoch of Reionization:}
-There is a large effort underway to probe the Epoch of Reionization, (EoR) $6\lo z\lo30$ through hydrogen line measurements. This is an exciting area of discovery, as the relevant physics depends upon many factors, notably first star formation and galaxy assembly that are very hard to anticipate.\footnote{JWST (http://www.jwst.nasa.gov), scheduled for launch in 2018, will also help indirectly in understanding the universe during this epoch but seems unlikely to provide quantitative measurements of very large scale structure.} The experiments will probe an ideal range of comoving radius $\sim8-12$~Gpc, interpolating between the CMB photosphere and local surveys,  for either contributing to or expanding upon our incorporating our 3D potential map.
+There is a large effort underway to probe the Epoch of Reionization, (EoR) $6\lo z\lo30$ through hydrogen line measurements. This is an exciting area of discovery, as the relevant physics depends upon many factors, notably first star formation and galaxy assembly that are very hard to anticipate.\footnote{JWST (http://www.jwst.nasa.gov), will also help indirectly in understanding the universe during this epoch but seems unlikely to provide quantitative measurements of very large scale structure.} The experiments will probe an ideal range of comoving radius $\sim8-12$~Gpc, interpolating between the CMB photosphere and local surveys,  for either contributing to or expanding upon our incorporating our 3D potential map.
 
 On a longer time scale there are ambitious plans to construct an international Square Kilometer Array (SKA\footnote{https://www.skatelescope.org}). The long term goals include measuring the redshifts of a billion galaxies, performing weak lensing surveys and carrying out more sensitive surveys of the epoch of reionization (see  \cite{SKACosmology} and references therein). It is likely that the SKA capabilities and schedule will become better-defined over the lifetime of this proposed research program.
 

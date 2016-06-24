@@ -142,7 +142,8 @@ a particular wave whose amplitude and phase we are trying to measure.
 \begin{figure}[t]
 \centering
 \includegraphics[width=4in]{figures/nsffig1.pdf}
-\caption{\small{a) The local Universe interior to the CMB photosphere
+\caption{ \openup -0.3em 
+\footnotesize{a) The local Universe interior to the CMB photosphere
 expressed in comoving coordinates. The circles are, in order, $a=0.6$,
 ($z\sim0.7$), schematically the limit of present surveys, $a=0.3$,
 ($z\sim2$) roughly the effective limit of future surveys, the nominal
@@ -249,7 +250,9 @@ identify systematic effects.)
 \begin{figure}[t]
 \centering
 \includegraphics[width=6.5in]{figures/Planck_lmaxs.pdf}
-\caption{{\small Photospheric potential fluctuations of the CMB for
+\caption{
+\openup -0.3em
+{\footnotesize Photospheric potential fluctuations of the CMB for
 $\ell_{\rm max}=2,5,10$ derived from Planck data shown as Mollweide
 projections.}}
 \label{Fig:placklmaxs}
@@ -342,14 +345,16 @@ of hyperparameters governing the statistics of the potential field.
 \centering\includegraphics[width=1.\linewidth]{figures/Reconstruction2D.pdf}
 \\
 \centering\includegraphics[width=1.\linewidth]{figures/Reconstruction3D-1.pdf}
-\caption{{\small
+\caption{
+\openup -0.3em
+ {\footnotesize
 a)  Demonstration of the reconstruction pipeline.  In this pilot study, 81 spherical harmonics and a
-Gaussian prior were used to recover 122 Fourier components with
+Gaussian prior were used to recover 36 Fourier components with
 $n_{\rm max}=2$. The monopole and dipole were not removed.
  {\it First panel: } Simulated, noiseless 2D potential fluctuations on the CMB photosphere. {\it Second panel: } Noisy mock observation. {\it Thris panel: } Most probable model, as given by equation \ref{eq:mostprobablemodel}. {\it Fourth panel: } Residuals. As expected, the posterior predicted potential maps have higher uncertainty in the galactic plane.
   b) Simulated 3D gravitational potential at the time
 of recombination.  {\it First panel: } Slice of the 3D potential in the
-$x_3=0$ plane. The CMB photosphere is represented by the black circle.  {\it Second panel: } 3D visualization of the potential. c) 3D reconstructed potential, recovered from the noisy 2D fluctuations on the CMB photosphere. Both panels a analogous to the ones in b), and show very good agreement between simulation and reconstruction.
+$x_3=0$ plane. The CMB photosphere is represented by the black circle.  {\it Second panel: } 3D visualization of the potential; the opaque ball represents the 2D CMB photosphere. c) 3D reconstructed potential, recovered from the noisy 2D fluctuations on the CMB photosphere. Both panels a analogous to the ones in b), and show very good agreement between simulation and reconstruction.
 }}
 \label{Fig:Mockreconstruction}
 \end{figure}
@@ -375,8 +380,10 @@ recombination surface around the acoustic peak near $\ell\sim200$.}
 
 
 \begin{figure}[t]
-\centering\includegraphics[width=0.7\linewidth]{figures/errorrec.png}
-\caption{{\small
+\centering\includegraphics[width=0.9\linewidth]{figures/errorrec.pdf}
+\caption{
+\openup -0.3em
+{\footnotesize
 Error on the reconstructed $f_n$ parameters in the reconstruction from Figure~\ref{Fig:Mockreconstruction}. The left panel shows the real part of the coefficients while the right panel shows the corresponding imaginary part.
  {\it Blue:} True $f_n$ values. {\it Orange: } Reconstructed $f_n$ values. The error bars are given by the  posterior covariance matrix $\mathbf{A}_{nn'}^{-1}$.
 }}
@@ -419,7 +426,7 @@ actual Planck data, and our results are exhibited in Figure~\ref{Fig:PlanckRec}.
 
 The error on the recovered Fourier coefficients $f_n$ is given by the covariance of the posterior distribution,
 $C_{posterior}=\mathbf{A}_{nn'}^{-1} = \left(\mathbf{R}_{ny'}C^{-1}_{y'y} \mathbf{R}_{yn'}+C_{nn'}^{-1}\right)^{-1}$.
-Therefore, the marginalized error on individual reconstructed $f_n$ parameters is given by the square root of the corresponding diagonal elements of $\mathbf{A}_{nn'}^{-1} $. The error on the recovered parameters for the reconstruction displayed in Figure~\ref{Fig:Mockreconstruction} is shown in Figure~\ref{Fig:recerror}
+Therefore, the marginalized error on individual reconstructed $f_n$ parameters is given by the square root of the corresponding diagonal elements of $\mathbf{A}_{nn'}^{-1} $. The error on the recovered parameters for the reconstruction displayed in Figure~\ref{Fig:Mockreconstruction} is shown in Figure~\ref{Fig:recerror}.
 
 
 
@@ -439,7 +446,9 @@ To extend our analysis to larger l, when density and velocity effects are also i
 \centering\includegraphics[width=1.\linewidth]{figures/PlanckMoll.pdf}
 \\
 \centering\includegraphics[width=1.\linewidth]{figures/Planck3d.pdf}
-\caption{{\small
+\caption{
+\openup -0.3em
+{\footnotesize
 a)  Reconstruction of the 3D temperature map from the Planck 2D CMB photosphere.  In this pilot study, 81 spherical harmonics and a
 Gaussian prior were used to recover 122 Fourier components with
 $n_{\rm max}=3$. The monopole and dipole were not removed.
@@ -536,14 +545,14 @@ and then on the Planck temperature map.
 \vspace{-1cm}
 \begin{center}
 \centering
-\begin{minipage}[t]{0.48\linewidth}
-\centering\includegraphics[trim = 80 -32 0 50 mm, width=.8\linewidth]{figures/onemodeThetadist.pdf}\\
+\begin{minipage}[t]{0.4\linewidth}
+\hspace{2cm}\includegraphics[trim = 80 -32 0 50 mm, width=.8\linewidth]{figures/onemodeThetadist.pdf}\\
 \end{minipage}\hfill
-\begin{minipage}[t]{0.48\linewidth}
-\centering\includegraphics[trim = 0 0 0 0 mm, clip, width=.8\linewidth]{figures/first10modesThetadist.pdf}\\
+\begin{minipage}[t]{0.4\linewidth}
+\centering\hspace{-3cm}\includegraphics[trim = 0 0 0 0 mm, clip, width=.8\linewidth]{figures/first10modesThetadist.pdf}\\
 \end{minipage}
-\caption{\label{f:variations}
-\small{{\it Left panel}: Distribution of the modes of $\zeta_{{\bf k}}$
+\caption{\label{f:variations} \openup -0.3em
+\footnotesize{{\it Left panel}: Distribution of the modes of $\zeta_{{\bf k}}$
 at fixed $|{\bf k}|$.} \small{{\it Right panel}: Representation of  the
 norm of the first few $k$-modes ($|{\bf n}|$ from 2 to 10), versus their
 random spatial angle $\theta$. If the individual modes were clustering
@@ -598,6 +607,9 @@ The $\mathbf{A}$ matrix is defined as above and $\mathbf{B}$ vector are given by
 	 \mathbf{B}_{n}  = \mathbf{R}_{ny'} C_{y'y}^{-1}  a_{y}\, .
 \ee
 
+As our reconstruction techniques become more sophisticated, and as a result allow us to robustly increase $\ell_{max}$ and $n_{max}$ in our analysis, the larger range of recovered $f_n$ will make it possible to reconstruct the shape of the inflaton potential over a longer and longer range of $e$-folds. This will potentially give us insight
+
+
 Generalizing this analytic formalism to include the
 inflationary parameters that produce
 {\it primordial non-Gaussianities} is straightforward. However, a key
@@ -623,7 +635,7 @@ of the problem \cite{SeljebotnEtal2014}.
 \ni{\bf Detailed Approach Incorporating Planck and WMAP Polarization Data:}
 Up to this point, we have only considered the CMB temperature data. We
 anticipate making significant gains in map fidelity when we incorporate
-the existing polarization data as well. While
+the Planck polarization data as well after it is made public. While
 these will be more sensitive to systematic effects (such as galactic
 dust and synchrotron emission), the additional signal to noise alone
 should allow us to make maps of higher spatial resolution. The
@@ -642,17 +654,6 @@ results to them. We expect all our inferences to increase in precision
 as a result of including the polarization information; whether we can
 reach the commensurate degree of accuracy will depend on both the
 computational and modeling problems outlined here.
-
-
-% NOTE: they say this in the guidelines:
-%
-% In addition, proposals may not anticipate future public data releases.
-% The scientific case for any proposed investigation must be based on -
-% and executable with - data that are in the public domain at the time of
-% the original proposal. Any proposal that invokes the use of data that
-% are not public at the time of the ADAP 2016 proposal submission deadline
-% (other than that explicitly allowed under Section 1.3.4) will be ruled
-% noncompliant and will not be rated or considered for funding.
 
 \ni{\bf Tree Representation and Non-Parametric Investigation of Gaussianity:}
 There is another way to think about this problem. Let us build up the
@@ -693,7 +694,9 @@ equipotential surfaces within the photosphere. This leads to similar
 type of tree. Although these trees are essentially topological, they can only be measured in 3D if there is very careful control of the systematics in the data.
 \begin{figure}[t]
 \centering\includegraphics[width=0.6\linewidth]{figures/nsffig5.jpg}
-\caption{{\small a) Nesting of separatrices for Planck data, with
+\caption{
+\openup -0.3em
+{\footnotesize a) Nesting of separatrices for Planck data, with
 $\ell_{\rm max}=4.5$. The extrema, H, L and saddles, K, X are
 identified. b) Equivalent tree describing the same data.}}
 \end{figure}
@@ -814,6 +817,10 @@ low signal to noise measurements of the long wavelength potential
 fluctuations along the line of sight to about $z \approx 1$,
 through  a quantitative comparison with our model predictions.
 
+\ni{\bf Constraints on Inflation:}
+The newly developed effective field theory of large scale structure~\cite{Carrasco2012} has made great promises in terms of pushing constraints on the primordial Universe far beyond the scope of the CMB. This formalism relies on a separation of scales between the linear physics on large, cosmological scales in the infra-red (IR) and the non-linear physics on small scales in the ultra-violet (UV) (under $\sim10$ Mpc). These small scales are strongly coupled as a result of gravitational collapse. The UV modes are then integrated out in a way that yields a classical loop expansion correcting the dynamics of the linear IR theory. By pushing the theoretical control of modes with $k$ closer to the non-linear regime, a far greater amount of information becomes available. The future application of this method to current and upcoming surveys will certainly allow the improvement of our 3D map in accuracy and resolution, which will in turn be translated into better constraints on the inflaton potential, primordial non-Gaussianities, etc. Quantifying the astrophysical systematic errors will be an important part of this phase of the investigation: the connection between observed galaxy summaries such as their number density and the underlying potential will need to be quantified and explored. Both galaxy bias and halo bias will need to be incorporated into the treatment.
+
+
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 %
 % \subsection{Stage 3. Future Surveys}
@@ -909,13 +916,16 @@ through  a quantitative comparison with our model predictions.
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-\subsection{Stage 3. Posterior Predictions and Ultimate Limits}
+\subsection{Stage 3.  Future Surveys}
 \label{sec:research:stagethree}
 
 The final stage of our research program,
 which is likely to be prosecuted towards the end of this proposal period,
 will be predictive in
-character. A fully constrained 4D model of the large scale gravitational
+character. 
+
+\ni{\bf Ground-based CMB Telescopes:}
+A fully constrained 4D model of the large scale gravitational
 potential in the Universe, with well characterized posterior PDF, will
 enable us to make predictions, with uncertainties, about the  density
 field probed by a number of different upcoming sky surveys
@@ -928,6 +938,8 @@ enable the effective regularization of the analysis of
 new data on the largest angular scales, and thus potentially provide a
 higher contrast view of any anomalies present.
 
+
+\ni{\bf Survey Telescopes:}
 Over the next decade, a suite of all-sky (or at least, wide field)
 cosmological galaxy surveys are planned, including those to be carried
 out with
@@ -937,23 +949,18 @@ SphereX\footnote{http://spherex.caltech.edu/},
 Euclid\footnote{http://www.euclid-ec.org},
 WFIRST-AFTA\footnote{http://wfirst.gsfc.nasa.gov}, and
 CHIME\footnote{http://chime.phas.ubc.ca}.
-We will be able to make predictions about the large scale density
-of galaxies and clusters of galaxies, as well as the large scale
-tomographic weak lensing density fluctuations, that will be probed by
-these surveys.
+As with the CMB, weak lensing and galaxy clustering observations can provide ``tomographic'' distance information and, in principle, should lead to a better map of the long wavelength potential perturbations. Systematic error control on these large scales is as yet uncharted territory: our 4D potential maps may have a role to play in this, effectively regularizing the local analysis on the largest angular scales. At the same time, local constraints on the 3D potential will pin down the  model considerably, improving our constraints on the inflation model.
 
-There is a large effort underway to probe the Epoch of Reionization,
-(EoR) $6\lo z\lo30$ through hydrogen line measurements, with facilities
-such as the planned Square Kilometer
-Array\footnote{https://www.skatelescope.org} and its precursors. This is
-an exciting area of discovery, as the relevant physics depends upon many
-factors, notably the formation of the first stars and galaxies,  that
-are very hard to anticipate. We will be able to make predictions about
-the large scale structure present in the volume at $6\lo z\lo30$ probed
-by these surveys. Again, such a prediction should assist in the
-interpretation of the survey data, and increase the fidelity of the new
-measurements made there.
 
+\ni{\bf Epoch of Reionization:}
+There is a large effort underway to probe the Epoch of Reionization, (EoR) $6\lo z\lo30$ through hydrogen line measurements. This is an exciting area of discovery, as the relevant physics depends upon many factors, notably first star formation and galaxy assembly that are very hard to anticipate.\footnote{JWST (http://www.jwst.nasa.gov), scheduled for launch in 2018, will also help indirectly in understanding the universe during this epoch but seems unlikely to provide quantitative measurements of very large scale structure.} The experiments will probe an ideal range of comoving radius $\sim8-12$~Gpc, interpolating between the CMB photosphere and local surveys,  for either contributing to or expanding upon our incorporating our 3D potential map.
+
+On a longer time scale there are ambitious plans to construct an international Square Kilometer Array (SKA\footnote{https://www.skatelescope.org}). The long term goals include measuring the redshifts of a billion galaxies, performing weak lensing surveys and carrying out more sensitive surveys of the epoch of reionization (see  \cite{SKACosmology} and references therein). It is likely that the SKA capabilities and schedule will become better-defined over the lifetime of this proposed research program.
+
+With a 4D potential model constrained both at $z=1100$ by the CMB and at $z=0.5$ by the Dark Energy surveys of the previous subsection, we will be able to make predictions about the large scale structure present in the volume at $6\lo z\lo30$ probed by EoR surveys. Such a prediction should assist in the interpretation of the survey data, and increase the fidelity of the measurements made there.
+
+
+\subsection{Stage 4. Ultimate Limits}
 It is also of interest to consider the limitations to what could be
 learned in principle about the idiosyncratic structure of our Universe
 with {\it any} conceivable observing facility. The many galaxy and EoR
@@ -973,6 +980,10 @@ opportunity to make statements about structure somewhat outside our
 horizon, predicated on our adopted inflationary model on these large
 scales. This raises interesting
 issues of theoretical principle which we intend to try to clarify.
+
+
+
+
 
 
 % ====================================================================
@@ -1023,7 +1034,7 @@ assumption of Gaussianity and random phases which underlies this entire
 approach. It remains to be seen if this is competitive with alternative
 apporaches based upon the CMB and large scale structure.
 2018 will be devoted to completing and writing up the Stage 2 results
-and starting work on Stage 3.
+and starting work on Stage 3 and~4.
 
 % ====================================================================
 

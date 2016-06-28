@@ -287,6 +287,7 @@ compromise value of four times the radius of the CMB photosphere,
 $13.9$~Gpc which we adopt as our unit of length.
 \begin{equation}
 \Phi[{\bf x}(r,\theta,\phi)]=\sum_{n=1}^{N/2}[f_n\cos({\bf k}_n\cdot{\bf x})+f_{N+1-n}\sin({\bf k}_n\cdot{\bf x})]
+\label{eq:fourierseries}
 \end{equation}
 where the coefficients $f_n$ are also real and
 ${\bf k}=\Delta k\{n_1,n_2,n_3\}=k\{\sin\theta'\cos\phi',\sin\theta'\sin\phi',\cos\theta'\}$,
@@ -360,8 +361,11 @@ recombination surface around the acoustic peak near $\ell\sim200$.}
 \caption{
 \openup -0.3em
 {\footnotesize
-Error on the reconstructed $f_n$ parameters in the reconstruction from Figure~\ref{Fig:Mockreconstruction}. The left panel shows the real part of the coefficients while the right panel shows the corresponding imaginary part.
- {\it Blue:} True $f_n$ values. {\it Orange: } Reconstructed $f_n$ values. The error bars are the diagonal elements of the posterior covariance matrix $\mathbf{A}_{nn'}^{-1}$.
+Errors on the $f_n$ parameters in the reconstruction from Figure~\ref{Fig:Mockreconstruction}. We form complex Fourier coefficients from the real
+quantities defined in Equation~\ref{eq:fourierseries}, and then display the
+real parts of these complex coefficients in the left panel, and the imaginary parts in the right panel. In both panels
+ {\it blue} points show the true coefficent component values,
+ while the reconstructed values are plotted in {\it orange}. The error bars are the diagonal elements of the posterior covariance matrix $\mathbf{A}_{nn'}^{-1}$.
 }}
 \label{Fig:recerror}
 \end{figure}

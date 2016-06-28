@@ -189,15 +189,15 @@ The long term goal of this proposal is to connect the CMB to local
 surveys by producing an evolving three-dimensional (or in other
 words, four-dimensional) map of the Universe that is valid from the very early universe to
 today, and out beyond 14 Gpc. The exercise is not purely cartographic, as
-it is essential that we use secure physical inferences
-about the early Universe in making this map. This research is envisaged as a three stage program.
+it is essential that we use -- or make -- secure physical inferences
+about the early Universe while making this map. This research is envisaged as a three stage program.
 
 The first stage of our proposed program is to use 2D CMB observations alone
 to test internal consistency and to recover as much as we can of the 3D
 potential, velocity and density fields interior to the last scattering
 surface. This stage is nearing completion. In the second stage, we will augment CMB data with existing 3D
 measurements from galaxy surveys, gravitational lensing, intermediate
-Sachs-Wolfe measurements and so on. This should improve the resolution.
+Sachs-Wolfe measurements and so on. This should greatly improve our resolution.
 % The third stage involves estimating the improvement that should come on
 % a decade timescale from future surveys such as LSST and Epoch of
 % Reionization investigations, ``Stage IV'' CMB observations, SKA etc.
@@ -252,7 +252,7 @@ harmonic components over $m$, and comparing these products with the predictions 
 various cosmological models. This program has been wonderfully
 productive, and has resulted in the world model outlined in the introduction.
 Furthermore this power spectrum has been successfully reconciled with
-features of the local Universe, such as galaxy counts. One common
+features of the local Universe, such as galaxy clustering. One common
 assumption is that the particular realization of the Universe that we
 are observing is drawn from a statistical ensemble of universes. When
 $\ell$ is large, we have many independent measurements on the associated
@@ -265,12 +265,12 @@ in the sense that music is far more than a ``flicker'' power spectrum.}  In the 
 Universe -- the one we inhabit --  is considered.
 
 In order to start us on a pilot investigation, Planck team members Wehus \&
-Eriksen kindly supplied us with 100 samples of the Planck temperature
+Eriksen kindly supplied us with 100 posterior samples of the Planck temperature
 fluctuation maps for $0\le\ell\le10$ or $1\le y\le121$. From this
 ensemble we compute the mean 2D photospheric potential
-fluctuation map at the time of recombination, $\Phi=a_yY_y$, up to various $\ell_{max}$ as shown in Figure \ref{Fig:placklmaxs} (including
+fluctuation map at the time of recombination, $\Phi=a_yY_y$, up to various $\ell_{max}$ as shown in Figure~\ref{Fig:placklmaxs} (including
 the (artificial) monopole and dipole components and adopting the summation
-convention) and the covariance matrix $C_{yy'}$ associated with the
+convention), and the covariance matrix $C_{yy'}$ associated with the
 harmonic components $a_y$. We find that this matrix is invertible and
 can be used directly up to $\ell_{max}=8$. (We have developed a more careful treatment for $\ell_{max}>8$ and have access to the data but this reduced dataset suffices to demonstrate proof of principle and to create our first low resolution maps.) The fractional variance in individual harmonics
 is impressively low ranging between $\sim0.0001$ and $\sim0.01$. Undoubtedly, there are
@@ -289,9 +289,14 @@ $13.9$~Gpc which we adopt as our unit of length.
 \Phi[{\bf x}(r,\theta,\phi)]=\sum_{n=1}^{N/2}[f_n\cos({\bf k}_n\cdot{\bf x})+f_{N+1-n}\sin({\bf k}_n\cdot{\bf x})]
 \end{equation}
 where the coefficients $f_n$ are also real and
-$
- {\bf k}=\Delta k\{n_1,n_2,n_3\}=k\{\sin\theta'\cos\phi',\sin\theta'\sin\phi',\cos\theta'\}$,
-  with $n_1,n_2,n_3$ integers and $\Delta k=2\pi/L=\pi/2$.  We restrict the sum to $(n_1^2+n_2^2+n_3^2)^{1/2}\le n_{\rm max}$ and only need consider $\bf k$ over a hemisphere (since the potential must everywhere be real.) We label the coefficients by the index $n$ running from $1$ to $N\sim4\pi n_{\rm max}^3/3$. ($N=6$ through $4168$ for $n_{\rm max}=1$ through $10$.) $\Phi({\bf x})$ can be expanded formally as an infinite sum of Legendre polynomials and approximately as a finite sum:
+${\bf k}=\Delta k\{n_1,n_2,n_3\}=k\{\sin\theta'\cos\phi',\sin\theta'\sin\phi',\cos\theta'\}$,
+with $n_1,n_2,n_3$ integers and $\Delta k=2\pi/L=\pi/2$.  We restrict
+the sum to $(n_1^2+n_2^2+n_3^2)^{1/2}\le n_{\rm max}$ and only need
+consider $\bf k$ over a hemisphere (since the potential must everywhere
+be real). We label the coefficients by the index $n$ running from $1$ to
+$N\sim4\pi n_{\rm max}^3/3$. ($N=6$ through $4168$ for $n_{\rm max}=1$
+through $10$.) $\Phi({\bf x})$ can be expanded formally as an infinite
+sum of Legendre polynomials and approximately as a finite sum:
 \begin{equation}
 \Phi({\bf x;\ell_{\rm max}})=\sum_{\ell=0} ^{\ell_{\rm max}}(2\ell+1)\sum_{n=1}^{N/2}j_{\ell}(k_nx)P_{\ell}({\hat{\bf k}}_n\cdot{\hat{\bf x}})[\cos(\ell\pi/2)f_n+\sin(\ell\pi/2)f_{N+1-n}].
 \end{equation}
@@ -303,12 +308,11 @@ vector $\bf k$ is well modeled as having been drawn from a Gaussian
 distribution of variance $\sigma_{\bf
 n}^2=\alpha^2(n_1^2+n_2^2+n_3^2)^{-3+(n_s-1)}$, where $n_s$ is the
 scalar spectral index. Adopting this model, we can fix the spectral tilt
-to the Planck best-fit value (this assumption will be relaxed in the
-next subsection in order to estimate the inflationary hyperparameters)
-and we fix the regularization constant $\alpha$ following the
-evidence analysis of~\cite{Suyu2006}. As will be explained below, this constitute the first step towards a hierarchical
-modeling of the system where $\alpha$ is one of a set
-of hyperparameters governing the statistics of the potential field.
+to the Planck best-fit value
+and infer the regularization constant $\alpha$ by following the
+evidence analysis of~\cite{Suyu2006}. As will be explained below, this constitutes the first step towards a hierarchical
+modeling of the system where both $\alpha$ and the tilt are part of a set
+of inflationary hyperparameters governing the statistics of the potential field.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -325,7 +329,7 @@ $n_{\rm max}=2$. The monopole and dipole were not removed.
  {\it First panel: } Simulated, noiseless 2D potential fluctuations on the CMB photosphere. {\it Second panel: } Noisy mock observation. {\it Third panel: } Most probable model, as given by equation \ref{eq:mostprobablemodel}. {\it Fourth panel: } Residuals. As expected, the posterior predicted potential maps have higher uncertainty in the galactic plane.
   b) Simulated 3D gravitational potential at the time
 of recombination.  {\it First panel: } Slice of the 3D potential in the
-$x_3=0$ plane. The CMB photosphere is represented by the black circle.  {\it Second panel: } 3D visualization of the potential; the opaque ball represents the 2D CMB photosphere. c) 3D reconstructed potential, recovered from the noisy 2D fluctuations on the CMB photosphere. Both panels are analogous to the ones in b), and show very good agreement between simulation and reconstruction.
+$x_3=0$ plane. The CMB photosphere is represented by the black circle.  {\it Second panel: } 3D visualization of the simulated potential; the opaque ball represents the 2D CMB photosphere. c) 3D reconstructed potential, recovered from the noisy 2D fluctuations on the CMB photosphere. Both panels are analogous to the ones in b), and show very good agreement between simulation and reconstruction.
 }}
 \label{Fig:Mockreconstruction}
 \end{figure}
@@ -357,7 +361,7 @@ recombination surface around the acoustic peak near $\ell\sim200$.}
 \openup -0.3em
 {\footnotesize
 Error on the reconstructed $f_n$ parameters in the reconstruction from Figure~\ref{Fig:Mockreconstruction}. The left panel shows the real part of the coefficients while the right panel shows the corresponding imaginary part.
- {\it Blue:} True $f_n$ values. {\it Orange: } Reconstructed $f_n$ values. The error bars are given by the  posterior covariance matrix $\mathbf{A}_{nn'}^{-1}$.
+ {\it Blue:} True $f_n$ values. {\it Orange: } Reconstructed $f_n$ values. The error bars are the diagonal elements of the posterior covariance matrix $\mathbf{A}_{nn'}^{-1}$.
 }}
 \label{Fig:recerror}
 \end{figure}
@@ -372,7 +376,7 @@ matrix'' is given by:
 
 For a given data set of $a_y$ measurements, we approximately characterize the posterior PDF (which under our
 assumptions is a multivariate Gaussian distribution) for the
-coefficients $f_n$, ${\cal P}\left(f_n|a_y\right)$, by first finding its peak, by minimizing the quantity
+coefficients $f_n$, ${\cal P}\left(f_n|a_y\right)$ by first finding its peak, by minimizing the quantity
 \begin{equation}
 -2\ln{\cal P}\left(f_n|a_y\right) \approx (a_y- f_n\mathbf{R}_{ny})C_{yy'}^{-1}(a_{y'}-\mathbf{R}_{y'n'}f_{n'})+\frac{f_n^2}{\sigma_{{\bf n}}^2} + \mathrm{const.}
 \end{equation}
@@ -388,7 +392,6 @@ f_n=\left(\mathbf{R}_{ny}C_{yy'}^{-1}\mathbf{R}_{y'n'}+\frac{\delta_{nn'}}{\sigm
 
 % In Section~\ref{} below, we give a more rigorously-derived expression for the posterior PDF ${\cal P}$.
 
-
 For the purpose of this pilot study, the modes that mostly concern us remain linear and are ``adiabatic'', so that we need not to worry about secondary effects that usually enter the transfer function. The approximate form given above is sufficient for a feasibility check:
 as shown in Figure~\ref{Fig:Mockreconstruction} using mock data, we have found that {\it it is possible to solve for
 stable, low order maximum posterior Fourier coefficients, which can
@@ -403,15 +406,15 @@ Therefore, the marginalized error on individual reconstructed $f_n$ parameters i
 
 
 There are
-features of the data which we have yet to understand, but this suffices
+features of the data which we have yet to understand, but the above exercise suffices
 to illustrate what we hope will be possible. It is proposed to refine
 and improve upon this basic approach to obtain the best map we can
 based upon the CMB data alone. In particular we intend to set clear,
 statistical criteria for assessing when it is significant to add
 additional Fourier components to the map. With a better understanding of
 the robustness of the inference, we will be equipped to proceed with
-our further investigation.
-To extend our analysis to larger l, when density and velocity effects are also important. It will become necessary to use the standard transfer function to relate the observed temperature fluctuation to the inflationary perturbations and the contemporary potential (and density) perturbations.
+our further investigation, and
+extend our analysis to larger $l$, when density and velocity effects are also important. It will become necessary to use the standard transfer function to relate the observed temperature fluctuation to the inflationary perturbations and the contemporary potential (and density) perturbations.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
@@ -422,7 +425,7 @@ To extend our analysis to larger l, when density and velocity effects are also i
 \caption{
 \openup -0.3em
 {\footnotesize
-a)  Reconstruction of the 3D temperature map from the Planck 2D CMB photosphere.  In this pilot study, 81 spherical harmonics and a
+a)  Reconstruction of the 3D potential map from the Planck 2D CMB photosphere.  In this pilot study, 81 spherical harmonics and a
 Gaussian prior were used to recover 122 Fourier components with
 $n_{\rm max}=3$. The monopole and dipole were not removed.
  {\it First panel: } Planck temperature map on the CMB photosphere. {\it Second panel: } Most probable model, as given by equation \ref{eq:mostprobablemodel}. {\it Third panel: } Residuals. As expected, the posterior predicted temperature maps have higher uncertainty in the galactic plane.
@@ -679,21 +682,21 @@ At the end of Stage 1, we will have in hand the posterior PDF for the
 Fourier mode amplitudes of a 3D model of the potential on large scales
 throughout the observable Universe (and slightly beyond) at the epoch of
 last scattering.
-Our main goal in Stage 2 which is the principal object of this proposal
+Our main goal in Stage 2, which is the principal object of this proposal,
 is to improve the linear resolution of our map as far as we can.
-If we now assume a  Friedman-Robertson-Walker expansion
+If we now assume a Friedman-Robertson-Walker expansion
 model, with suitably-parameterized expansion rate and a particular
 choice of those expansion parameters,  we can evolve the Fourier modes
-of any sample potential map we draw  from this PDF forward in cosmic
+of any sample potential map we draw from this PDF forward in cosmic
 time in order to make posterior  predictions about the local
 $z << 1000$ Universe. The likelihood of these predictions given various
 observations in the local Universe will allow us to downweight some
 possible models, and hence further reduce the uncertainty in the map.
 As we discuss below, the process of combining CMB data with local surveys
 will not always be as straightforward as this simple picture of
-prediction and evaluation: Stage 2 of this program will combining
+prediction and evaluation: Stage 2 of this program will involve combining
 investigation of the principles involved in carrying out these joint inferences robustly and
-efficiently with starting to implement them.
+efficiently, with starting to implement them.
 
 \ni{\bf CMB Lensing and ISW Measurements:}
 An important way to add 3D information on the potential throughout a
@@ -727,7 +730,7 @@ exploration  of better approximations to the posterior PDF for the
 Fourier modes  which retain as much of the the computational efficiency
 as the linear model as possible.
 
-Similar remarks apply to the Integrated Sachs Wolfe effect which is
+Similar remarks apply to the Integrated Sachs Wolfe effect, which is
 caused by variation in the potential over time, attributable to the
 cosmological constant (or a ``dark energy'' component) at late times\footnote{It turns out to be easiest to combine the original S-W effect with the ISW extension}.
 It is proposed to see if such
@@ -918,11 +921,11 @@ LSST\footnote{http://www.lsst.org/lsst/},
 DESI\footnote{http://desi.lbl.gov},
 and
 CHIME\footnote{http://chime.phas.ubc.ca}.
-As with the CMB, weak lensing and galaxy clustering observations can provide ``tomographic'' distance information and, in principle, should lead to a better map of the long wavelength potential perturbations. Systematic error control on these large scales is as yet uncharted territory: our 4D potential maps may have a role to play in this, effectively regularizing the local analysis on the largest angular scales. At the same time, local constraints on the 3D potential will pin down the  model considerably, improving our constraints on the inflation model.
+As with the CMB, weak lensing and galaxy clustering observations can provide ``tomographic'' distance information and, in principle, should lead to a better map of the long wavelength potential perturbations. Again, systematic error control is the biggest challenge: our 4D potential maps may have a role to play in this, effectively regularizing the local analysis on the largest angular scales. At the same time, local constraints on the 3D potential will pin down the 4D model considerably, improving our constraints on inflation.
 
 
 \ni{\bf Epoch of Reionization:}
-There is a large effort underway to probe the Epoch of Reionization, (EoR) $6\lo z\lo30$ through hydrogen line measurements. This is an exciting area of discovery, as the relevant physics depends upon many factors, notably first star formation and galaxy assembly that are very hard to anticipate.\footnote{JWST (http://www.jwst.nasa.gov), will also help indirectly in understanding the universe during this epoch but seems unlikely to provide quantitative measurements of very large scale structure.} The experiments will probe an ideal range of comoving radius $\sim8-12$~Gpc, interpolating between the CMB photosphere and local surveys,  for either contributing to or expanding upon our incorporating our 3D potential map.
+There is a large effort underway to probe the Epoch of Reionization, (EoR) $6\lo z\lo30$ through hydrogen line measurements. This is an exciting area of discovery, as the relevant physics depends upon many factors, notably first star formation and galaxy assembly that are very hard to anticipate.\footnote{JWST (http://www.jwst.nasa.gov), will also help indirectly in understanding the universe during this epoch but seems unlikely to provide quantitative measurements of very large scale structure.} The experiments will probe an ideal range of comoving radius $\sim8-12$~Gpc, interpolating between the CMB photosphere and local surveys,  for either contributing to or expanding upon our 4D potential map.
 
 On a longer time scale there are ambitious plans to construct an international Square Kilometer Array (SKA\footnote{https://www.skatelescope.org}). The long term goals include measuring the redshifts of a billion galaxies, performing weak lensing surveys and carrying out more sensitive surveys of the epoch of reionization (see  \cite{SKACosmology} and references therein). It is likely that the SKA capabilities and schedule will become better-defined over the lifetime of this proposed research program.
 
@@ -993,17 +996,17 @@ issues of theoretical principle which we intend to try to clarify.
 A first paper presenting the low resolution map is nearing completion
 and should be submitted over the summer.  A second paper describing the
 tree description of nested contours is underway and should be finished
-in the fall. Essentially all of Stage 1 should be completed by the end
-of the year and the Stage 2 projects will be underway especially those
-involving polarization. 2017 will be devoted towards the Stage 2
+in the fall. Essentially all of Stage~1 should be completed by the end
+of the year and the Stage~2 projects will be underway especially those
+involving polarization. 2017 will be devoted towards the Stage~2
 projects and papers will be written presenting higher resolution maps of
 the contemporary universe and analyses of inflation. We expect to be
 able to carry out a series of tests of the self-consistency of the
 assumption of Gaussianity and random phases which underlies this entire
 approach. It remains to be seen if this is competitive with alternative
 apporaches based upon the CMB and large scale structure.
-2018 will be devoted to completing and writing up the Stage 2 results
-and starting work on Stage 3.
+2018 will be devoted to completing and writing up the Stage~2 results
+and starting work on Stage~3.
 
 % ====================================================================
 

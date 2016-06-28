@@ -73,7 +73,7 @@ by increasingly detailed measurements of the cosmic microwave background
 (CMB) radiation~(see e.g.~\cite{WMAP2013maps, WMAP2013cosmopara, Planck2015maps, Planck2015cosmopara} for satellites which are complemented by ground-based telescopes with smaller fields of view).
 These accurate measurements have affirmed that a description of a
 homogeneous, spatially flat general relativistic Universe with
-relatively few ingredients -- photons ($T_\gamma=2.7$~K), neutrinos
+relatively few ingredients -- photons ($T_\gamma=2.7$~K, $\Omega_\gamma=5\times10^{-5}$), neutrinos
 (three flavors), baryons ($\Omega_b=0.05$), dark matter
 ($\Omega_d=0.26$) and a cosmological constant ($\Omega_\Lambda=0.69$)
 supplemented by (almost) scale-free, adiabatic, Gaussian initial
@@ -124,7 +124,7 @@ The potential associated with a mode was essentially frozen until it
 ``entered the horizon,'' that is, until the timescale for its dynamical
 evolution, became smaller than the expansion timescale. We are mostly
 concerned with long wavelength modes for which this happened after
-recombination and $k\lo40{\rm Gpc}^{-1}$.\footnote{$k_0$ can be
+recombination and $k\lo k_0\sim40{\rm Gpc}^{-1}$.\footnote{$k_0$ can be
 considered as approximately the wavenumber associated with the first
 acoustic peak and its consequence, Baryon Acoustic Oscillations (BAO).}
 For such wavenumbers, the waves evolve at roughly constant $\Phi$ until
@@ -212,7 +212,7 @@ Universe including what can be inferred beyond our horizon.
 \subsection{Stage 1. From 2D to 3D: Potential Reconstruction from CMB Data Alone}
 
 We first provide a  brief review of our results so far, to place this
-proposed investigation in context. These are predicated on the simplest, inflation-compatible assumptions, as outlined above. We will compete and publish this research and then go on to use CMB data alone to explore the internal consistency of these assumptions in new ways.
+proposed investigation in context. These are predicated on the simplest, inflation-compatible assumptions, as outlined above. We will complete and publish this research and then go on to use CMB data alone to explore the internal consistency of these assumptions in new ways.
 
 \ni{\bf CMB Temperature Fluctuation Input Data:}
 % Most quantitative cosmology derives from CMB observations.
@@ -354,22 +354,26 @@ quite complementary to that of Yadav and Wandelt~\cite{Yadav:2005} who
 are concerned with wavelengths comparable with the thickness of the
 recombination surface around the acoustic peak near $\ell\sim200$.}
 
-
+%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
 \vspace{-1cm}
 \centering\includegraphics[width=0.8\linewidth]{figures/errorrec.pdf}
 \caption{
 \openup -0.3em
 {\footnotesize
-Errors on the $f_n$ parameters in the reconstruction from Figure~\ref{Fig:Mockreconstruction}. We form complex Fourier coefficients from the real
-quantities defined in Equation~\ref{eq:fourierseries}, and then display the
-real parts of these complex coefficients in the left panel, and the imaginary parts in the right panel. In both panels
- {\it blue} points show the true coefficent component values,
- while the reconstructed values are plotted in {\it orange}. The error bars are the diagonal elements of the posterior covariance matrix $\mathbf{A}_{nn'}^{-1}$.
-}}
+Errors on the $f_n$ parameters in the reconstruction from
+Figure~\ref{Fig:Mockreconstruction}. We form complex Fourier
+coefficients from the real quantities defined in
+Equation~\ref{eq:fourierseries}, and then display the real parts of
+these complex coefficients in the left panel, and the imaginary parts
+(equivalent to $f_{N+1-n}$ in Eq.~\ref{eq:fourierseries}) in the right
+panel. In both panels blue points show the true coefficent component
+values, while the reconstructed values are plotted in orange. The error
+bars are the diagonal elements of the posterior covariance matrix
+$\mathbf{A}_{nn'}^{-1}$. }}
 \label{Fig:recerror}
 \end{figure}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 For a set of $f_n$ parameters, our model for the 2-dimensional sky is defined by computing the spherical harmonic coefficients $a_y
 =\mathbf{R}_{yn}f_n$, where the ``response
@@ -452,9 +456,8 @@ of the inflation model, we must infer them from the data as well, in a
 hierarachical model for the CMB data. In this section we step through the
 construction of this statistical model.
 
-As is conventional, we assume
-that the main matter components during inflation are in the form of
-of ``single-field'' inflation. Generalization to more complex models is possible. We want to describe perturbations of the scalar field, which we call
+We assume that the main matter components during inflation take the form of
+of a single field. Generalization to more complex models is possible. We want to describe perturbations of the scalar field, which we call
 $\varphi$, about a homogeneous background. It is common to quantify
 these perturbations with the gauge-invariant curvature perturbation,
 $\zeta$.\footnote{At late times (i.e. after the time of BBN) and inside
@@ -510,7 +513,7 @@ show an example visualization of the phases of a mock 3D potential:
 a key part of our research program will be to develop
 robust statistical
 tests of the posterior inferences of such phases, first using realistic
-mock data (to avoid {a posteriori} bias),
+mock data (to avoid {\it a posteriori} bias),
 and then on the Planck temperature map.
 
 \begin{figure*}[t]
@@ -668,7 +671,7 @@ has only begun, it is already clear that the statistics and structure of
 the tree satisfy many rules if the underlying fluctuations are
 drawn from a random distribution, for example $N_K\sim N_X$ as
 $\ell\rightarrow\infty$. We propose to explore this novel approach to
-test Gaussianity. We plan to extend this 2D approach on the
+testing Gaussianity. We plan to extend this 2D approach on the
 photosphere to a 3D approach\footnote{Another generalization that we
 plan to explore is to describe the topological arrangement of the
 polarization patterns~\cite{Scheuer:1977}.} exploring the nesting of the
@@ -757,7 +760,7 @@ $z\sim0.7$ and the Dark Energy Survey\footnote{http://www.darkenergysurvey.org} 
 complement to optical surveys but the survey volumes to date are
 comparatively modest.} For our purposes this translates to a comoving
 volume $\sim50{\rm Gpc}^3$, about 0.005 of the total. Surveys of much
-rarer quasars and the brightest star forming galaxies which extend to
+rarer quasars and the brightest star-forming galaxies which extend to
 $z\sim6$ provide much greater volumes over which the potential on Gpc
 scales can be estimated, albeit with inferior precision.
 

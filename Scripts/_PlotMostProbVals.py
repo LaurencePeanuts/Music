@@ -10,7 +10,7 @@ from scipy.stats import norm
 from scipy.stats import multivariate_normal
 
 
-num=3
+num=10
 
 postn=np.zeros(numreal)
 for i in range(numreal):
@@ -21,7 +21,7 @@ n, bins, patches = plt.hist(postn, 20, normed=1, facecolor='green', alpha=0.75)
 plt.xlabel('$f_n$ values for $n=$'+str(num))
 plt.ylabel('Probability')
 plt.title(r'$\mathrm{Histogram\ of\ most\ probable\ reconstructed\ values:}$')
-plt.axis([-5, 5, 0, 5])
+plt.axis([-0.1, 0.11, 0, 1])
 plt.grid(True)
 
 plt.axvline(beatbox.You.all_simulated_universes[-1].fn[num])

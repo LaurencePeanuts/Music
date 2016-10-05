@@ -696,7 +696,7 @@ class Universe(object):
         if usedefault == 1:
             # Populate the R matrix
             if beatbox.Universe.R is None:
-                self.populate_instance_response_matrix(usedefault=usedefault)
+                self.populate_instance_response_matrix(truncated_nmax=truncated_nmax, truncated_nmin=truncated_nmin,truncated_lmax=truncated_lmax, truncated_lmin=truncated_lmin,usedefault=usedefault)
             # Calculate the a_y matrix
             ay = np.dot(self.R,self.fn)
             self.ay = ay

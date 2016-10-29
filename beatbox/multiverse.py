@@ -407,6 +407,121 @@ class Multiverse(object):
             
         return alpha*inv_Cf
     
+    def solve_for_3D_potential_marginalized_over_large_n(self, datamap, inv_Cyy=None, print_alpha=0, truncated_nmax=None, nmax=None):
+        
+        #Initiate the inverse of the a_y covariance matrix
+        if inv_Cyy is None:
+            inv_Cyy = self.inv_Cyy
+        if truncated_nmax is None:
+            truncated_nmax = beatbox.Universe.truncated_nmax
+        if nmax is None:
+            nmax = beatbox.Universe.truncated_nmax
+        
+        #Get the indices of the f_n's ordered by k norm
+        ind = np.where(beatbox.Universe.kfilter>0)
+        
+        k, theta, phi = beatbox.Universe.k[ind], np.arctan2(beatbox.Universe.ky[ind],beatbox.Universe.kx[ind]), np.arccos(beatbox.Universe.kz[ind]/beatbox.Universe.k[ind])
+        
+        kvec_long = np.zeros(2*len(ind[1]))
+        kvec_long[:len(ind[1])] = (k[ind])
+        kvec_long[len(ind[1]):] = (k[ind])
+        
+        kvec = np.zeros(len(ind[1]))
+        kvec[:len(ind[1])/2] = kvec_long[:len(ind[1])/2]
+        kvec[len(ind[1])/2:] = kvec_long[len(ind[1]):3*len(ind[1])/2]
+        
+        ind_for_A_marginalization = np.argsort(kvec)
+        
+        kvec1_ind = ind_for_A_marginalization[np.in1d(ind_for_A_marginalization, np.where(kvec <= truncated_nmax), assume_unique=False)]
+        
+        kvec2_ind = ind_for_A_marginalization[np.in1d(ind_for_A_marginalization, np.where(kvec > truncated_nmax), assume_unique=False)]
+        
+        #Reindex the data
+        datamap1 = datamap[kvec1_ind]
+        datamap2 = datamap[kvec2_ind]
+        datamap_reordformarg = datamap[ind_for_A_marginalization]
+        
+        #Initiate the inverse covariance matrix of the prior
+        #ind = np.where(beatbox.Universe.kfilter>0)
+        PS_long = np.zeros(2*len(ind[1]))
+        PS_long[:len(ind[1])] = (self.all_simulated_universes[0].Power_Spectrum[ind])
+        PS_long[len(ind[1]):] = (self.all_simulated_universes[0].Power_Spectrum[ind])
+        
+        PS = np.zeros(len(ind[1]))
+        PS[:len(ind[1])/2] = PS_long[:len(ind[1])/2]
+        PS[len(ind[1])/2:] = PS_long[len(ind[1]):3*len(ind[1])/2]
+        
+        inv_Cf = np.diag(1./PS)
+        
+        inv_Cf_reordformarg = inv_Cf[ind_for_A_marginalization, ind_for_A_marginalization] 
+        
+        #Deal with the R matrix to make it real
+        # Select the m values out the the lms tupples
+        m = np.array([m[1] for m in beatbox.Universe.lms])
+        # Find the indices of the positive ms
+        pos_ind = (m>0)
+        # Find the indices of the m=0
+        zero_ind = (m==0)
+        # Find the indices of the negative ms
+        neg_ind = (m<0)
+        
+        R_real = np.zeros((len(beatbox.Universe.lms), len(beatbox.You.all_simulated_universes[-1].fn)), dtype=np.float)
+        
+        R_real[pos_ind,:] = beatbox.Universe.R[pos_ind,:].real
+        R_real[neg_ind,:] = beatbox.Universe.R[pos_ind,:].imag
+        R_real[zero_ind,:] = beatbox.Universe.R[zero_ind,:].astype(np.float)
+        
+        self.R_real = R_real
+        R_real_reordformarg = R_real[ind_for_A_marginalization]
+        self.R_real_reordformarg = R_real_reordformarg
+        
+        # Define the A matrix and it's four components, and the needed inverses 
+        A = np.dot(R_real.T , np.dot( inv_Cyy , R_real)) + inv_Cf
+        
+        A1 = A[kvec1_ind, kvec1_ind]
+        A2 = A[kvec1_ind, kvec2_ind]
+        A3 = A[kvec2_ind, kvec1_ind]
+        A4 = A[kvec2_ind, kvec2_ind]
+        
+        U, s, V_star = np.linalg.svd(A4)
+        inv_A4 = np.dot(V_star.T, np.dot(np.diag(1./s),U.T))
+        
+        #Solve for the normalization of the prior
+        #inv_Cf = self.solve_for_prior_normalization(inv_Cyy, inv_Cf, A, inv_A, R_real, datamap, print_alpha)
+        
+        # Redefine A with the properly normalized prior
+        #A = np.dot(R_real.T , np.dot( inv_Cyy , R_real)) + inv_Cf
+        #self.A = A
+        # Find the inverse of A that has been the properly normalized Cf
+        #U, s, V_star = np.linalg.svd(A)
+        #inv_A = np.dot(V_star.T, np.dot(np.diag(1./s),U.T))
+        self.inv_A4=inv_A4
+        
+        NewAcov = (A1-np.dot(np.dot(A2, inv_A4), A2.T ) )
+        self.NewAcov = NewAcov
+        
+        U2, s2, V_star2 = np.linalg.svd(NewAcov)
+        inv_NewAcov = np.dot(V_star2.T, np.dot(np.diag(1./s2),U2.T))
+        self.inv_NewAcov=inv_NewAcov
+        
+        inv_Cyy_reordformarg = inv_Cyy[ind_for_A_marginalization,ind_for_A_marginalization]
+        
+        # Use linear algebra to solve the A*f_n=b linear equation
+        b_reordformarg =  np.dot(R_real_reordformarg.T , np.dot (inv_Cyy_reordformarg , datamap_reordformarg) )
+        b =  np.dot(R_real.T , np.dot (inv_Cyy , datamap) )
+        b1 = b[kvec1_ind]
+        b2 = b[kvec2_ind]
+        #self.reconstrunct_fn = np.linalg.solve(A, b)
+    
+        #from numpy.linalg import inv
+        self.reconstrunct_fn_ordformarg = np.dot( inv_NewAcov , b1.T - np.dot( b2.T,  np.dot(inv_A4 , A2.T ) ) )
+        self.reconstrunct_fn[kvec1_ind] = self.reconstrunct_fn_ordformarg
+        self.reconstrunct_fn[kvec2_ind] = np.zeros(kvec1_ind.shape)
+        
+        return
+
+    
+    
     def generate_one_realization_of_noise(self):
         '''
         Generate one realization of the noise given by C_yy

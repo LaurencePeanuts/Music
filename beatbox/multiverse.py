@@ -422,9 +422,10 @@ class Multiverse(object):
         
         k, theta, phi = beatbox.Universe.k[ind], np.arctan2(beatbox.Universe.ky[ind],beatbox.Universe.kx[ind]), np.arccos(beatbox.Universe.kz[ind]/beatbox.Universe.k[ind])
         
+        
         kvec_long = np.zeros(2*len(ind[1]))
-        kvec_long[:len(ind[1])] = (k[ind])
-        kvec_long[len(ind[1]):] = (k[ind])
+        kvec_long[:len(ind[1])] = k
+        kvec_long[len(ind[1]):] = k
         
         kvec = np.zeros(len(ind[1]))
         kvec[:len(ind[1])/2] = kvec_long[:len(ind[1])/2]
@@ -437,9 +438,9 @@ class Multiverse(object):
         kvec2_ind = ind_for_A_marginalization[np.in1d(ind_for_A_marginalization, np.where(kvec > truncated_nmax), assume_unique=False)]
         
         #Reindex the data
-        datamap1 = datamap[kvec1_ind]
-        datamap2 = datamap[kvec2_ind]
-        datamap_reordformarg = datamap[ind_for_A_marginalization]
+        #datamap1 = datamap[kvec1_ind]
+        #datamap2 = datamap[kvec2_ind]
+        #datamap_reordformarg = datamap[ind_for_A_marginalization]
         
         #Initiate the inverse covariance matrix of the prior
         #ind = np.where(beatbox.Universe.kfilter>0)
@@ -472,11 +473,16 @@ class Multiverse(object):
         R_real[zero_ind,:] = beatbox.Universe.R[zero_ind,:].astype(np.float)
         
         self.R_real = R_real
-        R_real_reordformarg = R_real[ind_for_A_marginalization]
-        self.R_real_reordformarg = R_real_reordformarg
+        #R_real_reordformarg = R_real[ind_for_A_marginalization]
+        #self.R_real_reordformarg = R_real_reordformarg
         
         # Define the A matrix and it's four components, and the needed inverses 
         A = np.dot(R_real.T , np.dot( inv_Cyy , R_real)) + inv_Cf
+        
+        A1 = np.zeros((len(kvec1_ind), len(kvec1_ind)))
+        A2 = np.zeros((len(kvec1_ind), len(kvec2_ind)))
+        A3 = np.zeros((len(kvec2_ind), len(kvec1_ind)))
+        A4 = np.zeros((len(kvec2_ind), len(kvec2_ind)))
         
         A1 = A[kvec1_ind, kvec1_ind]
         A2 = A[kvec1_ind, kvec2_ind]
@@ -507,7 +513,7 @@ class Multiverse(object):
         inv_Cyy_reordformarg = inv_Cyy[ind_for_A_marginalization,ind_for_A_marginalization]
         
         # Use linear algebra to solve the A*f_n=b linear equation
-        b_reordformarg =  np.dot(R_real_reordformarg.T , np.dot (inv_Cyy_reordformarg , datamap_reordformarg) )
+        #b_reordformarg =  np.dot(R_real_reordformarg.T , np.dot (inv_Cyy_reordformarg , datamap_reordformarg) )
         b =  np.dot(R_real.T , np.dot (inv_Cyy , datamap) )
         b1 = b[kvec1_ind]
         b2 = b[kvec2_ind]

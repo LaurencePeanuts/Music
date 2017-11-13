@@ -591,11 +591,14 @@ class Universe(object):
             fn_Phase = np.random.uniform(0, Pmax*np.ones(self.k.shape,dtype=np.float_) )*np.power(self.kfilter,2)
         else:
             fn_Phase = np.random.normal(Pmax, np.sqrt(Pvar)*np.ones(self.k.shape,dtype=np.float_) )*np.power(self.kfilter,2)
-
+        
+        self.fn_Phase = fn_Phase
+        self.fn_Norm = fn_Norm
         # Need to ensure that f_-k = f^*_k
         # FT = fn_R + fn_I*1j
         FT = fn_Norm*np.cos(fn_Phase)+fn_Norm*np.sin(fn_Phase)*1j
-
+        self.FT = FT
+        
         X = np.concatenate((np.append(FT[:self.nmax, self.nmax ,self.nmax ], 0), np.conjugate(FT[:self.nmax, self.nmax ,self.nmax ])[::-1]), axis=0)
         Z = np.concatenate( ( FT[:, :self.nmax ,self.nmax ], X.reshape(2*self.nmax+1,1), np.conjugate(FT[:, :self.nmax ,self.nmax ])[::-1,::-1]), axis=1 )
         self.fngrid = np.concatenate( (FT[:,:,:self.nmax], Z.reshape(2*self.nmax+1,2*self.nmax+1,1), np.conjugate( FT[:,:,:self.nmax])[::-1,::-1,::-1] ), axis=2  )
@@ -714,7 +717,7 @@ class Universe(object):
         return
 
 
-    def show_potential_with_yt(self,output='',angle=np.pi/4.0, N_layer=5, alpha_norm=5.0, cmap='BrBG', Proj=0, Slice=0, gifmaking=0, show3D=0, continoursshade = 50.0, boxoutput='scratch/opac_phi3D_Gauss_phases_mean'):
+    def show_potential_with_yt(self,output='',angle=np.pi/4.0, N_layer=5, alpha_norm=5.0, cmap='BrBG', Proj=0, Slice=0, gifmaking=0, show3D=0, continoursshade = 50.0, boxoutput='scratch/opac_phi3D_Gauss_phases_mean', slicerad=1):
         """
         Visualize the gravitational potential using yt. We're after something
         like http://yt-project.org/doc/_images/vr_sample.jpg - described
@@ -866,9 +869,10 @@ class Universe(object):
             s.save('phi')
 
         if Slice == 1:
-            w = yt.SlicePlot(ds, "z", "density", center="c")
-            w.set_cmap(field="density", cmap='jet')
-            w.annotate_sphere([0., 0., 0.], radius=(1, 'cm'),
+            w = yt.SlicePlot(ds, "z", "density", center=[0,0,slicerad])
+            w.set_cmap(field="density", cmap=cmap)
+            circrad = np.sqrt(1-slicerad*slicerad)
+            w.annotate_sphere([0., 0., 0.], radius=(circrad, 'cm'),
                   circle_args={'color':'red',"linewidth": 3})
             w.show()
             w.save('phi')

@@ -407,7 +407,7 @@ class Multiverse(object):
             
         return alpha*inv_Cf
     
-    def solve_for_3D_potential_marginalized_over_large_n(self, datamap, inv_Cyy=None, print_alpha=0, truncated_nmax=None, nmax=None):
+    def solve_for_3D_potential_marginalized_over_large_n(self, datamap, inv_Cyy=None, print_alpha=0, truncated_nmax=None, nmax=None, NewAcov = None, inv_NewAcov = None, count=0):
         
         #Initiate the inverse of the a_y covariance matrix
         if inv_Cyy is None:
@@ -433,9 +433,13 @@ class Multiverse(object):
         
         ind_for_A_marginalization = np.argsort(kvec)
         
-        kvec1_ind = ind_for_A_marginalization[np.in1d(ind_for_A_marginalization, np.where(kvec <= truncated_nmax), assume_unique=False)]
+        kvec1_ind = ind_for_A_marginalization[np.in1d(ind_for_A_marginalization, np.where(kvec <= truncated_nmax*beatbox.Universe.Deltak), assume_unique=False)]
         
-        kvec2_ind = ind_for_A_marginalization[np.in1d(ind_for_A_marginalization, np.where(kvec > truncated_nmax), assume_unique=False)]
+        kvec2_ind = ind_for_A_marginalization[np.in1d(ind_for_A_marginalization, np.where(kvec > truncated_nmax*beatbox.Universe.Deltak), assume_unique=False)]
+        
+        
+        #print kvec1_ind.shape
+        #print kvec2_ind.shape
         
         #Reindex the data
         #datamap1 = datamap[kvec1_ind]
@@ -477,40 +481,74 @@ class Multiverse(object):
         #self.R_real_reordformarg = R_real_reordformarg
         
         # Define the A matrix and it's four components, and the needed inverses 
-        A = np.dot(R_real.T , np.dot( inv_Cyy , R_real)) + inv_Cf
+        if NewAcov is None:
+            A = np.dot(R_real.T , np.dot( inv_Cyy , R_real)) + inv_Cf
         
-        A1 = np.zeros((len(kvec1_ind), len(kvec1_ind)))
-        A2 = np.zeros((len(kvec1_ind), len(kvec2_ind)))
-        A3 = np.zeros((len(kvec2_ind), len(kvec1_ind)))
-        A4 = np.zeros((len(kvec2_ind), len(kvec2_ind)))
+            A1 = np.zeros((len(kvec1_ind), len(kvec1_ind)))
+            A2 = np.zeros((len(kvec1_ind), len(kvec2_ind)))
+            A3 = np.zeros((len(kvec2_ind), len(kvec1_ind)))
+            A4 = np.zeros((len(kvec2_ind), len(kvec2_ind)))
+            print A1.shape 
+            print A2.shape
+            print A3.shape
+            print A4.shape 
         
-        A1 = A[kvec1_ind, kvec1_ind]
-        A2 = A[kvec1_ind, kvec2_ind]
-        A3 = A[kvec2_ind, kvec1_ind]
-        A4 = A[kvec2_ind, kvec2_ind]
         
-        U, s, V_star = np.linalg.svd(A4)
-        inv_A4 = np.dot(V_star.T, np.dot(np.diag(1./s),U.T))
+            for i in range(len(kvec1_ind)):
+                A1[i,:] = A[kvec1_ind[i], kvec1_ind]
+            for i in range(len(kvec1_ind)):
+                A2[i,:] = A[kvec1_ind[i], kvec2_ind]
+            print A2.shape
+            print  A2[:5,:5]
+            for i in range(len(kvec1_ind)):
+                A3[:,i] = A[kvec2_ind, kvec1_ind[i]]
+            for i in range(len(kvec2_ind)):
+                A4[:,i] = A[kvec2_ind, kvec2_ind[i]]
+            print A1.shape 
+            print A2.shape
+            print A3.shape
+            print A4.shape 
+            
+            U, s, V_star = np.linalg.svd(A4)
+            inv_A4 = np.dot(V_star.T, np.dot(np.diag(1./s),U.T))
+            
+            #Solve for the normalization of the prior
+            #inv_Cf = self.solve_for_prior_normalization(inv_Cyy, inv_Cf,   A, inv_A, R_real, datamap, print_alpha)
         
-        #Solve for the normalization of the prior
-        #inv_Cf = self.solve_for_prior_normalization(inv_Cyy, inv_Cf, A, inv_A, R_real, datamap, print_alpha)
+            # Redefine A with the properly normalized prior
+            #A = np.dot(R_real.T , np.dot( inv_Cyy , R_real)) + inv_Cf
+            #self.A = A
+            # Find the inverse of A that has been the properly normalized  Cf
+            #U, s, V_star = np.linalg.svd(A)
+            #inv_A = np.dot(V_star.T, np.dot(np.diag(1./s),U.T))
+            self.inv_A4=inv_A4
+            
+            NewAcov = (A1-np.dot(np.dot(A2, inv_A4), A2.T ) )
+            self.NewAcov = NewAcov
+            count = count+1
+        else:
+            invA4dotA2t=self.invA4dotA2t
+#            A = np.dot(R_real.T , np.dot( inv_Cyy , R_real)) + inv_Cf
+#        
+#            A2 = np.zeros((len(kvec1_ind), len(kvec2_ind)))
+#            for i in range(len(kvec1_ind)):
+#                A2[i,:] = A[kvec1_ind[i], kvec2_ind]
+#            print A2.shape
+            
+            
+        if inv_NewAcov is None:
+            U2, s2, V_star2 = np.linalg.svd(NewAcov)
+            inv_NewAcov = np.dot(V_star2.T, np.dot(np.diag(1./s2),U2.T))
+            self.inv_NewAcov=inv_NewAcov
         
-        # Redefine A with the properly normalized prior
-        #A = np.dot(R_real.T , np.dot( inv_Cyy , R_real)) + inv_Cf
-        #self.A = A
-        # Find the inverse of A that has been the properly normalized Cf
-        #U, s, V_star = np.linalg.svd(A)
-        #inv_A = np.dot(V_star.T, np.dot(np.diag(1./s),U.T))
-        self.inv_A4=inv_A4
+        #This should not be done:
+        #inv_Cyy_reordformarg = np.zeros((len(ind_for_A_marginalization), len(ind_for_A_marginalization)))
         
-        NewAcov = (A1-np.dot(np.dot(A2, inv_A4), A2.T ) )
-        self.NewAcov = NewAcov
+        #print len(ind_for_A_marginalization)
+        #print inv_Cyy_reordformarg.shape
         
-        U2, s2, V_star2 = np.linalg.svd(NewAcov)
-        inv_NewAcov = np.dot(V_star2.T, np.dot(np.diag(1./s2),U2.T))
-        self.inv_NewAcov=inv_NewAcov
-        
-        inv_Cyy_reordformarg = inv_Cyy[ind_for_A_marginalization,ind_for_A_marginalization]
+        #for i in range(len(ind_for_A_marginalization)):
+        #    inv_Cyy_reordformarg[i,:] = inv_Cyy[ind_for_A_marginalization[i], ind_for_A_marginalization]
         
         # Use linear algebra to solve the A*f_n=b linear equation
         #b_reordformarg =  np.dot(R_real_reordformarg.T , np.dot (inv_Cyy_reordformarg , datamap_reordformarg) )
@@ -520,9 +558,18 @@ class Multiverse(object):
         #self.reconstrunct_fn = np.linalg.solve(A, b)
     
         #from numpy.linalg import inv
-        self.reconstrunct_fn_ordformarg = np.dot( inv_NewAcov , b1.T - np.dot( b2.T,  np.dot(inv_A4 , A2.T ) ) )
+        if count is not 0:
+            self.invA4dotA2t = np.dot(inv_A4 , A2.T )
+            invA4dotA2t = self.invA4dotA2t
+            self.reconstrunct_fn_ordformarg = np.dot( inv_NewAcov , b1.T - np.dot( b2.T,  self.invA4dotA2t ) )
+            
+        else:
+            self.reconstrunct_fn_ordformarg = np.dot( inv_NewAcov , b1.T - np.dot( b2.T,  invA4dotA2t ) )
+        
+        self.reconstrunct_fn = np.zeros(len(kvec))
+        
         self.reconstrunct_fn[kvec1_ind] = self.reconstrunct_fn_ordformarg
-        self.reconstrunct_fn[kvec2_ind] = np.zeros(kvec1_ind.shape)
+        self.reconstrunct_fn[kvec2_ind] = np.zeros(kvec2_ind.shape)
         
         return
 

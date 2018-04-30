@@ -63,7 +63,7 @@ else:
     beatbox.You.all_data_universes = np.append(beatbox.You.all_data_universes, beatbox.Universe())
 #    beatbox.You.all_data_universes[-1].read_in_CMB_T_map(from_this = '../data/commander_32band_Clsamples100/cmb_Cl_c0001_k00031.fits')
     beatbox.You.all_data_universes[-1].read_in_CMB_T_map(from_this = fromthis)
-    beatbox.You.all_data_universes[-1].decompose_T_map_into_spherical_harmonics(lmax=60)
+    beatbox.You.all_data_universes[-1].decompose_T_map_into_spherical_harmonics(lmax=6)
     beatbox.You.all_data_universes[-1].alm2ay()
     beatbox.You.all_data_universes[-1].ay2alm(beatbox.You.all_data_universes[-1].ay)
     datamap = beatbox.You.all_data_universes[-1].ay2ayreal_for_inference(beatbox.You.all_data_universes[-1].ay)

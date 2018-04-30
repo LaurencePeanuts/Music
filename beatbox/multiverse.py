@@ -10,6 +10,8 @@ import glob
 from PIL import Image as PIL_Image
 from scipy.stats import chi2
 
+import time
+
 #import beatbox.universe
 import beatbox
 
@@ -260,7 +262,99 @@ class Multiverse(object):
         self.inv_Cyy=np.dot(V, np.dot(S_cross,U_star))
         
         return
+
+    def calculate_A_matrix(self, inv_Cyy = None, inv_Cf = None, R_real = None, filename = 'nmax_unspecified'):
+        '''
+        Calculate the A matrix, and save it to disk
+        '''
+        #Initiate the inverse of the a_y covariance matrix
+        if inv_Cyy is None:
+            inv_Cyy = self.inv_Cyy
+
+        if inv_Cf is None:
+            #Initiate the inverse covariance matrix of the prior
+            ind = np.where(beatbox.Universe.kfilter>0)
+            PS_long = np.zeros(2*len(ind[1]))
+            PS_long[:len(ind[1])] = (self.all_simulated_universes[-1].Power_Spectrum[ind])
+            PS_long[len(ind[1]):] = (self.all_simulated_universes[-1].Power_Spectrum[ind])
+        
+            PS = np.zeros(len(ind[1]))
+            PS[:len(ind[1])/2] = PS_long[:len(ind[1])/2]
+            PS[len(ind[1])/2:] = PS_long[len(ind[1]):3*len(ind[1])/2]
+        
+            inv_Cf=np.diag(1./PS)
+
+        if R_real is None:
+            #Deal with the R matrix to make it real
+            # Select the m values out the the lms tupples
+            m = np.array([m[1] for m in beatbox.Universe.lms])
+            # Find the indices of the positive ms
+            pos_ind = (m>0)
+            # Find the indices of the m=0
+            zero_ind = (m==0)
+            # Find the indices of the negative ms
+            neg_ind = (m<0)
+        
+            R_real = np.zeros((len(beatbox.Universe.lms), len(beatbox.You.all_simulated_universes[-1].fn)), dtype=np.float)
+        
+            R_real[pos_ind,:] = beatbox.Universe.R[pos_ind,:].real
+            R_real[neg_ind,:] = beatbox.Universe.R[pos_ind,:].imag
+            R_real[zero_ind,:] = beatbox.Universe.R[zero_ind,:].astype(np.float)
+        
+            self.R_real = R_real
+        
+        A = np.dot(R_real.T , np.dot( inv_Cyy , R_real)) + inv_Cf
+        self.A=A
+        
+        inv_A = self.calculate_pure_A_inverse()
+        
+#        np.savetxt( "../data/A_"+filename+".txt", A)
+        np.save("../data/A_"+filename+".npy", A)
+        np.save("../data/inv_A_"+filename+".npy", inv_A)
+        return inv_A
     
+    def load_A_matrix(self,  filename, inv = 'n'):
+        '''
+        Load the previously calculated a_y covariance matrix
+        '''
+        
+#        self.A = np.loadtxt("../data/"+filename)
+        if inv == 'n':
+            self.A = np.load("../data/A_"+filename+".npy")
+        else:
+            self.inv_A = np.load("../data/inv_A_"+filename+".npy")
+        return
+    
+    def calculate_sdv_A_inverse(self):
+        '''
+        Calculate the inverse of the covariance matrix using singular
+        value decomposition.
+        '''
+        
+        U, s, V_star = np.linalg.svd(self.A)
+        
+        #S = np.zeros((U.shape[1], V_star.shape[0]), dtype=complex)
+        #S=np.diag(s)
+        #S_cross = np.transpose(1./S)
+        S_cross=np.diag(1./s)
+        
+        V = V_star.conj().T
+        U_star=U.conj().T
+        self.inv_A=np.dot(V, np.dot(S_cross,U_star))
+        
+        return inv_A
+    
+    def calculate_pure_A_inverse(self):
+        '''
+        Calculate the inverse of the covariance matrix using singular
+        value decomposition.
+        '''
+        
+        from numpy.linalg import inv
+        
+        inv_A=inv(self.A)
+        
+        return inv_A
     
     def reconstruct_3D_potential(self, datamap ,inv_Cyy=None):
         '''
@@ -322,25 +416,21 @@ class Multiverse(object):
         return log_likelihood+log_prior
     
     
-    def solve_for_3D_potential(self, datamap, inv_Cyy=None, print_alpha=0):
+    def solve_for_3D_potential(self, datamap, inv_Cyy=None, A=None, print_alpha=0):
+        
+        start = time.time()
         
         #Initiate the inverse of the a_y covariance matrix
         if inv_Cyy is None:
             inv_Cyy = self.inv_Cyy
         
-        #Initiate the inverse covariance matrix of the prior
-        ind = np.where(beatbox.Universe.kfilter>0)
-        PS_long = np.zeros(2*len(ind[1]))
-        PS_long[:len(ind[1])] = (self.all_simulated_universes[0].Power_Spectrum[ind])
-        PS_long[len(ind[1]):] = (self.all_simulated_universes[0].Power_Spectrum[ind])
-        
-        PS = np.zeros(len(ind[1]))
-        PS[:len(ind[1])/2] = PS_long[:len(ind[1])/2]
-        PS[len(ind[1])/2:] = PS_long[len(ind[1]):3*len(ind[1])/2]
-        
-        inv_Cf=np.diag(1./PS)
+#        end1 = time.time()
+#        print end1-start1
         
         
+        
+#        end2 = time.time()
+#        print end2-end1
         
         #Deal with the R matrix to make it real
         # Select the m values out the the lms tupples
@@ -360,33 +450,93 @@ class Multiverse(object):
         
         self.R_real = R_real
         
-        # Define the A matrix and its inverse 
-        A = np.dot(R_real.T , np.dot( inv_Cyy , R_real)) + inv_Cf
+        end2 = time.time()
+        print end2-start
+#        print 'begining of long part'
         
-        U, s, V_star = np.linalg.svd(A)
-        inv_A = np.dot(V_star.T, np.dot(np.diag(1./s),U.T))
+        # Define the A matrix and its inverse 
+#        A = np.dot(R_real.T , np.dot( inv_Cyy , R_real)) + inv_Cf
+#        self.A1= A
+        
+#        end4 = time.time()
+#        print 'A'
+#        print end4-end3
+        
+#        U, s, V_star = np.linalg.svd(A)
+        
+#        end5 = time.time()
+#        print 'B'
+#        print end5-end4
+        
+#        inv_A = np.dot(V_star.T, np.dot(np.diag(1./s),U.T))
+        
         
         #Solve for the normalization of the prior
         #inv_Cf = self.solve_for_prior_normalization(inv_Cyy, inv_Cf, A, inv_A, R_real, datamap, print_alpha)
         
         # Redefine A with the properly normalized prior
-        A = np.dot(R_real.T , np.dot( inv_Cyy , R_real)) + inv_Cf
-        #self.A = A
-        # Find the inverse of A that has been the properly normalized Cf
-        U, s, V_star = np.linalg.svd(A)
-        inv_A = np.dot(V_star.T, np.dot(np.diag(1./s),U.T))
-        self.inv_A=inv_A
         
-        U2, s2, V_star2 = np.linalg.svd(inv_A)
-        inv_inv_A = np.dot(V_star2.T, np.dot(np.diag(1./s2),U2.T))
-        self.A=inv_inv_A
+        if A is None:
+            
+            #Initiate the inverse covariance matrix of the prior
+            ind = np.where(beatbox.Universe.kfilter>0)
+            PS_long = np.zeros(2*len(ind[1]))
+            PS_long[:len(ind[1])] = (self.all_simulated_universes[-1].Power_Spectrum[ind])
+            PS_long[len(ind[1]):] = (self.all_simulated_universes[-1].Power_Spectrum[ind])
+        
+            PS = np.zeros(len(ind[1]))
+            PS[:len(ind[1])/2] = PS_long[:len(ind[1])/2]
+            PS[len(ind[1])/2:] = PS_long[len(ind[1]):3*len(ind[1])/2]
+        
+            inv_Cf=np.diag(1./PS)
+            
+            filename = 'nmax'+str(beatbox.Universe.truncated_nmax)
+            
+            inv_A = self.calculate_A_matrix(inv_Cyy = inv_Cyy, R_real = R_real, inv_Cf = inv_Cf, filename = filename)
+            #A = self.A
+        else:
+            filename = 'nmax'+str(beatbox.Universe.truncated_nmax)
+            
+            end4 = time.time()
+
+            self.load_A_matrix(filename, inv = 'y')
+            
+            end5 = time.time()
+            print "time for loading is:"
+            print end5-end4
+
+            inv_A = self.inv_A
+            print "successfully loaded A from the disk."
+#        self.Yash1  = np.dot(R_real.T , np.dot( inv_Cyy , R_real))
+#        self.Yash2 = inv_Cf
+        #self.A = A
+        
+        
+        # Find the inverse of A that has been the properly normalized Cf
+#        U, s, V_star = np.linalg.svd(A)
+#        inv_A = np.dot(V_star.T, np.dot(np.diag(1./s),U.T))
+#        self.inv_A=inv_A
+        
+
+        
+#        U2, s2, V_star2 = np.linalg.svd(inv_A)
+#        inv_inv_A = np.dot(V_star2.T, np.dot(np.diag(1./s2),U2.T))
+#        self.A=inv_inv_A
+        
+
+        
         
         # Use linear algebra to solve the A*f_n=b linear equation
         b =  np.dot(R_real.T , np.dot (inv_Cyy , datamap) )
         #self.reconstrunct_fn = np.linalg.solve(A, b)
     
         #from numpy.linalg import inv
+#        self.reconstrunct_fn = np.linalg.solve(A, b)
         self.reconstrunct_fn = np.dot( inv_A , np.dot(R_real.T , np.dot (inv_Cyy , datamap) ) )
+        
+        end = time.time()
+        print 'total time is:'
+        print end-start
         
         return
     
@@ -470,7 +620,7 @@ class Multiverse(object):
         # Find the indices of the negative ms
         neg_ind = (m<0)
         
-        R_real = np.zeros((len(beatbox.Universe.lms), len(beatbox.You.all_simulated_universes[-1].fn)), dtype=np.float)
+        R_real = np.zeros((len(beatbox.Universe.lms), len(self.all_simulated_universes[-1].fn)), dtype=np.float)
         
         R_real[pos_ind,:] = beatbox.Universe.R[pos_ind,:].real
         R_real[neg_ind,:] = beatbox.Universe.R[pos_ind,:].imag

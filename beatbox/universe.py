@@ -430,7 +430,7 @@ class Universe(object):
         ay = np.zeros(len(self.lms), dtype=np.complex128)
         
         ay[pos_ind] = ay_real[pos_ind].real+1j*ay_real[neg_ind]
-        ay[neg_ind] = ((ay_real[pos_ind].T-1j*ay_real[neg_ind].T) * (-1)**m[neg_ind]).T
+        ay[neg_ind] = ((ay_real[pos_ind].T-1j*ay_real[neg_ind].T) * (-1.)**m[neg_ind]).T
         ay[zero_ind] = ay_real[zero_ind].astype(np.complex128)
         
         self.ay=ay

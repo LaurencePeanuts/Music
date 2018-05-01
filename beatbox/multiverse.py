@@ -490,6 +490,8 @@ class Multiverse(object):
         
             inv_Cf=np.diag(1./PS)
             
+            self.inv_Cf = inv_Cf
+            
             filename = 'nmax'+str(beatbox.Universe.truncated_nmax)
             
             inv_A = self.calculate_A_matrix(inv_Cyy = inv_Cyy, R_real = R_real, inv_Cf = inv_Cf, filename = filename)

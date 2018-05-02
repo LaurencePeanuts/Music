@@ -416,6 +416,37 @@ class Multiverse(object):
         return log_likelihood+log_prior
     
     
+
+    def calculate_prior_Cf(self, ind, fn_length, n_s=0.97,kstar=0.02,PSnorm=2.43e-9,Pdist=1,Pmax=np.pi,Pvar=0.0):
+        '''
+        Initiate the inverse covariance matrix of the prior.
+        '''
+        
+        # Define the constants that go in the power spectrum
+        # Change units of the pivot scale kstar from Mpc^-1 to normalize the smallest k
+        #    mode to 1 (i.e. the radius of the CMB photosphere at 13.94Gpc)
+        kstar = kstar*1.394e4
+
+        # Draw Gaussian random Fourier coefficients with a k^{-3+(n_s-1)} power spectrum:
+        Power_Spectrum = PSnorm*10000*np.power((beatbox.Universe.k/kstar) ,(-3+(n_s-1)))
+        Power_Spectrum[np.isinf(Power_Spectrum)] = 10**-9
+
+        
+        ind = np.where(beatbox.Universe.kfilter>0)
+        PS_long = np.zeros(2*fn_length)
+        PS_long[:fn_length] = (self.all_simulated_universes[-1].Power_Spectrum[ind]) 
+        PS_long[fn_length:] = (self.all_simulated_universes[-1].Power_Spectrum[ind]) 
+        
+        PS = np.zeros(fn_length)
+        PS[:fn_length/2] = PS_long[:fn_length/2]
+        PS[fn_length/2:] = PS_long[fn_length:3*fn_length/2]
+        
+        inv_Cf = np.diag(1./PS) * 2 # factor of 2 is to account for real and imag covariance from power-spectrum covariance
+            
+        self.inv_Cf = inv_Cf
+        
+        return inv_Cf
+        
     def solve_for_3D_potential(self, datamap, inv_Cyy=None, A=None, print_alpha=0):
         
         start = time.time()
@@ -442,7 +473,12 @@ class Multiverse(object):
         # Find the indices of the negative ms
         neg_ind = (m<0)
         
-        R_real = np.zeros((len(beatbox.Universe.lms), len(beatbox.You.all_simulated_universes[-1].fn)), dtype=np.float)
+        #Calculate the number of fns for the recontruction
+        ind = np.where(beatbox.Universe.kfilter>0)
+        fn_length = len(ind[1])
+        
+        
+        R_real = np.zeros((len(beatbox.Universe.lms), fn_length), dtype=np.float)
         
         R_real[pos_ind,:] = beatbox.Universe.R[pos_ind,:].real
         R_real[neg_ind,:] = beatbox.Universe.R[pos_ind,:].imag
@@ -478,19 +514,21 @@ class Multiverse(object):
         
         if A is None:
             
-            #Initiate the inverse covariance matrix of the prior
-            ind = np.where(beatbox.Universe.kfilter>0)
-            PS_long = np.zeros(2*len(ind[1]))
-            PS_long[:len(ind[1])] = (self.all_simulated_universes[-1].Power_Spectrum[ind]) 
-            PS_long[len(ind[1]):] = (self.all_simulated_universes[-1].Power_Spectrum[ind]) 
-        
-            PS = np.zeros(len(ind[1]))
-            PS[:len(ind[1])/2] = PS_long[:len(ind[1])/2]
-            PS[len(ind[1])/2:] = PS_long[len(ind[1]):3*len(ind[1])/2]
-        
-            inv_Cf = np.diag(1./PS) * 2 # factor of 2 is to account for real and imag covariance from power-spectrum covariance
+            inv_Cf = self.calculate_prior_Cf(ind=ind, fn_length=fn_length)
             
-            self.inv_Cf = inv_Cf
+#            #Initiate the inverse covariance matrix of the prior
+#            ind = np.where(beatbox.Universe.kfilter>0)
+#            PS_long = np.zeros(2*len(ind[1]))
+#            PS_long[:len(ind[1])] = (self.all_simulated_universes[-1].Power_Spectrum[ind]) 
+#            PS_long[len(ind[1]):] = (self.all_simulated_universes[-1].Power_Spectrum[ind]) 
+#        
+#            PS = np.zeros(len(ind[1]))
+#            PS[:len(ind[1])/2] = PS_long[:len(ind[1])/2]
+#            PS[len(ind[1])/2:] = PS_long[len(ind[1]):3*len(ind[1])/2]
+#        
+#            inv_Cf = np.diag(1./PS) * 2 # factor of 2 is to account for real and imag covariance from power-spectrum covariance
+#            
+#            self.inv_Cf = inv_Cf
             
             filename = 'nmax'+str(beatbox.Universe.truncated_nmax)
             

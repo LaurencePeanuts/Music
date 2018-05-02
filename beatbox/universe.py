@@ -580,7 +580,7 @@ class Universe(object):
         self.Power_Spectrum = self.PSnorm*10000*np.power((self.k/self.kstar) ,(-3+(self.n_s-1)))
         self.Power_Spectrum[np.isinf(self.Power_Spectrum)] = 10**-9
 
-        self.Power_Spectrum = np.ones(self.kfilter.shape)*6.7
+        
         fn_Norm = np.random.normal(0, np.sqrt(self.Power_Spectrum) )*np.power(self.kfilter,2)
         # Draw the phases for the modes: use p=1 for a uniform distribution in [0,Pmax],
         #    and p=0 for a Gaussian distribution with mean Pmax and variance Pvar
@@ -592,6 +592,7 @@ class Universe(object):
             fn_Phase = np.random.uniform(0, Pmax*np.ones(self.k.shape,dtype=np.float_) )*np.power(self.kfilter,2)
         else:
             fn_Phase = np.random.normal(Pmax, np.sqrt(Pvar)*np.ones(self.k.shape,dtype=np.float_) )*np.power(self.kfilter,2)
+        
         
         self.fn_Phase = fn_Phase
         self.fn_Norm = fn_Norm

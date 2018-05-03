@@ -560,7 +560,7 @@ class Universe(object):
         return
 
 
-    def generate_a_random_potential_field(self,truncated_nmax=6,truncated_nmin=2,n_s=0.97,kstar=0.02,PSnorm=2.43e-9,Pdist=1,Pmax=2*np.pi,Pvar=0.0, printout=1):
+    def generate_a_random_potential_field(self,truncated_nmax=6,truncated_nmin=2,n_s=0.97,kstar=0.02,PSnorm=2.43e-9,Pdist=1,Pmax=2*np.pi,Pvar=0.0, printout=1, do_fft=1):
 
         #is this realy necessary since filter def moved up in __init__ function??
         # Set the k filter:
@@ -581,7 +581,7 @@ class Universe(object):
         self.Power_Spectrum[np.isinf(self.Power_Spectrum)] = 10**-9
 
         
-        fn_Norm = np.random.normal(0, np.sqrt(self.Power_Spectrum) )*np.power(self.kfilter,2)
+        fn_Norm = np.random.rayleigh(np.sqrt(self.Power_Spectrum/2.))*self.kfilter
         # Draw the phases for the modes: use p=1 for a uniform distribution in [0,Pmax],
         #    and p=0 for a Gaussian distribution with mean Pmax and variance Pvar
         self.Pdist = Pdist
@@ -589,9 +589,9 @@ class Universe(object):
         self.Pmax = Pmax
 
         if Pdist == 1:
-            fn_Phase = np.random.uniform(0, Pmax*np.ones(self.k.shape,dtype=np.float_) )*np.power(self.kfilter,2)
+            fn_Phase = np.random.uniform(0, Pmax*np.ones(self.k.shape,dtype=np.float_) )*self.kfilter
         else:
-            fn_Phase = np.random.normal(Pmax, np.sqrt(Pvar)*np.ones(self.k.shape,dtype=np.float_) )*np.power(self.kfilter,2)
+            fn_Phase = np.random.normal(Pmax, np.sqrt(Pvar)*np.ones(self.k.shape,dtype=np.float_) )*self.kfilter
         
         
         self.fn_Phase = fn_Phase
@@ -614,7 +614,8 @@ class Universe(object):
                 print " with phases sampled from a Gaussian distribution with mean ", Pmax," and variance ", Pvar
 
         # Evaluate it on our Phi grid:
-        self.evaluate_potential_given_fourier_coefficients(printout=printout)
+        if do_fft == 1:
+            self.evaluate_potential_given_fourier_coefficients(printout=printout)
 
         return
 
@@ -682,6 +683,28 @@ class Universe(object):
         self.fngrid = np.zeros(self.kfilter.shape, dtype=np.complex128)
         self.fngrid[ind]=fn_long[:len(ind[1])] + 1j*fn_long[len(ind[1]):]
         return
+    
+    def get_ordered_fn_indices(self):
+        '''
+        Get the indices of the Fourrier modes in the vector used
+        for the inference and sort them by increasing k value.
+        '''
+        
+        ind = np.where(self.kfilter>0)
+        
+        k, theta, phi = self.k[ind], np.arctan2(self.ky[ind], self.kx[ind]), np.arccos(self.kz[ind]/self.k[ind])
+
+        kvec_long = np.zeros(2*len(ind[1]))
+        kvec_long[:len(ind[1])] = k
+        kvec_long[len(ind[1]):] = k
+        
+        kvec = np.zeros(len(ind[1]))
+        kvec[:len(ind[1])/2] = kvec_long[:len(ind[1])/2]
+        kvec[len(ind[1])/2:] = kvec_long[len(ind[1]):3*len(ind[1])/2]
+        
+        ind_for_ordered_fn = np.argsort(kvec)
+        
+        return ind_for_ordered_fn
     
 
     def transform_3D_potential_into_alm(self, truncated_nmax=None, truncated_nmin=None,truncated_lmax=None, truncated_lmin=None, usedefault=1, fn=None):

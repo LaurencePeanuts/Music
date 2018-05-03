@@ -109,7 +109,7 @@ class Multiverse(object):
         return 
     
     
-    def initiate_simulated_universe(self, truncated_nmax=None, truncated_nmin=None, truncated_lmax=None, truncated_lmin=None, n_s=0.97,kstar=0.02,PSnorm=2.43e-9,Pdist=1,Pmax=np.pi,Pvar=0.0, fngrid=None, printout=1):
+    def initiate_simulated_universe(self, truncated_nmax=None, truncated_nmin=None, truncated_lmax=None, truncated_lmin=None, n_s=0.97,kstar=0.02,PSnorm=2.43e-9,Pdist=1,Pmax=2*np.pi,Pvar=0.0, fngrid=None, printout=1,dofft=0):
         '''
         Makes an instance of the universe with containing a random
         realization of the gravitational field phi.
@@ -130,12 +130,12 @@ class Multiverse(object):
             usedefault=usedefault+1
         
         if fngrid is None: 
-            We.generate_a_random_potential_field(truncated_nmax=We.truncated_nmax, truncated_nmin=We.truncated_nmin, n_s=n_s,kstar=kstar,PSnorm=PSnorm, Pdist=Pdist, Pmax=Pmax,Pvar=Pvar, printout=printout)
+            We.generate_a_random_potential_field(truncated_nmax=We.truncated_nmax, truncated_nmin=We.truncated_nmin, n_s=n_s,kstar=kstar,PSnorm=PSnorm, Pdist=Pdist, Pmax=Pmax,Pvar=Pvar, printout=printout, do_fft=dofft)
             We.transform_3D_potential_into_alm(truncated_nmax=We.truncated_nmax, truncated_nmin=We.truncated_nmin,truncated_lmax=We.truncated_lmax, truncated_lmin=We.truncated_lmin,usedefault=usedefault)
 
         else:
             We.fngrid=fngrid
-            We.transform_3D_potential_into_alm(truncated_nmax=We.truncated_nmax, truncated_nmin=We.truncated_nmin,truncated_lmax=We.truncated_lmax, truncated_lmin=We.truncated_lmin,usedefault=usedefault)
+            We.transform_3D_potential_into_alm(truncated_nmax=We.truncated_nmax, truncated_nmin=We.truncated_nmin,truncated_lmax=We.truncated_lmax, truncated_lmin=We.truncated_lmin,usedefault=usedefault, do_fft=dofft)
         
         
         
@@ -250,16 +250,18 @@ class Multiverse(object):
         value decomposition.
         '''
         
-        U, s, V_star = np.linalg.svd(self.C_yy)
+        #U, s, V_star = np.linalg.svd(self.C_yy)
         
         #S = np.zeros((U.shape[1], V_star.shape[0]), dtype=complex)
         #S=np.diag(s)
         #S_cross = np.transpose(1./S)
-        S_cross=np.diag(1./s)
+        #S_cross=np.diag(1./s)
         
-        V = V_star.conj().T
-        U_star=U.conj().T
-        self.inv_Cyy=np.dot(V, np.dot(S_cross,U_star))
+        #V = V_star.conj().T
+        #U_star=U.conj().T
+        #self.inv_Cyy=np.dot(V, np.dot(S_cross,U_star))
+        
+        self.inv_Cyy = np.linalg.inv(self.C_yy)
         
         return
 
@@ -272,19 +274,25 @@ class Multiverse(object):
             inv_Cyy = self.inv_Cyy
 
         if inv_Cf is None:
-            #Initiate the inverse covariance matrix of the prior
+#            #Initiate the inverse covariance matrix of the prior
+#            ind = np.where(beatbox.Universe.kfilter>0)
+#            PS_long = np.zeros(2*len(ind[1]))
+#            PS_long[:len(ind[1])] = (self.all_simulated_universes[-1].Power_Spectrum[ind])
+#            PS_long[len(ind[1]):] = (self.all_simulated_universes[-1].Power_Spectrum[ind])
+#        
+#            PS = np.zeros(len(ind[1]))
+#            PS[:len(ind[1])/2] = PS_long[:len(ind[1])/2]
+#            PS[len(ind[1])/2:] = PS_long[len(ind[1]):3*len(ind[1])/2]
+#        
+#            inv_Cf=np.diag(1./PS)
+            print 'Prior matrix not provided, using default Universe'
+            
             ind = np.where(beatbox.Universe.kfilter>0)
-            PS_long = np.zeros(2*len(ind[1]))
-            PS_long[:len(ind[1])] = (self.all_simulated_universes[-1].Power_Spectrum[ind])
-            PS_long[len(ind[1]):] = (self.all_simulated_universes[-1].Power_Spectrum[ind])
-        
-            PS = np.zeros(len(ind[1]))
-            PS[:len(ind[1])/2] = PS_long[:len(ind[1])/2]
-            PS[len(ind[1])/2:] = PS_long[len(ind[1]):3*len(ind[1])/2]
-        
-            inv_Cf=np.diag(1./PS)
+            fn_length = len(ind[1])
+            self.inv_Cf = calculate_prior_Cf(ind, fn_length)
 
         if R_real is None:
+            print 'R_real matrix not provided, using default Universe'
             #Deal with the R matrix to make it real
             # Select the m values out the the lms tupples
             m = np.array([m[1] for m in beatbox.Universe.lms])
@@ -417,7 +425,7 @@ class Multiverse(object):
     
     
 
-    def calculate_prior_Cf(self, ind, fn_length, n_s=0.97,kstar=0.02,PSnorm=2.43e-9,Pdist=1,Pmax=np.pi,Pvar=0.0):
+    def calculate_prior_Cf(self, ind, fn_length, n_s=0.97,kstar=0.02,PSnorm=2.43e-9,Pdist=1,Pmax=2*np.pi,Pvar=0.0):
         '''
         Initiate the inverse covariance matrix of the prior.
         '''
@@ -432,7 +440,7 @@ class Multiverse(object):
         Power_Spectrum[np.isinf(Power_Spectrum)] = 10**-9
 
         
-        ind = np.where(beatbox.Universe.kfilter>0)
+        #ind = np.where(beatbox.Universe.kfilter>0)
         PS_long = np.zeros(2*fn_length)
         PS_long[:fn_length] = (self.all_simulated_universes[-1].Power_Spectrum[ind]) 
         PS_long[fn_length:] = (self.all_simulated_universes[-1].Power_Spectrum[ind]) 

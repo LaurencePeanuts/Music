@@ -28,6 +28,8 @@ def set_k_filter(self):
     low_k_filter = (~(Universe.n < Universe.truncated_nmin)).astype(int)
     high_k_filter = (~(Universe.n > Universe.truncated_nmax)).astype(int)
     Universe.kfilter = high_k_filter*low_k_filter
+
+        
     return
 
 def populate_response_matrix(self):
@@ -75,6 +77,19 @@ def populate_response_matrix(self):
     Universe.R = np.append(R_long[:,0:len(ind[1])/2], R_long[:,len(ind[1]):3*len(ind[1])/2], axis=1)
     return
 
+def get_number_of_fns(self):
+    '''
+    Get the number of fn modes.
+    '''
+        
+    ind = np.where(Universe.kfilter>0)
+        
+        
+    fn_length = len(ind[1])
+    
+    Universe.numfn = fn_length
+    
+    return fn_length
 
 # ====================================================================
 
@@ -151,6 +166,8 @@ class Universe(object):
     R = None
     populate_Universe_R = populate_response_matrix
 
+    numfn = None
+    get_numfn = get_number_of_fns
     #==========================================================
     
     def __init__(self):
@@ -706,7 +723,18 @@ class Universe(object):
         
         return ind_for_ordered_fn
     
-
+    def get_instance_numfn(self):
+        '''
+        Get the number of fn modes.
+        '''
+        
+        ind = np.where(self.kfilter>0)
+        
+        
+        fn_length = len(ind[1])
+        
+        return fn_length
+    
     def transform_3D_potential_into_alm(self, truncated_nmax=None, truncated_nmin=None,truncated_lmax=None, truncated_lmin=None, usedefault=1, fn=None):
         '''
         From the f_n on a 3D grid, rearrange the Fourier coefficients 

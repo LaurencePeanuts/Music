@@ -555,8 +555,6 @@ class Multiverse(object):
 
             inv_A = self.inv_A
             print "successfully loaded A from the disk."
-#        self.Yash1  = np.dot(R_real.T , np.dot( inv_Cyy , R_real))
-#        self.Yash2 = inv_Cf
         #self.A = A
         
         

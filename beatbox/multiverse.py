@@ -93,6 +93,7 @@ class Multiverse(object):
         We_first=beatbox.Universe()
         We_first.set_Universe_k_filter()
         We_first.populate_Universe_R()
+        We_first.get_numfn()
         
         return
     
